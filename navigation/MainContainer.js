@@ -17,6 +17,7 @@ const taskBites = 'Task Bites';
 
 const Tab = createBottomTabNavigator();
 
+//below handles the taskbar
 function Tabs () {
     return (
         <Tab.Navigator
@@ -27,6 +28,7 @@ function Tabs () {
             //Screenoptions takes in route, which is the current tab.
             //Screenoptions will return an object describing the properties for that tab
             screenOptions = {({route}) => ({
+                //tabBarIcon is the icon for each tab in the task bar
                 tabBarIcon: ({focused, color, size}) => {
                     let iconName;
                     let rn = route.name;
@@ -43,6 +45,7 @@ function Tabs () {
                     } else if (rn === productivity) {
                         iconName = focused ? 'bar-chart' : 'bar-chart-outline'
                     }
+                    //Ionicons is a library of icons we can use provided by React
                     return <Ionicons name={iconName} size={size} color={color}/>
                 },
                 activeTintColor: 'tomato',
@@ -50,7 +53,7 @@ function Tabs () {
                 labelStyle: {paddingBottom: 10, fontSize: 10},
                 style: {padding: 10, height: 70}
             })}
-            
+            //below describes all the possible tabs. so, we have 3 tabs. 
             >
                 <Tab.Screen name={pom} component={TimerStack}/>
                 <Tab.Screen name={taskBites} component={TaskBites}/>
@@ -69,8 +72,8 @@ function Tabs () {
 const Stack = createStackNavigator();
 function TimerStack() {
     return (
-      <Stack.Navigator initialRouteName="Flow Timer">
-        <Stack.Screen name="Flow Timer" component={PomodoroTimer} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="Flow Timer2">
+        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false }} />
         <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false }} />
       </Stack.Navigator>
     );

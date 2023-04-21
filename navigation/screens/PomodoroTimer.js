@@ -8,9 +8,16 @@ import Stacker from '../MainContainer';
 
 
 //exporting these functions make them visible to other files.
-//this will be useful, as we can use the timer duration
-//and apply it onto other filex. 
+//this will be useful, as we can use the timer duration functions
+//and use it in other files.
+
+//Below is some REACT HOOKS
 export function getTimerWorkDuration() {
+    //This is saying: define a variable called timerWorkDuration,
+    //and set the default value of this variable to 25:00.
+    //You can call setWorkTimer to adjust the value of timerWorkDuration. 
+
+    //I.E setWorkTimer(5) would set timerWorkDuration to a new value of 5.
     const [timerWorkDuration, setWorkTimer] = useState('25:00');
     return timerWorkDuration;
 }
@@ -28,14 +35,16 @@ export default function PomodoroTimer() {
         console.log('hi');
     }
 
-    //the TouchableOpacity is our START button.
+    //the TouchableOpacity BELOW is our START button.
     //for BACKEND: when this button is clicked, start the timer.
+    //navigation.navigate tells us which screen to go to next,
+    //but the screen MUST be defined in the StackNavigation first in MainContainer.js
     return (
         <View style = {styles.timerContainer}> 
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
             <View style = {styles.midcontainer}> 
-                <Text style = {styles.timerText} onPress={() => alert('Start your flow!')}>{timerWorkDuration} Work Time</Text>
-                <Text style = {styles.timerText} onPress={() => alert('Start your flow!')}>{timerBreakDuration} Break Time</Text>
+                <Text style = {styles.timerText} onPress={() => alert('This is how long you will work!')}>{timerWorkDuration} Work Time</Text>
+                <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Break Time</Text>
                 <TouchableOpacity style = {styles.buttonStyle} onPress={() =>
                     navigation.navigate('StartTimer')
                 }>
@@ -46,6 +55,10 @@ export default function PomodoroTimer() {
     );
 
 }
+
+//below is just the styles. like css
+//review flexbox to understand flex, alignItems, justifyContent
+//(I think i may have used flexbox weirdly here, though)
 
 const styles = StyleSheet.create({
     timerContainer: {
