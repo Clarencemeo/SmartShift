@@ -18,12 +18,12 @@ export function getTimerWorkDuration() {
     //You can call setWorkTimer to adjust the value of timerWorkDuration. 
 
     //I.E setWorkTimer(5) would set timerWorkDuration to a new value of 5.
-    const [timerWorkDuration, setWorkTimer] = useState('25:00');
+    const [timerWorkDuration, setWorkTimer] = useState(25);
     return timerWorkDuration;
 }
 
 export function getTimerBreakDuration() {
-    const [timerBreakDuration, setBreak] = useState('05:00');
+    const [timerBreakDuration, setBreak] = useState(5);
     return timerBreakDuration;
 }
 
@@ -43,8 +43,8 @@ export default function PomodoroTimer() {
         <View style = {styles.timerContainer}> 
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
             <View style = {styles.midcontainer}> 
-                <Text style = {styles.timerText} onPress={() => alert('This is how long you will work!')}>{timerWorkDuration} Work Time</Text>
-                <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Break Time</Text>
+                <Text style = {styles.timerText} onPress={() => alert('This is how long you will work!')}>{timerWorkDuration} Minute Work Time</Text>
+                <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Minute Break Time</Text>
                 <TouchableOpacity style = {styles.buttonStyle} onPress={() =>
                     navigation.navigate('StartTimer')
                 }>
