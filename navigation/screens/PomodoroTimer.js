@@ -76,6 +76,13 @@ export default function PomodoroTimer() {
         setBreakTimerModalIsVisible(false);
     }
 
+    function startTimerHandler() {
+        navigation.navigate('StartTimer', {
+            workTimerDuration: workTimer,
+            breakTimerDuration: breakTimer,
+        });
+    }
+
     //the TouchableOpacity BELOW is our START button.
     //for BACKEND: when this button is clicked, start the timer.
     //navigation.navigate tells us which screen to go to next,
@@ -114,9 +121,12 @@ export default function PomodoroTimer() {
                     defaultValues = {breakTimer}
                 />
                 {/* <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Minute Break Time</Text> */}
-                <TouchableOpacity style = {styles.buttonStyle} onPress={() =>
+                {/* <TouchableOpacity style = {styles.buttonStyle} onPress={() =>
                     navigation.navigate('StartTimer')
                 }>
+                    <Text style={styles.buttonText}>Start</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity style = {styles.buttonStyle} onPress = {startTimerHandler}>
                     <Text style={styles.buttonText}>Start</Text>
                 </TouchableOpacity>
             </View>

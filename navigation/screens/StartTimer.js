@@ -5,7 +5,7 @@ import { Timer } from 'react-native-stopwatch-timer';
 
 //as of now, just shows the timer in a bad font.
 //backend should make sure the timer is counting down. 
-function App() {
+function App({route}) {
   //
   //Timer is a react native object with the following properties:
   //totalDuration = duration of the timer 
@@ -21,25 +21,32 @@ function App() {
  
   // make sure to import timer at the top: import { Timer } from 'react-native-stopwatch-timer';
   // and you might have to do: npm install react-native-stopwatch-timer --save   in the terminal 
+
+  const workDuration = route.params.workTimerDuration;
+  const breakDuration = route.params.breakTimerDuration;
+  console.log(workDuration);
+  console.log(breakDuration);
+
   return (
     <View style = {styles.font}>
         <Timer
-            totalDuration={getTimerWorkDuration() * 60000}
+            totalDuration={Number(workDuration) * 60000}
             start={true}
             reset={false}
             options={timerDesign}
             handleFinish={() => {
                 alert('Timer over');
             }}
-            getTime={(time) => {
-                console.log(time);
-            }}
+            // getTime={(time) => {
+            //     console.log(time);
+            // }}
         />
     </View>
   );
 }
 
 export default App;
+
 const styles = StyleSheet.create({
     font: {
         fontSize: 30
