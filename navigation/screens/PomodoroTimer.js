@@ -18,7 +18,7 @@ export default function PomodoroTimer() {
     // const timerBreakDuration = getTimerBreakDuration();
 
     const [workTimer, setWorkTimer] = useState('');
-    const [breakTimer, setBreakTimer] = useState('');
+    const [breakTimer, setBreakTimer] = useState("5");
 
     function userInputBreakTimer(enteredValue) {
         setBreakTimer(Number(enteredValue));
@@ -104,6 +104,7 @@ export default function PomodoroTimer() {
                     visible = {breakModalIsVisible}
                     onCancel = {endBreakTimerModalHandler}
                     onSubmit = {userInputBreakTimer}
+                    defaultValues = {breakTimer}
                 />
                 {/* <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Minute Break Time</Text> */}
                 <TouchableOpacity style = {styles.buttonStyle} onPress={() =>

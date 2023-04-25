@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
 
 function BreakTimerInput(props) {
-    const [breakTime, setBreakTime] = useState('')
+    const [breakTime, setBreakTime] = useState(props.defaultValues ? props.defaultValues.toString() : "5",);
     
     function inputValueHandler(enteredText) { 
         setBreakTime(enteredText)
@@ -22,7 +22,7 @@ function BreakTimerInput(props) {
                         inputMode = 'numeric'
                         keyboardType = "number-pad" 
                         maxLength = {4}
-                        placeholder="5"
+                        // placeholder="5"
                         onChangeText = {inputValueHandler}
                         value = {breakTime}
                         style = {styles.numberInput}
