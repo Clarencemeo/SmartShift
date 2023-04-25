@@ -10,7 +10,7 @@ function BreakTimerInput(props) {
 
     function changeBreakTime() {
         props.onSubmit(breakTime);
-        setBreakTime('');
+        // setBreakTime('');
     }
 
     return (

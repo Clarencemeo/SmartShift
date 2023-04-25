@@ -17,12 +17,17 @@ export default function PomodoroTimer() {
     // const timerWorkDuration = getTimerWorkDuration();
     // const timerBreakDuration = getTimerBreakDuration();
 
-    const [workTimer, setWorkTimer] = useState('');
+    const [workTimer, setWorkTimer] = useState("25");
     const [breakTimer, setBreakTimer] = useState("5");
 
     function userInputBreakTimer(enteredValue) {
         setBreakTimer(Number(enteredValue));
         endBreakTimerModalHandler();
+    }
+
+    function userInputWorkTimer(enteredValue) {
+        setWorkTimer(Number(enteredValue));
+        endWorkTimerModalHandler();
     }
 
     //Below is some REACT HOOKS
@@ -83,12 +88,14 @@ export default function PomodoroTimer() {
                 {/* Creates a custom button that activates modal for user to use to set custom work timer*/}
                 <Pressable visible = {workModalIsVisible} onPress = {startWorkTimerModalHandler}>
                     <View>
-                        <Text style= {styles.timerText}>Minute Work Time</Text>
+                        <Text style= {styles.timerText}>{workTimer} Minute Work Time</Text>
                     </View>
                 </Pressable>
                 <WorkTimerInput 
                     visible = {workModalIsVisible} 
                     onCancel={endWorkTimerModalHandler}
+                    onSubmit = {userInputWorkTimer}
+                    defaultValues = {workTimer}
                 />
                 {/* <WorkTimerInput onChangeWorkTimer = {inputTimerChangedHandler.bind(this, 'work')}/> */}
                 

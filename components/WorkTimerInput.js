@@ -4,15 +4,15 @@ import { setWorkTimer } from "../navigation/screens/PomodoroTimer";
 
 function WorkTimerInput(props) {
     // work timer text / number input handling 
-    const [enteredWorkTimerInput, setWorkTimerInput] = useState('');
+    const [workTime, setWorkTime] = useState(props.defaultValues ? props.defaultValues.toString() : "5",);
     
-    function workTimerInputHandler(enteredText) {
-        setWorkTimerInput(enteredText);
+    function inputValueHandler(enteredText) {
+        setWorkTime(enteredText);
     }
 
-    function changeWorkTimerHandler(enteredText) {
-        props.onChangeWorkTimer(enteredWorkTimerInput);
-        setWorkTimerInput('');
+    function changeWorkTime() {
+        props.onSubmit(workTime);
+        // setWorkTime('');
     } 
 
     return (
@@ -24,14 +24,14 @@ function WorkTimerInput(props) {
                         inputMode = 'numeric'
                         keyboardType = "number-pad" 
                         maxLength = {4}
-                        placeholder="25"
-                        // onChangeText = {workTimerInputHandler}
-                        // value = {enteredWorkTimerInput}
+                        // placeholder="25"
+                        onChangeText = {inputValueHandler}
+                        value = {workTime}
                         style = {styles.numberInput}
                     />
                 </View>
                 <View style = {styles.buttonStyle}>
-                    <Pressable>
+                    <Pressable onPress = {changeWorkTime}>
                         <View>
                             <Text style= {styles.timerText}>Change</Text>
                         </View>
