@@ -2,6 +2,17 @@ import { useState } from "react";
 import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
 
 function BreakTimerInput(props) {
+    const [breakTime, setBreakTime] = useState('')
+    
+    function inputValueHandler(enteredText) { 
+        setBreakTime(enteredText)
+    }
+
+    function changeBreakTime() {
+        props.onSubmit(breakTime);
+        setBreakTime('');
+    }
+
     return (
         <Modal visible = {props.visible} animationType = "slide" >
             <View style={styles.inputContainer}>
@@ -12,13 +23,13 @@ function BreakTimerInput(props) {
                         keyboardType = "number-pad" 
                         maxLength = {4}
                         placeholder="5"
-                        // onChangeText = {workTimerInputHandler}
-                        // value = {enteredWorkTimerInput}
+                        onChangeText = {inputValueHandler}
+                        value = {breakTime}
                         style = {styles.numberInput}
                     />
                 </View>
                 <View style = {styles.buttonStyle}>
-                    <Pressable>
+                    <Pressable onPress={changeBreakTime}>
                         <View>
                             <Text style= {styles.timerText}>Change</Text>
                         </View>

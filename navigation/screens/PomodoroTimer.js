@@ -17,20 +17,13 @@ export default function PomodoroTimer() {
     // const timerWorkDuration = getTimerWorkDuration();
     // const timerBreakDuration = getTimerBreakDuration();
 
-    const [timerValues, setTimerValues] = useState({ 
-        work: '',
-        break: ''
-    });
+    const [workTimer, setWorkTimer] = useState('');
+    const [breakTimer, setBreakTimer] = useState('');
 
-    function inputTimerChangedHandler(inputIdentifier, enteredValue) {
-        setTimerValues((curInputValues) => {
-            return {
-                ...curInputValues,
-                [inputIdentifier]: enteredValue
-            }
-        });
-        endWorkTimerModalHandler();
-    } 
+    function userInputBreakTimer(enteredValue) {
+        setBreakTimer(Number(enteredValue));
+        endBreakTimerModalHandler();
+    }
 
     //Below is some REACT HOOKS
     // function getTimerWorkDuration() {
@@ -90,7 +83,7 @@ export default function PomodoroTimer() {
                 {/* Creates a custom button that activates modal for user to use to set custom work timer*/}
                 <Pressable visible = {workModalIsVisible} onPress = {startWorkTimerModalHandler}>
                     <View>
-                        <Text style= {styles.timerText}>{timerValues.work} Minute Work Time</Text>
+                        <Text style= {styles.timerText}>Minute Work Time</Text>
                     </View>
                 </Pressable>
                 <WorkTimerInput 
@@ -104,12 +97,13 @@ export default function PomodoroTimer() {
                 {/* Creates a custom button thatr activate modal for user to use to set custom break timer */}
                 <Pressable visible = {breakModalIsVisible} onPress={startBreakTimerModalHandler}>
                     <View>
-                        <Text style= {styles.timerText}>{timerValues.break} Minute Break Time</Text>
+                        <Text style= {styles.timerText}>{breakTimer} Minute Break Time</Text>
                     </View>
                 </Pressable>
                 <BreakTimerInput
                     visible = {breakModalIsVisible}
                     onCancel = {endBreakTimerModalHandler}
+                    onSubmit = {userInputBreakTimer}
                 />
                 {/* <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Minute Break Time</Text> */}
                 <TouchableOpacity style = {styles.buttonStyle} onPress={() =>
