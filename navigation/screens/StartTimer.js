@@ -28,10 +28,15 @@ export default function TimerApp() {
             handleFinish={()=>{completeTimer(!timerWorking); toggleTimer(false);}}
             getTime={time => {}}/>
           <TouchableHighlight onPress={()=>{toggleTimer(!timerStart); resetTimer(false);}}>
-            <Text style={{fontSize: 30}}>{timerStart ? "Start" : "Stop"}</Text>
+            <Text style={{fontSize: 30}}>{timerStart ? "Stop" : "Start"}</Text>
           </TouchableHighlight>
           <TouchableHighlight onPress={()=>{toggleTimer(false); resetTimer(true);}}>
             <Text style={{fontSize: 30}}>Reset</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={()=>{
+            if(!timerWorking){toggleTimer(false); resetTimer(true); completeTimer(!timerWorking);} 
+            else{alert("can only skip breaks.");}}}>
+            <Text style={{fontSize: 30}}>Skip Break</Text>
           </TouchableHighlight>
         </View>
     ); 
