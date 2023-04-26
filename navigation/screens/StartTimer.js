@@ -22,14 +22,15 @@ function App({route}) {
   // make sure to import timer at the top: import { Timer } from 'react-native-stopwatch-timer';
   // and you might have to do: npm install react-native-stopwatch-timer --save   in the terminal 
 
+  // the Work Timer Duration value, passed from the PomodoroTimer.js page (set to default 25 unless the user changed it)
   const workDuration = route.params.workTimerDuration;
+  // the Break Timer Duration value, passed from the PomodoroTimer.js page (set to default 5 unless the user changed it)
   const breakDuration = route.params.breakTimerDuration;
-  console.log(workDuration);
-  console.log(breakDuration);
 
   return (
     <View style = {styles.font}>
         <Timer
+            // Sets the Work Timer to the passed Work Timer value from PomodoroTimer.js
             totalDuration={Number(workDuration) * 60000}
             start={true}
             reset={false}

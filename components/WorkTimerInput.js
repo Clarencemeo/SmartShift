@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
-import { setWorkTimer } from "../navigation/screens/PomodoroTimer";
+
+// Component that handles the Work Timer Modal that allows user to change the length of the Work Timer 
 
 function WorkTimerInput(props) {
     // work timer text / number input handling 
-    const [workTime, setWorkTime] = useState(props.defaultValues ? props.defaultValues.toString() : "5",);
+    // sets the workTime value to the default previously selected/entered (25 if user hasn't changed it once already)
+    const [workTime, setWorkTime] = useState(props.defaultValues ? props.defaultValues.toString() : "25",);
     
+    // sets the WorkTime to the value entered by user 
     function inputValueHandler(enteredText) {
         setWorkTime(enteredText);
     }
 
+    // saves the change that the user made to workTime and then closes the modal 
     function changeWorkTime() {
         props.onSubmit(workTime);
-        // setWorkTime('');
     } 
 
     return (
+        // returns a modal that is visible depending on props.visisble and slides up 
         <Modal visible = {props.visible} animationType = "slide" >
             <View style={styles.inputContainer}>
                 <View style={styles.inputTop}>
@@ -24,7 +28,6 @@ function WorkTimerInput(props) {
                         inputMode = 'numeric'
                         keyboardType = "number-pad" 
                         maxLength = {4}
-                        // placeholder="25"
                         onChangeText = {inputValueHandler}
                         value = {workTime}
                         style = {styles.numberInput}
@@ -41,8 +44,6 @@ function WorkTimerInput(props) {
                             <Text style= {styles.timerText}>Cancel</Text>
                         </View>
                     </Pressable>
-                    {/* <Button title = "Cancel" onPress = {props.onCancel}/>
-                    <Button title = "Change"/> */}
                 </View>
             </View>
         </Modal>
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
         marginBottom: 24,
         marginBottomWidth: 1, 
         backgroundColor: '#fbc4ab'
-        // borderBottomColor: 
     },
     inputTop: {
         flex: 1,
@@ -85,12 +85,10 @@ const styles = StyleSheet.create({
         margin: 10,
         marginBottom: 30,
         fontSize: 26,
-        // borderRadius: 30,
         padding: 10,
         backgroundColor: '#f4978e',
         borderWidth: 5,
         borderColor: '#f08080',
-        //backgroundColor: 'red',
         fontWeight: 'bold',
         opacity: 0.8,
         overflow: 'hidden'
@@ -105,14 +103,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#f4978e',
         borderWidth: 5,
         borderColor: '#f08080',
-        //backgroundColor: 'red',
         fontWeight: 'bold',
         opacity: 0.8,
         overflow: 'hidden'
     },
     buttonStyle: {
         alignItems: 'top',
-        // justifyContent: 'top',
         flex: 1,
         flexDirection: 'row',
         fontSize: 46,
