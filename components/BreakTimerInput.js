@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
+import { StyleSheet, View, Modal, TextInput, Text, Pressable} from "react-native";
 
 // Component that handles the Break Timer Modal that allows user to change the length of the Break Timer 
 

@@ -1,10 +1,7 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {StyleSheet, View, Text, Fragment, TouchableOpacity, Pressable, Modal, TextInput, Button} from 'react-native';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import TaskBites from './TaskBites';
-import Stacker from '../MainContainer';
+import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
 

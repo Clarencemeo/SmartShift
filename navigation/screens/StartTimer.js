@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { getTimerWorkDuration } from './PomodoroTimer';
-import {StyleSheet, View, Text, Fragment, TouchableOpacity} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
 
 //as of now, just shows the timer in a bad font.
