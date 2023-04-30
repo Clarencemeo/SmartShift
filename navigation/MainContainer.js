@@ -1,19 +1,13 @@
 import * as React from 'react';
-import {View, Text} from 'react-native';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import PomodoroTimer from './screens/PomodoroTimer';
 import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
-
-const pom = 'Flow Timer';
-const productivity = 'Productivity Scope';
-const taskBites = 'Task Bites';
+import Register from './screens/Register';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,12 +16,22 @@ function Tabs () {
     return (
         <Tab.Navigator
             //initialRouteName describes the default screen
-            initialRouteName = {pom}
+            
+            initialRouteName = {"Register"}
             //screenOptions describes properties for each
             //tab in the navBar.
             //Screenoptions takes in route, which is the current tab.
             //Screenoptions will return an object describing the properties for that tab
             screenOptions = {({route}) => ({
+                tabBarButton: [
+                    //all the screens listed here will not show up in the task bar, but can still be navigated to 
+                    "Register",
+                    "StartTimer"
+                  ].includes(route.name)
+                    ? () => {
+                        return null;
+                      }
+                    : undefined,
                 //tabBarIcon is the icon for each tab in the task bar
                 tabBarIcon: ({focused, color, size}) => {
                     let iconName;
@@ -36,13 +40,13 @@ function Tabs () {
                     //if the route or current screen is the pomodoro timer,
                     //then highlight the alarm tab IF it is focused.
                     //else, just show the outline
-                    if (rn === pom) {
+                    if (rn === "Flow Timer") {
                         //focused describes whether the tab is focused or not
                         iconName = focused ? 'alarm' : 'alarm-outline'
 
-                    } else if (rn === taskBites) {
+                    } else if (rn === "Task Bites") {
                         iconName = focused ? 'ios-newspaper' : 'ios-newspaper-outline'
-                    } else if (rn === productivity) {
+                    } else if (rn === "Productivity Scope") {
                         iconName = focused ? 'bar-chart' : 'bar-chart-outline'
                     }
                     //Ionicons is a library of icons we can use provided by React
@@ -53,31 +57,18 @@ function Tabs () {
                 labelStyle: {paddingBottom: 10, fontSize: 10},
                 style: {padding: 10, height: 70}
             })}
-            //below describes all the possible tabs. so, we have 3 tabs. 
+            //below describes all of the screens; define all screens here
+            //any new screens you define here, make sure to also define up above 
+            //under "tabBarButton"; this ensures that the new screens don't appear on the taskbar
             >
-                <Tab.Screen name={pom} component={TimerStack}/>
-                <Tab.Screen name={taskBites} component={TaskBites}/>
-                <Tab.Screen name={productivity} component={Productivity}/>
+                <Tab.Screen name={"Flow Timer"} component={PomodoroTimer} options={{ headerShown: false } }/>
+                <Tab.Screen name={"Task Bites"} component={TaskBites} options={{ headerShown: false }}/>
+                <Tab.Screen name={"Productivity Scope"} component={Productivity} options={{ headerShown: false }}/>
+                <Tab.Screen name={"Register"} component={Register} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
+                <Tab.Screen name={"StartTimer"} component={StartTimer} options={{ headerShown: false }}/>
         </Tab.Navigator>
     );
 }
-
-//The stack describes any screens associated with a particular screen.
-//Here, this is the stack of screens associated with the flow timer screen.
-//The flow timer can either go to itself or the StartTimer screen.
-//Define any new screens related to the flow timer screen here.
-//Feel free to make a new stack for a new list of screens.
-//It's also useful to link screens in a stack, since this is
-//how the program determines which screen the "back button" on a phone links to
-const Stack = createStackNavigator();
-function TimerStack() {
-    return (
-      <Stack.Navigator initialRouteName="Flow Timer2">
-        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false }} />
-        <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false }} />
-      </Stack.Navigator>
-    );
-  }
 
 export default function MainContainer() {
     return (

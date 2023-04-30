@@ -7,6 +7,7 @@ import TaskBites from './TaskBites';
 import Stacker from '../MainContainer';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
+import {auth} from '../../firebase/firebase-config'
 
 export default function PomodoroTimer() {
     const navigation = useNavigation();
@@ -15,6 +16,14 @@ export default function PomodoroTimer() {
     const [workTimer, setWorkTimer] = useState("25");
     // break timer state (beginning at 25 for default)
     const [breakTimer, setBreakTimer] = useState("5");
+
+    const handleSignOut = () => {
+        auth.signOut()
+        .then(() => {
+            navigation.replace("Register")
+        })
+        .catch(error => alert(error.message))
+    }
 
     // changes work timer value according to user input and then closes the work modal 
     function userInputWorkTimer(enteredValue) {
@@ -70,9 +79,10 @@ export default function PomodoroTimer() {
     //the TouchableOpacity BELOW is our START button.
     //for BACKEND: when this button is clicked, start the timer.
     //navigation.navigate tells us which screen to go to next,
-    //but the screen MUST be defined in the StackNavigation first in MainContainer.js
+    //but the screen MUST be defined in the TabNavigation first in MainContainer.js
     return (
         <View style = {styles.timerContainer}> 
+            <Text style = {styles.userProfile} onPress={() => {handleSignOut}}>{auth.currentUser?.email}</Text>
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
             <View style = {styles.midcontainer}>   
                 
@@ -157,6 +167,11 @@ const styles = StyleSheet.create({
         flex: 0.3,
         fontSize: 46,
         fontWeight: 'bold',
+        borderRadius: 20
+    },
+    userProfile: {
+        flex: 0.1,
+        fontSize: 18,
         borderRadius: 20
     },
     buttonStyle: {
