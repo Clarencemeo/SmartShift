@@ -9,100 +9,41 @@ import { Timer } from 'react-native-stopwatch-timer';
 //as of now, just shows the timer in a bad font.
 //backend should make sure the timer is counting down. 
 
-let WorkDuration = 0;
-let BreakDuration = 0;
+export default function TimerApp() {
+    //set to *60000 for actual time
+    //const workDuration = getTimerWorkDuration()*60000;
+    //const breakDuration = getTimerBreakDuration()*60000;
+    const workDuration = 6000;
+    const breakDuration = 10000;
+    const [timerStart, toggleTimer] = useState(true);
+    const [timerReset, resetTimer] = useState(false);
+    const [timerWorking, completeTimer] = useState(true);
 
-function durationGrabber() {
-    WorkDuration = getTimerWorkDuration();
-    BreakDuration = getTimerBreakDuration();
-}
 
-
-class App extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        timerStart: true,
-        stopwatchStart: false,
-        totalDuration: 0.10 * 60000,
-        timerReset: false,
-        stopwatchReset: false,
-        timerWorking: true 
-      };
-      this.toggleTimer = this.toggleTimer.bind(this);
-      this.resetTimer = this.resetTimer.bind(this);
-      this.toggleStopwatch = this.toggleStopwatch.bind(this);
-      this.resetStopwatch = this.resetStopwatch.bind(this);
-      this.determineTime = this.determineTime.bind(this);
-      this.completeTimer = this.completeTimer.bind(this);
-    }
-   
-    toggleTimer() {
-      this.setState({timerStart: !this.state.timerStart, timerReset: false});
-    }
-   
-    resetTimer() {
-      this.setState({timerStart: false, timerReset: true});
-    }
-   
-    toggleStopwatch() {
-      this.setState({stopwatchStart: !this.state.stopwatchStart, stopwatchReset: false});
-    }
-   
-    resetStopwatch() {
-      this.setState({stopwatchStart: false, stopwatchReset: true});
-    }
-    
-    getFormattedTime(time) {
-        this.currentTime = time;
-    };
-
-    determineTime() {
-        console.log("We made it here!?");
-        if (this.state.timerWorking == true) {
-            //timer.timerReset = true;
-            this.setState({totalDuration: 10000});
-            this.toggleTimer();
-            alert("Working Now!")
-            //return getTimerWorkDuration() * 60000;
-        }
-        else {
-            //timer.timerReset = true;
-            alert("On break!")
-            this.setState({totalDuration: 3000});
-            this.toggleTimer();
-            //return getTimerBreakDuration() * 60000;
-        }    
-    }
-    
-    completeTimer() {
-        console.log("We made it here!");
-        this.setState({timerWorking: !this.state.timerWorking});
-        this.resetTimer(); 
-        this.determineTime();
-    }
-   
-    render() {
-      return (
+    return (
         <View>
-          <Timer totalDuration={this.state.totalDuration} msecs start={this.state.timerStart}
-            reset={this.state.timerReset}
+          <Timer totalDuration={(timerWorking ? workDuration: breakDuration)} msecs start={timerStart}
+            reset={timerReset}
             options={timerDesign}
-            handleFinish={this.completeTimer}
-            getTime={this.getFormattedTime} />
-          <TouchableHighlight onPress={this.toggleTimer}>
-            <Text style={{fontSize: 30}}>{!this.state.timerStart ? "Start" : "Stop"}</Text>
+            handleFinish={()=>{completeTimer(!timerWorking); toggleTimer(false);}}
+            getTime={time => {}}/>
+          <TouchableHighlight onPress={()=>{toggleTimer(!timerStart); resetTimer(false);}}>
+            <Text style={{fontSize: 30}}>{timerStart ? "Stop" : "Start"}</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={this.resetTimer}>
+          <TouchableHighlight onPress={()=>{toggleTimer(false); resetTimer(true);}}>
             <Text style={{fontSize: 30}}>Reset</Text>
           </TouchableHighlight>
+          <TouchableHighlight onPress={()=>{
+            if(!timerWorking){toggleTimer(false); resetTimer(true); completeTimer(!timerWorking);} 
+            else{alert("can only skip breaks.");}}}>
+            <Text style={{fontSize: 30}}>Skip Break</Text>
+          </TouchableHighlight>
         </View>
-      );
-    }
-  }
-   
-  const handleTimerComplete = () => alert("custom completion function");
-   
+    ); 
+}
+
+//const handleTimerComplete = ()=>{alert("???");};
+
   const styles = StyleSheet.create({
     font: {
         fontSize: 30
@@ -121,7 +62,6 @@ const timerDesign = {
     }
   };
    
-export default App;
 
 /*
 export default function TimerComponent() {

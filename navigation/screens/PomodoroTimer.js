@@ -1,38 +1,70 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {StyleSheet, View, Text, Fragment, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, Fragment, TouchableOpacity, Pressable, Modal, TextInput, Button} from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import TaskBites from './TaskBites';
 import Stacker from '../MainContainer';
-
-
-//exporting these functions make them visible to other files.
-//this will be useful, as we can use the timer duration functions
-//and use it in other files.
-
-//Below is some REACT HOOKS
-export function getTimerWorkDuration() {
-    //This is saying: define a variable called timerWorkDuration,
-    //and set the default value of this variable to 25:00.
-    //You can call setWorkTimer to adjust the value of timerWorkDuration. 
-
-    //I.E setWorkTimer(5) would set timerWorkDuration to a new value of 5.
-    const [timerWorkDuration, setWorkTimer] = useState(25);
-    return timerWorkDuration;
-}
-
-export function getTimerBreakDuration() {
-    const [timerBreakDuration, setBreak] = useState(5);
-    return timerBreakDuration;
-}
+import WorkTimerInput from '../../components/WorkTimerInput';
+import BreakTimerInput from '../../components/BreakTimerInput';
 
 export default function PomodoroTimer() {
     const navigation = useNavigation();
-    const timerWorkDuration = getTimerWorkDuration()
-    const timerBreakDuration = getTimerBreakDuration()
+
+    // work timer state (beginning at 25 for default)
+    const [workTimer, setWorkTimer] = useState("25");
+    // break timer state (beginning at 25 for default)
+    const [breakTimer, setBreakTimer] = useState("5");
+
+    // changes work timer value according to user input and then closes the work modal 
+    function userInputWorkTimer(enteredValue) {
+        setWorkTimer(Number(enteredValue));
+        endWorkTimerModalHandler();
+    }
+
+    // changes break timer value according to user input and then closes the break modal 
+    function userInputBreakTimer(enteredValue) {
+        setBreakTimer(Number(enteredValue));
+        endBreakTimerModalHandler();
+    }
+    
+    // extra function 
     function timerWorkHandler() {
         console.log('hi');
+    }
+
+    // work timer modal useState, initially set to invisible (false)
+    const [workModalIsVisible, setWorkTimerModalIsVisible] = useState(false);
+
+    // updating function to update whether Work Timer Modal is visible
+    function startWorkTimerModalHandler() {
+        setWorkTimerModalIsVisible(true);
+    }
+
+    // function to close the Work Timer Modal (make it invisible)
+    function endWorkTimerModalHandler() {
+        setWorkTimerModalIsVisible(false);
+    }
+
+    // break timer modal useState, initially set to invisible (false)
+    const [breakModalIsVisible, setBreakTimerModalIsVisible] = useState(false);
+
+    // updating function to update whether Work Timer Modal is visible
+    function startBreakTimerModalHandler() {
+        setBreakTimerModalIsVisible(true);
+    }
+
+    // function to close the Work Timer Modal (make it invisible)
+    function endBreakTimerModalHandler() {
+        setBreakTimerModalIsVisible(false);
+    }
+
+    // function to do the navigation from this Pomodoro Timer screen to StartTimer screen with timer starting with the given values
+    function startTimerHandler() {
+        navigation.navigate('StartTimer', {
+            workTimerDuration: workTimer,
+            breakTimerDuration: breakTimer,
+        });
     }
 
     //the TouchableOpacity BELOW is our START button.
@@ -42,12 +74,47 @@ export default function PomodoroTimer() {
     return (
         <View style = {styles.timerContainer}> 
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
-            <View style = {styles.midcontainer}> 
-                <Text style = {styles.timerText} onPress={() => alert('This is how long you will work!')}>{timerWorkDuration} Minute Work Time</Text>
-                <Text style = {styles.timerText} onPress={() => alert('This is how long your break will be!')}>{timerBreakDuration} Minute Break Time</Text>
-                <TouchableOpacity style = {styles.buttonStyle} onPress={() =>
-                    navigation.navigate('StartTimer')
-                }>
+            <View style = {styles.midcontainer}>   
+                
+                {/* Creates a custom button that activates modal for user to use to set custom work timer*/}
+                <Pressable visible = {workModalIsVisible} onPress = {startWorkTimerModalHandler}>
+                    <View>
+                        <Text style= {styles.timerText}>{workTimer} Minute Work Time</Text>
+                    </View>
+                </Pressable>
+                {/* The custom modal to allow user to change Work Timer value */}
+                <WorkTimerInput 
+                    // passes value to make modal visible 
+                    visible = {workModalIsVisible} 
+                    // passes function that closes modal
+                    onCancel={endWorkTimerModalHandler}
+                    // passes function that handles user input, then closes modal
+                    onSubmit = {userInputWorkTimer}
+                    // passes default value of Work Timer (whatever was previously entered, default starting at 25)
+                    defaultValues = {workTimer}
+                />
+
+                {/* Creates a custom button thatr activate modal for user to use to set custom break timer */}
+                <Pressable visible = {breakModalIsVisible} onPress={startBreakTimerModalHandler}>
+                    <View>
+                        <Text style= {styles.timerText}>{breakTimer} Minute Break Time</Text>
+                    </View>
+                </Pressable>
+                {/* The custom modal to allow user to change Break Timer value  */}
+                <BreakTimerInput
+                    // passes value to make modal visible 
+                    visible = {breakModalIsVisible}
+                    // passes function to close modal 
+                    onCancel = {endBreakTimerModalHandler}
+                    // passes function that handles user input, then closes modal 
+                    onSubmit = {userInputBreakTimer}
+                    // passes default value of Break Timer (whatever was previously entered, default starting at 5)
+                    defaultValues = {breakTimer}
+                />
+                {/* The navigation button that upon pressing "Start" button, starts the startTimerHandler function which passes 
+                appropriate workTimerDuration and breakTimerDuration values to the timer and navigates the user to that page 
+                where the timer promptly starts (set to the passed values) */}
+                <TouchableOpacity style = {styles.buttonStyle} onPress = {startTimerHandler}>
                     <Text style={styles.buttonText}>Start</Text>
                 </TouchableOpacity>
             </View>
@@ -103,5 +170,14 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 30,
         padding: 30,
-    }
+    }, 
+    inputContainer: {
+        flex: 1, 
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 24,
+        marginBottomWidth: 1, 
+        // borderBottomColor: 
+    },
 });
