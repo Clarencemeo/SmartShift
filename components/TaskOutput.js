@@ -1,15 +1,16 @@
-import * as React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import TaskOutput from '../../components/TaskOutput';
+import TaskList from './TaskList';
 
-export default function TaskBites() {
+function TaskOutput({tasks}) { 
     return (
-        <View style = {styles.timerContainer}> 
-            <TaskOutput />
-        </View>
+    <View>
+        <TaskList />
+    </View>
     );
 
 }
+
+export default TaskOutput;
 
 const styles = StyleSheet.create({
     timerContainer: {
