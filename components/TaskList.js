@@ -32,10 +32,7 @@ function TaskList({tasks}) {
         title: 'Complete',
         content: 
         <View> 
-            <Text style={styles.textSmall}>
-                List of Complete Tasks
-
-            </Text>
+            <Text style={styles.textSmall}>List of Complete Tasks</Text>
         </View>
         }
     ];

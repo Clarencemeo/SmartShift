@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'space-between',
         borderRadius: 6, 
-        // shadowColor: "#b5838d",
-        // shadowRadius: 4, 
-        // shadowOffset: {width: 1, height: 1},
-        // shadowOpacity: 0.4
+        shadowColor: "#b5838d",
+        shadowRadius: 4, 
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.4
     }, 
     description: {
         fontSize: 16, 
