@@ -7,21 +7,26 @@ import React, { useState } from 'react';
 import {StyleSheet, View, Text, SafeAreaView, ScrollView, Button,Pressable} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import TaskItem from './TaskItem';
 
-// npx expo install react@18.0.0 react-native@0.69.9 react-native-gesture-handler@~2.5.0 react-native-reanimated@~2.9.1 react-native-safe-area-context@4.3.1 react-native-screens@~3.15.0
 
-function TaskList() {
+function renderTaskItem(itemData) { 
+    return <TaskItem {...itemData.item}/>
+}
+
+function TaskList({tasks}) {
     const [ activeSections, setActiveSections ] = useState([]);
     const sections = [
         {
         title: 'In Progress',
         content: 
-        <View>
-            <Text style={styles.textSmallTop}>
-                List of In Progress Tasks 
-
-            </Text>
-        </View>
+            <SafeAreaView>
+                <FlatList 
+                    data = {tasks} 
+                    renderItem={renderTaskItem} 
+                    keyExtractor = {(item) => item.id}
+                />
+            </SafeAreaView>
         },
         {
         title: 'Complete',
@@ -47,7 +52,7 @@ function TaskList() {
 
     function renderContent(section, _, isActive) {
         return (
-          <View style={styles.accordBody}>
+          <View >
             {section.content}
           </View>
         );
@@ -55,9 +60,8 @@ function TaskList() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView
-                contentInsetAdjustmentBehavior="automatic"
-                style={styles.container}>
+                {/* // contentInsetAdjustmentBehavior="automatic"
+                // style={styles.container} */}
                 <Accordion
                     align="bottom"
                     expandMultiple={true}
@@ -69,13 +73,13 @@ function TaskList() {
                     renderContent={renderContent}
                     onChange={(sections) => setActiveSections(sections)}
                     sectionContainerStyle={styles.accordContainer}
+                    renderAsFlatList={true}
                 />
                 <Pressable>
                     <View> 
                         <Text style = {styles.buttonText}>Add New Task</Text>
                     </View>
                 </Pressable>
-            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -88,13 +92,13 @@ const styles = StyleSheet.create({
         flex: 1
     },
     accordContainer: {
-        // paddingBottom: 4
+        paddingBottom: 4
     },
     accordHeader: {
         padding: 12,
         backgroundColor: '#F8AD9D',
         color: '#eee',
-        flex: 1,
+        // flex: 1,
         flexDirection: 'row',
         justifyContent:'space-between'
     },
@@ -103,7 +107,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     accordBody: {
-        padding: 12
+        padding: 12,
+        flex: 1
     },
     textSmall: {
         fontSize: 16,
@@ -129,7 +134,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         opacity: 0.8,
         overflow: 'hidden'
-    }
+    },
+
 });
   
   
