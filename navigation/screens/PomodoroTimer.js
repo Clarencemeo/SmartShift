@@ -1,29 +1,49 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import {StyleSheet, View, Text, Fragment, TouchableOpacity, Pressable, Modal, TextInput, Button} from 'react-native';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import TaskBites from './TaskBites';
-import Stacker from '../MainContainer';
+import {useNavigation} from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
 import {auth} from '../../firebase/firebase-config'
+import {db} from '../../firebase/firebase-config'
+import {collection, onSnapshot, getDocs, doc, setDo, addDoc} from 'firebase/firestore/lite'
+import { SignInContext } from '../../userContexts/Context';
 
-export default function PomodoroTimer() {
+export default function PomodoroTimer(props) {
+    const {dispatchSignedIn} = useContext(SignInContext)
     const navigation = useNavigation();
+
+
+    const adjustSettings = async () => {
+        const doc = addDoc(collection(db, 'timerSettings'), { breakDuration: "5", workDuration: "12"})
+    }
+
+    const GetData = async() => {
+        const settingsCol = collection(db, 'timerSettings');
+        const settingsSnapshot = await getDocs(settingsCol);
+        const settingsList = settingsSnapshot.docs.map(doc => doc.data());
+
+        console.log(settingsList);
+    }
+
+    async function signOut(){
+        console.log("min")
+        try{
+            auth.signOut()
+            .then(
+                ()=>{console.log("USER SUCCESSFULLY SIGNED OUT")
+                dispatchSignedIn({type:"UPDATE_SIGN_IN",payload:{userToken:null}})
+            })
+    
+        }catch(error){
+            alert(error.code)
+        }
+    }
 
     // work timer state (beginning at 25 for default)
     const [workTimer, setWorkTimer] = useState("25");
     // break timer state (beginning at 25 for default)
     const [breakTimer, setBreakTimer] = useState("5");
-
-    const handleSignOut = () => {
-        auth.signOut()
-        .then(() => {
-            navigation.replace("Register")
-        })
-        .catch(error => alert(error.message))
-    }
 
     // changes work timer value according to user input and then closes the work modal 
     function userInputWorkTimer(enteredValue) {
@@ -82,7 +102,7 @@ export default function PomodoroTimer() {
     //but the screen MUST be defined in the TabNavigation first in MainContainer.js
     return (
         <View style = {styles.timerContainer}> 
-            <Text style = {styles.userProfile} onPress={() => {handleSignOut}}>{auth.currentUser?.email}</Text>
+            <Text style = {styles.userProfile} onPress={() => {signOut()}}>Click here to logout: {auth.currentUser?.email}</Text>
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
             <View style = {styles.midcontainer}>   
                 

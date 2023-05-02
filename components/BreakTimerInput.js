@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
+import {auth} from '../firebase/firebase-config'
+import {db} from '../firebase/firebase-config'
+import {collection, getDocs, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
 // Component that handles the Break Timer Modal that allows user to change the length of the Break Timer 
 
 function BreakTimerInput(props) {
     // sets the breakTime value to the default previously selected/entered (5 if user hasn't changed it once already)
     const [breakTime, setBreakTime] = useState(props.defaultValues ? props.defaultValues.toString() : "5",);
+
+    const adjustSettings = async () => {
+        const doc = addDoc(collection(db, 'timerSettings'), { breakDuration: "5", workDuration: "12"})
+    }
     
     // sets the breakTime to the value entered by user 
     function inputValueHandler(enteredText) { 
@@ -33,7 +40,7 @@ function BreakTimerInput(props) {
                     />
                 </View>
                 <View style = {styles.buttonStyle}>
-                    <Pressable onPress={changeBreakTime}>
+                    <Pressable onPress={() => { changeBreakTime(); adjustSettings(); }}>
                         <View>
                             <Text style= {styles.timerText}>Change</Text>
                         </View>

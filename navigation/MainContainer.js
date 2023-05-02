@@ -1,6 +1,8 @@
 import * as React from 'react';
+import {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import PomodoroTimer from './screens/PomodoroTimer';
@@ -8,6 +10,8 @@ import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
 import Register from './screens/Register';
+import Login from './screens/Login';
+import { SignInContext } from '../userContexts/Context';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +30,7 @@ function Tabs () {
                 tabBarButton: [
                     //all the screens listed here will not show up in the task bar, but can still be navigated to 
                     "Register",
+                    "Login",
                     "StartTimer"
                   ].includes(route.name)
                     ? () => {
@@ -59,21 +64,51 @@ function Tabs () {
             })}
             //below describes all of the screens; define all screens here
             //any new screens you define here, make sure to also define up above 
+            //                <Tab.Screen name={"Register"} component={Register} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
+            //<Tab.Screen name={"Login"} component={Login} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
             //under "tabBarButton"; this ensures that the new screens don't appear on the taskbar
             >
                 <Tab.Screen name={"Flow Timer"} component={PomodoroTimer} options={{ headerShown: false } }/>
                 <Tab.Screen name={"Task Bites"} component={TaskBites} options={{ headerShown: false }}/>
                 <Tab.Screen name={"Productivity Scope"} component={Productivity} options={{ headerShown: false }}/>
-                <Tab.Screen name={"Register"} component={Register} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
                 <Tab.Screen name={"StartTimer"} component={StartTimer} options={{ headerShown: false }}/>
         </Tab.Navigator>
     );
 }
 
+const Auth = createStackNavigator();
+function AuthStack(){
+    return(
+        <Auth.Navigator>
+
+                    <Auth.Screen 
+                        name ="Register"
+                        component = {Register}
+                        options ={{
+                            headerShown: false,
+                        }}
+                    />  
+
+                    <Auth.Screen 
+                        name ="Login"
+                        component = {Login}
+                        options ={{
+                            headerShown: false,
+                        }}
+                    /> 
+
+          
+                   
+                   
+        </Auth.Navigator>
+    )
+}
+
 export default function MainContainer() {
+    const {signedIn} = useContext(SignInContext)
     return (
-        <NavigationContainer>
-            <Tabs/>
-        </NavigationContainer>
+            <NavigationContainer>
+                {signedIn.userToken === null  ?  <AuthStack />: <Tabs />}
+            </NavigationContainer>
     )
 }
