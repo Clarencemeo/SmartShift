@@ -3,7 +3,7 @@ import {useState, useEffect, useRef, useContext} from 'react';
 import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
 import {auth} from '../../firebase/firebase-config'
 import {useNavigation} from '@react-navigation/native';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence, signInWithEmailAndPassword} from "firebase/auth";
 import { SocialIcon } from 'react-native-elements';
 import {Formik} from 'formik';
 import { SignInContext } from '../../userContexts/Context';
@@ -15,34 +15,16 @@ export default function Login() {
 
     const navigation = useNavigation();
 
-    /*
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user) {
-                navigation.navigate("Flow Timer")
-            }
+    useEffect(()=>{
+        auth.onAuthStateChanged((user)=>{
+          if(user){
+            dispatchSignedIn({type:"UPDATE_SIGN_IN",payload:{userToken:"signed-in"}})
+          }else{
+            dispatchSignedIn({type:"UPDATE_SIGN_IN",payload:{userToken:null}})
+          }
         })
-        //unsubscribe from the listener after we leave the screen
-        return unsubscribe
-    })
-    */
-
-    const RegisterUser = ()=> {
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          alert('Successfully registered user!');
-          // ...
-        })
-        .catch((error) => {
-          alert(error.message);
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
-
-
-    }
+        
+      },[])
 
     const LoginUser = (data)=> {
         const {password, email} = data

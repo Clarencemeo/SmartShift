@@ -21,7 +21,7 @@ function Tabs () {
         <Tab.Navigator
             //initialRouteName describes the default screen
             
-            initialRouteName = {"Register"}
+            initialRouteName = {"Login"}
             //screenOptions describes properties for each
             //tab in the navBar.
             //Screenoptions takes in route, which is the current tab.
@@ -81,13 +81,6 @@ function AuthStack(){
     return(
         <Auth.Navigator>
 
-                    <Auth.Screen 
-                        name ="Register"
-                        component = {Register}
-                        options ={{
-                            headerShown: false,
-                        }}
-                    />  
 
                     <Auth.Screen 
                         name ="Login"
@@ -96,6 +89,13 @@ function AuthStack(){
                             headerShown: false,
                         }}
                     /> 
+                    <Auth.Screen 
+                        name ="Register"
+                        component = {Register}
+                        options ={{
+                            headerShown: false,
+                        }}
+                    />  
 
           
                    
