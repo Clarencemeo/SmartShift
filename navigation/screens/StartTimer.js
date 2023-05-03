@@ -1,146 +1,211 @@
 import * as React from 'react';
 import { Component } from 'react';
-import {useState, useMemo, useEffect} from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
-import {StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight} from 'react-native';
-
+import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
 
-//as of now, just shows the timer in a bad font.
-//backend should make sure the timer is counting down. 
+import { SelectList } from 'react-native-dropdown-select-list'
+
 
 export default function TimerApp() {
-    //set to *60000 for actual time
-    //const workDuration = getTimerWorkDuration()*60000;
-    //const breakDuration = getTimerBreakDuration()*60000;
-    const workDuration = 6000;
-    const breakDuration = 10000;
-    const [timerStart, toggleTimer] = useState(true);
-    const [timerReset, resetTimer] = useState(false);
-    const [timerWorking, completeTimer] = useState(true);
+  //set to *60000 for actual time
+  //const workDuration = getTimerWorkDuration()*60000;
+  //const breakDuration = getTimerBreakDuration()*60000;
+  const workDuration = 10000;
+  const breakDuration = 6000;
+  const [timerStart, toggleTimer] = useState(true);
+  const [timerReset, resetTimer] = useState(false);
+  const [timerEnd, setTimerEnd] = useState(true);
+  const [timerWorking, completeTimer] = useState(true);
+  const [selected, setSelected] = useState("Alarm Sound 1");
+
+  const notificationSounds = [
+    { key: '1', value: 'Alarm Sound 1' },
+    { key: '2', value: 'Alarm Sound 2' },
+    { key: '3', value: 'Alarm Sound 3' },
+    { key: '4', value: 'Alarm Sound 4' },
+    { key: '5', value: 'Alarm Sound 5' },
+    { key: '6', value: 'Alarm Sound 6' },
+    { key: '7', value: 'Alarm Sound 7' },
+  ]
+
+  return (
+
+    <View justifyContent='center' backgroundColor='#F4978E' height='100%'
+      borderWidth='3' borderColor='teal'
+    >
+
+      <View height='15%'
+        borderColor='blue'
+        borderWidth='1'
+      >
+        <Text
+          marginTop='5%'
+          style={styles.titleText}
+        >{timerWorking ? "Work Cycle" : "Break Time!"}</Text>
+      </View>
+
+      <View borderWidth='1'
+        borderColor='green'
+        height='20%' justifyContent='center'>
+        <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
+          reset={timerReset}
+          options={timerDesign}
+          handleFinish={() => { completeTimer(!timerWorking); toggleTimer(false); setTimerEnd(true) }}
+          getTime={time => { }} />
+      </View>
 
 
-    return (
-        <View>
-          <Timer totalDuration={(timerWorking ? workDuration: breakDuration)} msecs start={timerStart}
-            reset={timerReset}
-            options={timerDesign}
-            handleFinish={()=>{completeTimer(!timerWorking); toggleTimer(false);}}
-            getTime={time => {}}/>
-          <TouchableHighlight onPress={()=>{toggleTimer(!timerStart); resetTimer(false);}}>
-            <Text style={{fontSize: 30}}>{timerStart ? "Stop" : "Start"}</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={()=>{toggleTimer(false); resetTimer(true);}}>
-            <Text style={{fontSize: 30}}>Reset</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={()=>{
-            if(!timerWorking){toggleTimer(false); resetTimer(true); completeTimer(!timerWorking);} 
-            else{alert("can only skip breaks.");}}}>
-            <Text style={{fontSize: 30}}>Skip Break</Text>
-          </TouchableHighlight>
-        </View>
-    ); 
+      <View
+        height='15%'
+        style={styles.buttonsRow}>
+        <TouchableOpacity
+          onPress={() => { toggleTimer(!timerStart); resetTimer(false); console.log(timerStart); console.log(timerReset); console.log("\n") }}
+          style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]
+          }
+        >
+          <View style={styles.buttonBorder}>
+            <Text style={[styles.buttonTitle]}>{timerStart ? "Pause" : "Resume"}</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            setTimerEnd(false); toggleTimer(false); resetTimer(true);
+            console.log("Timer end false")
+          }}
+          style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
+          activeOpacity={1.0}
+        >
+          <View style={styles.buttonBorder}>
+            <Text style={[styles.buttonTitle]} color='#ffffff'>{"Reset"}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+
+      <View height='10%'
+        borderWidth='1'
+        borderColor='red'
+      >
+        {(!timerWorking) && (
+          <View alignItems='center'
+            alignSelf='stretch'
+            borderWidth='1'
+            borderColor='white'
+            marginHorizontal='35%'
+          >
+            <TouchableOpacity //borderWidth='1'
+              borderColor='#FFFFFF' onPress={() => {
+                toggleTimer(false); resetTimer(true); completeTimer(!timerWorking);
+              }
+              }>
+              <Text style={styles.resetButtonTitle}>Skip Break</Text>
+            </TouchableOpacity>
+          </View>
+        )
+        }
+      </View>
+
+      <View height='10%' width='50%' alignSelf='center' borderColor='green'
+        borderWidth='1'
+      >
+        <SelectList setSelected={(val) => setSelected(val)}
+          ata={notificationSounds}
+          save="value"
+          search={false}
+          boxStyles={styles.listBox}
+          defaultOption={notificationSounds[0]
+          }
+        ></SelectList>
+
+      </View>
+
+    </View >
+  );
 }
 
-//const handleTimerComplete = ()=>{alert("???");};
 
-  const styles = StyleSheet.create({
-    font: {
-        fontSize: 30
-    }
+const styles = StyleSheet.create({
+  titleText: {
+    fontWeight: 'bold',
+    fontSize: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FF0000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 30
+  },
+  buttonBorder: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#C05050'
+  },
+  buttonTitle: {
+    fontSize: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#A00000',
+    textAlign: 'center',
+  },
+  //the row with two buttons
+  buttonsRow: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    justifyContent: 'space-between',
+    marginHorizontal: '10%'
+  },
+  roundButton: {
+    width: 90,
+    height: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 90,
+    borderColor: '#C05050',
+    borderWidth: '1',
+  },
+  resetButtonTitle: {
+    fontSize: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#A00000',
+    textAlign: 'center',
+  },
+
+  listBox: {
+    borderColor: '#C05050',
+    borderWidth: '1',
+    borderRadius: '15'
+  }
 });
 
 const timerDesign = {
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    text: {
-      fontSize: 70,
-      color: "red",
-      fontWeight: '200',
-    }
-  };
-   
-
-/*
-export default function TimerComponent() {
-    //
-    //Timer is a react native object with the following properties:
-    //totalDuration = duration of the timer 
-    //start = if the timer is started or not 
-    //by default, start is true because we started the timer on the previous screen
-    //reset says if the timer is reset or not 
-    //options is the DESIGN of the timer (which we defined later in the code)
-    //handleFinish says what happens when the timer ends
-
-    //getTimerWorkDuration() was defined in the PomodoroTimer file and we
-    //exported it so that we could use it in this file.
-    //call getTimerBreakDuration() to get the break duration and make sure to import it like at the top
- 
-    // make sure to import timer at the top: import { Timer } from 'react-native-stopwatch-timer';
-    // and you might have to do: npm install react-native-stopwatch-timer --save   in the terminal 
-    const timer = {
-        timerStart: true, 
-        timerReset: false,
-        timerWorking: true, //when true, indicates we are in our work cycle. false, indicates we are on break. 
-        timerTime: 2000,
-    }
-    
-    function startTimer() {
-        () => console.log("hello? timer start?");
-        timer.timerStart = true; 
-        timer.timerReset = false; 
-    }
-    
-    function resetTimer() {
-        () => console.log("hello? timer reset?");
-        timer.timerStart = false; 
-        timer.timerReset = true;
-    } 
-    
-    function determineTime() {
-        startTimer();
-        console.log("We made it here!?");
-        if (timer.timerWorking == true) {
-            //timer.timerReset = true;
-            timer.timerTime = 10000;
-            //return getTimerWorkDuration() * 60000;
-        }
-        else {
-            //timer.timerReset = true;
-            timer.timerTime = 10000;
-            //return getTimerBreakDuration() * 60000;
-        }    
-    }
-    
-    function completeTimer() {
-        timer.timerWorking = !timer.timerWorking; 
-        console.log("We made it here!");
-        resetTimer(); 
-        determineTime();
-    }
-
-    return(
-        <View style = {styles.font}>
-        <Timer totalDuration = {timer.timerTime} msecs start = {timer.timerStart}
-        reset={timer.timerReset}
-        options={timerDesign}
-        handleFinish={completeTimer}
-        getTime={(time) => {}}/> 
-
-        <TouchableOpacity onPress={startTimer}>
-            <Text style={{fontSize: 30}}>{timer.timerStart ? "Start" : "Stop"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={resetTimer}>
-            <Text style={{fontSize: 30}}>Reset</Text>
-        </TouchableOpacity>
-        </View>
-        //can also implement buttons that affect the timer if needed. 
-        //removed time logging
-        //I really don't know why getTime needs to be formated like 'that', but...
-    );
-}
-*/
-
-
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: '5',
+    borderRadius: '1000',
+    backgroundColor: '#FBC4AB',
+    borderColor: '#FFFFFF',
+    width: '90%',
+    alignSelf: 'center'
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 70,
+    color: 'black',
+    fontWeight: '300',
+  }
+};
