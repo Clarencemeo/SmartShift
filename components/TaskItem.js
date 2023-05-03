@@ -5,12 +5,15 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // documentation on Switches: https://reactnative.dev/docs/switch 
 function TaskItem({description, dueDate, urgent, important, complete}) {
     
+    function taskPressHandler() {
+
+    }
 
     return (
         <Pressable
             // onPress={expensePressHandler}
             style={({ pressed }) => pressed && styles.pressed}
-            >
+        >
             <View style={styles.taskItem}>
                 <View style = {styles.subcontainer1}>
                     <Text style={[styles.textBase, styles.description]}>
@@ -32,34 +35,6 @@ function TaskItem({description, dueDate, urgent, important, complete}) {
             </View>
         </Pressable>
     )
-
-    // return (
-    //     <Pressable
-    //         style={({ pressed }) => pressed && styles.pressed}
-    //     >
-    //     {/* // <TouchableOpacity> */}
-    //         <View style = {styles.taskItem}>
-    //             <View style = {styles.description}>
-    //                 <Text>{description}</Text>
-    //                 <Text>{getFormattedDate(dueDate)}</Text>
-    //             </View>
-    //             <View style = {styles.switches}>
-    //                 <Text>Urgent</Text>
-    //                 {/* <Switch
-    //             trackColor={{false: '#767577', true: '#81b0ff'}}
-    //             thumbColor={isEnabled ? '#FFDAB9' : '#FBC4AB'}
-    //             ios_backgroundColor="#3e3e3e"
-    //             onValueChange={toggleSwitch}
-    //             value={isEnabled}
-    //         /> */}
-    //             </View>
-    //             <View style = {styles.switches}>
-    //                 <Text>Important</Text>
-    //             </View>
-    //         </View>
-    //     {/* </TouchableOpacity> */}
-    //     </Pressable> 
-    // )
 }
 
 export default TaskItem; 
@@ -90,7 +65,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
     }, 
     textBase: {
-        // color: "#e4d9fd",
         color: "#6d6875",
     },
     description: {

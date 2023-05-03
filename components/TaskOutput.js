@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 
 const DUMMY_TASKS = [
     {
-        id: 't1',
+        // id: 't1',
         description: 'work on CSE 115A',
         dueDate: new Date('2023-04-30'),
         complete: false,
@@ -14,7 +14,7 @@ const DUMMY_TASKS = [
         important: false, 
     },
     {
-        id: 't2',
+        // id: 't2',
         description: 'work on CSE 108',
         dueDate: new Date('2023-05-01'),
         complete: false,
@@ -22,7 +22,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't3',
+        // id: 't3',
         description: 'work on CSE 183',
         dueDate: new Date('2023-05-02'),
         complete: false,
@@ -30,7 +30,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't4',
+        // id: 't4',
         description: 'work on project',
         dueDate: new Date('2023-05-03'),
         complete: false,
@@ -38,7 +38,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't5',
+        // id: 't5',
         description: 'work on other project',
         dueDate: new Date('2023-05-04'),
         complete: false,
@@ -46,7 +46,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't6',
+        // id: 't6',
         description: 'work on CSE 108',
         dueDate: new Date('2023-05-01'),
         complete: false,
@@ -54,7 +54,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't7',
+        // id: 't7',
         description: 'work on CSE 183',
         dueDate: new Date('2023-05-02'),
         complete: false,
@@ -62,7 +62,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't8',
+        // id: 't8',
         description: 'work on project',
         dueDate: new Date('2023-05-03'),
         complete: false,
@@ -70,7 +70,7 @@ const DUMMY_TASKS = [
         important: false,
     },
     {
-        id: 't9',
+        // id: 't9',
         description: 'work on other project',
         dueDate: new Date('2023-05-04'),
         complete: false,
@@ -117,5 +117,5 @@ const styles = StyleSheet.create({
         paddingTop: 24,
         paddingBottom: 0,
         width: "100%"
-    }
+    },
 });
