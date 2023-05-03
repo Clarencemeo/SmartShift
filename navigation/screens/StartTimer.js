@@ -68,7 +68,7 @@ export default function TimerApp() {
 
         <TouchableOpacity
           disabled={timerEnd}
-          onPress={() => { setTimerStart(!timerStart); setTimerReset(false); console.log(timerStart); console.log(timerReset); console.log("\n"); }}
+          onPress={() => { setTimerStart(!timerStart); setTimerReset(false); }}
           style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]
           }
         >
