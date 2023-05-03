@@ -41,7 +41,7 @@ const DUMMY_TASKS = [
         // id: 't5',
         description: 'work on other project',
         dueDate: new Date('2023-05-04'),
-        complete: false,
+        complete: true,
         urgent: false,
         important: false,
     },
@@ -49,7 +49,7 @@ const DUMMY_TASKS = [
         // id: 't6',
         description: 'work on CSE 108',
         dueDate: new Date('2023-05-01'),
-        complete: false,
+        complete: true,
         urgent: false,
         important: false,
     },
@@ -65,7 +65,7 @@ const DUMMY_TASKS = [
         // id: 't8',
         description: 'work on project',
         dueDate: new Date('2023-05-03'),
-        complete: false,
+        complete: true,
         urgent: false,
         important: false,
     },
@@ -91,6 +91,7 @@ function TaskOutput({tasks}) {
 
     return (
         <View style = {styles.container}>
+            {/* SelectList is from https://www.npmjs.com/package/react-native-dropdown-select-list*/}
             <SelectList 
                 setSelected={(val) => setSelected(val)} 
                 data={data} 

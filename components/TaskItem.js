@@ -1,6 +1,5 @@
 import {Pressable, StyleSheet, View, Text} from 'react-native';
 import { getFormattedDate } from '../util/date';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // documentation on Switches: https://reactnative.dev/docs/switch 
 function TaskItem({description, dueDate, urgent, important, complete}) {
@@ -9,12 +8,16 @@ function TaskItem({description, dueDate, urgent, important, complete}) {
 
     }
 
+    const backColorInProgress = "#fdf0d5";
+    const backColorComplete = "#ffcdb2";
+    const colorUsed = complete ? backColorComplete : backColorInProgress;
+
     return (
         <Pressable
-            // onPress={expensePressHandler}
+            // onPress={taskPressHandler}
             style={({ pressed }) => pressed && styles.pressed}
         >
-            <View style={styles.taskItem}>
+            <View style={styles.taskItem} backgroundColor = {colorUsed}>
                 <View style = {styles.subcontainer1}>
                     <Text style={[styles.textBase, styles.description]}>
                         {description}
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
     taskItem: {
         padding: 12,
         marginVertical: 8,
-        backgroundColor: "#F4978E",
+        // backgroundColor: "#F4978E",
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderRadius: 6,
