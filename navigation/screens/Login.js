@@ -7,11 +7,13 @@ import { getAuth, setPersistence, browserSessionPersistence, signInWithEmailAndP
 import {Icon, Button,SocialIcon} from 'react-native-elements'
 import {Formik} from 'formik';
 import { SignInContext } from '../../userContexts/Context';
+import { GoogleAuthProvider, signInWithPopup, signInWithCredential} from "firebase/auth";
 
 export default function Login() {
     const {dispatchSignedIn} = useContext(SignInContext)
     const text1 = useRef(1)
     const text2 = useRef(2)
+    const provider = new GoogleAuthProvider();
 
     const navigation = useNavigation();
 
@@ -25,6 +27,26 @@ export default function Login() {
         })
         
       },[])
+      
+      const signInWithGoogle = () => {
+        auth().signInWithCredential(googleCredential)
+            .then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                const user = result.user;
+                navigation.navigate("Home");
+                console.log(user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                const email = error.customData.email;
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                console.log(errorCode, errorMessage, email, credential);
+            });
+    }
+
+
 
     const LoginUser = (data)=> {
         const {password, email} = data
@@ -88,7 +110,7 @@ export default function Login() {
                     button 
                     type ="google"
                     style = {styles.socialMedia}
-                    onPress = {() => {}}
+                    onPress = {signInWithGoogle}
                 />
             </View>
         </View>
