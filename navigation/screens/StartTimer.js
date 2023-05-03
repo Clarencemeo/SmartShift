@@ -14,11 +14,11 @@ export default function TimerApp() {
   //const breakDuration = getTimerBreakDuration()*60000;
   const workDuration = 10000;
   const breakDuration = 6000;
-  const [timerStart, toggleTimer] = useState(true);
-  const [timerReset, resetTimer] = useState(false);
-  const [timerEnd, setTimerEnd] = useState(true);
-  const [timerWorking, completeTimer] = useState(true);
-  const [selected, setSelected] = useState("Alarm Sound 1");
+  const [timerStart, setTimerStart] = useState(true);
+  const [timerReset, setTimerReset] = useState(false);
+  const [timerEnd, setTimerEnd] = useState(false);
+  const [timerWorking, setTimerWorking] = useState(true);
+  const [selected, setSelected] = useState("");
 
   const notificationSounds = [
     { key: '1', value: 'Alarm Sound 1' },
@@ -31,28 +31,19 @@ export default function TimerApp() {
   ]
 
   return (
-
-    <View justifyContent='center' backgroundColor='#F4978E' height='100%'
-      borderWidth='3' borderColor='teal'
-    >
-
-      <View height='15%'
-        borderColor='blue'
-        borderWidth='1'
-      >
+    <View justifyContent='center' backgroundColor='#F4978E' height='100%'>
+      <View height='15%'>
         <Text
           marginTop='5%'
           style={styles.titleText}
         >{timerWorking ? "Work Cycle" : "Break Time!"}</Text>
       </View>
 
-      <View borderWidth='1'
-        borderColor='green'
-        height='20%' justifyContent='center'>
+      <View height='20%' justifyContent='center'>
         <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
           reset={timerReset}
           options={timerDesign}
-          handleFinish={() => { completeTimer(!timerWorking); toggleTimer(false); setTimerEnd(true) }}
+          handleFinish={() => { setTimerStart(false); setTimerEnd(true); }}
           getTime={time => { }} />
       </View>
 
@@ -60,8 +51,24 @@ export default function TimerApp() {
       <View
         height='15%'
         style={styles.buttonsRow}>
+
+
         <TouchableOpacity
-          onPress={() => { toggleTimer(!timerStart); resetTimer(false); console.log(timerStart); console.log(timerReset); console.log("\n") }}
+          onPress={() => {
+            setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking);
+          }}
+          style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
+          activeOpacity={1.0}
+        >
+          <View style={styles.buttonBorder}>
+            <Text style={[styles.buttonTitle]} color='#ffffff'>{timerEnd ? "Move On" : "Reset"}</Text>
+          </View>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          disabled={timerEnd}
+          onPress={() => { setTimerStart(!timerStart); setTimerReset(false); console.log(timerStart); console.log(timerReset); console.log("\n"); }}
           style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]
           }
         >
@@ -69,63 +76,45 @@ export default function TimerApp() {
             <Text style={[styles.buttonTitle]}>{timerStart ? "Pause" : "Resume"}</Text>
           </View>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            setTimerEnd(false); toggleTimer(false); resetTimer(true);
-            console.log("Timer end false")
-          }}
-          style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
-          activeOpacity={1.0}
-        >
-          <View style={styles.buttonBorder}>
-            <Text style={[styles.buttonTitle]} color='#ffffff'>{"Reset"}</Text>
-          </View>
-        </TouchableOpacity>
       </View>
 
 
-      <View height='10%'
-        borderWidth='1'
-        borderColor='red'
-      >
+      <View height='10%'>
         {(!timerWorking) && (
           <View alignItems='center'
             alignSelf='stretch'
-            borderWidth='1'
-            borderColor='white'
-            marginHorizontal='35%'
+            backgroundColor='#F08080'
+            borderWidth='2'
+            borderColor='#900000'
+            borderRadius='20'
+            marginHorizontal='30%'
+            marginTop='2%'
           >
-            <TouchableOpacity //borderWidth='1'
-              borderColor='#FFFFFF' onPress={() => {
-                toggleTimer(false); resetTimer(true); completeTimer(!timerWorking);
+            <TouchableOpacity
+              onPress={() => {
+                setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
               }
               }>
-              <Text style={styles.resetButtonTitle}>Skip Break</Text>
+              <Text style={styles.skipBreakTitle}>Skip Break</Text>
             </TouchableOpacity>
           </View>
         )
         }
       </View>
 
-      <View height='10%' width='50%' alignSelf='center' borderColor='green'
-        borderWidth='1'
-      >
-        <SelectList setSelected={(val) => setSelected(val)}
-          ata={notificationSounds}
+      <View height='40%' width='50%' alignSelf='center'>
+        <SelectList setSelected={setSelected}
+          data={notificationSounds}
           save="value"
           search={false}
           boxStyles={styles.listBox}
-          defaultOption={notificationSounds[0]
-          }
-        ></SelectList>
+          maxHeight='200' />
 
-      </View>
+      </View >
 
     </View >
   );
 }
-
 
 const styles = StyleSheet.create({
   titleText: {
@@ -175,11 +164,12 @@ const styles = StyleSheet.create({
     borderColor: '#C05050',
     borderWidth: '1',
   },
-  resetButtonTitle: {
+  skipBreakTitle: {
     fontSize: 25,
+    fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#A00000',
+    color: '#900000',
     textAlign: 'center',
   },
 
