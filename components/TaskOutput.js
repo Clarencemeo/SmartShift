@@ -1,5 +1,8 @@
 import {StyleSheet, View, Text} from 'react-native';
 import TaskList from './TaskList';
+import { SelectList } from 'react-native-dropdown-select-list'
+import React, { useState } from 'react';
+
 
 const DUMMY_TASKS = [
     {
@@ -76,11 +79,31 @@ const DUMMY_TASKS = [
     },
 ]
 
+
 function TaskOutput({tasks}) { 
+    const [selected, setSelected] = useState("");
+
+    const data = [
+        {key: '1', value: 'All'},
+        {key: '2', value: 'In Progress'},
+        {key: '3', value: 'Complete'}
+    ]
+
     return (
-    <View style = {styles.container}>
-        <TaskList tasks = {DUMMY_TASKS}/>
-    </View>
+        <View style = {styles.container}>
+            <SelectList 
+                setSelected={(val) => setSelected(val)} 
+                data={data} 
+                save="value"
+                search= {false}
+                defaultOption={{ key:'1', value:'All' }}
+            />
+            {/* <Text>
+                NOW THIS IS WHERE TASK LIST WOULD GO 
+                The selected option is {selected}
+            </Text> */}
+            <TaskList selection = {selected} tasks = {DUMMY_TASKS}/>
+        </View>
     );
 
 }
@@ -93,5 +116,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24, 
         paddingTop: 24,
         paddingBottom: 0,
+        width: "100%"
     }
 });
