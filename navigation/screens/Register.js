@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {useState, useEffect, useRef, useContext} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ScrollView} from 'react-native';
 import {auth} from '../../firebase/firebase-config'
 import {useNavigation} from '@react-navigation/native';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
-import { SocialIcon } from 'react-native-elements';
+import {Icon, Button,SocialIcon} from 'react-native-elements'
 import {Formik} from 'formik';
 
 export default function Register() {
@@ -83,11 +83,11 @@ export default function Register() {
                         <View style = {styles.inputs}>
                             <TextInput style = {styles.typeFormat} placeholder='Password' value={props.values.password} secureTextEntry = {true} autofocus = {false} onChangeText={props.handleChange('password')}/>
                         </View>
-                        <Button title='Create Account' onPress={props.handleSubmit}/>
+                        <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
                         </View>
                     }
                 </Formik>
-                <Button title='Log into existing account' onPress={() => {navigation.navigate('Login')}}/>
+                <Button title='Log into existing account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={() => {navigation.navigate('Login')}}/>
             </ScrollView>
         </View>
     );
@@ -136,5 +136,24 @@ const styles = StyleSheet.create({
    titleText:{
         fontSize:22,
         fontWeight:'bold'
-  },
+   },
+   buttonDesign: {
+        backgroundColor:"#FBC4AB",
+        alignContent:"center",
+        justifyContent:"center",
+        borderRadius:12,
+        borderWidth:3, 
+        borderColor:"#F08080",
+        height:40,
+        paddingHorizontal:20,
+        marginVertical: 10
+    },
+    titleButton:{
+        color:"white",
+        fontSize:16,  
+        fontWeight:"bold" ,
+        alignItems:"center",
+        justifyContent:"center"  ,
+        marginTop:-3
+    },
 });

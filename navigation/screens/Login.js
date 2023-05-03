@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {useState, useEffect, useRef, useContext} from 'react';
-import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
+import {StyleSheet, View, Text, TextInput} from 'react-native';
 import {auth} from '../../firebase/firebase-config'
 import {useNavigation} from '@react-navigation/native';
 import { getAuth, setPersistence, browserSessionPersistence, signInWithEmailAndPassword} from "firebase/auth";
-import { SocialIcon } from 'react-native-elements';
+import {Icon, Button,SocialIcon} from 'react-native-elements'
 import {Formik} from 'formik';
 import { SignInContext } from '../../userContexts/Context';
 
@@ -47,6 +47,9 @@ export default function Login() {
 
     return (
         <View style = {styles.timerContainer}> 
+             <View style ={{marginLeft:20, marginTop:10}}>
+                 <Text style ={styles.title}>Sign in with your account!</Text>
+             </View> 
             <Formik
                 initialValues = {{email:'',password:''}}
                 onSubmit = {(values) => {
@@ -56,11 +59,26 @@ export default function Login() {
             > 
                 { (props) => 
                     <View> 
-                    <TextInput style = {styles.input} placeholder='Email' value={props.values.email} ref={text1} onChangeText={props.handleChange('email')}/>
+                        <View style = {styles.TextInput2}> 
+                            <Icon 
+                                name ="mail"
+                                iconStyle ={{color:'#86939e'}}
+                                type ="material"
+                                style={{}}
+                            />
+                            <TextInput style = {styles.input} placeholder='Email' value={props.values.email} ref={text1} onChangeText={props.handleChange('email')}/>
+                        </View>
+                    <View style = {styles.TextInput2}> 
+                    <Icon 
+                            name ="lock"
+                            iconStyle ={{color:'#86939e'}}
+                            type ="material"
+                            style={{}}
+                        />
                     <TextInput style = {styles.input} placeholder='Password' value={props.values.password} ref={text2} secureTextEntry = {true} onChangeText={props.handleChange('password')}/>
-
-                    <Button title='Login' onPress={props.handleSubmit}/>
-                    <Button title='Create Account' onPress={() => {navigation.navigate('Register')}}/>
+                    </View>
+                    <Button title='Login' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
+                    <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={() => {navigation.navigate('Register')}}/>
                     </View>
                 }
             </Formik>
@@ -89,14 +107,50 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     input: {
-        height: 50,
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 10,
-        backgroundColor: '#fff'
+       flex:1,
+       paddingHorizontal: 5,
+       marginVertical: 10,
     },
     socialMedia: {
         borderRadius: 12,
-        height: 50
+        height: 50,
+        padding: 10
+    },
+    buttonDesign: {
+        backgroundColor:"#FBC4AB",
+        alignContent:"center",
+        justifyContent:"center",
+        borderRadius:12,
+        borderWidth:3, 
+        borderColor:"#F08080",
+        height:40,
+        paddingHorizontal:20,
+        marginVertical: 10
+    },
+    titleButton:{
+        color:"white",
+        fontSize:16,  
+        fontWeight:"bold" ,
+        alignItems:"center",
+        justifyContent:"center"  ,
+        marginTop:-3
+      },
+    TextInput2:{
+        borderWidth:1,
+        borderRadius:12,
+        marginHorizontal:20,
+        marginVertical: 5,
+        borderColor:"#86939e",
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignContent:"center",
+        alignItems:"center",
+        paddingLeft:10
+      },
+    title:{
+        color:"#F08080",
+        fontSize :20,
+        fontWeight:"bold",
+        padding: 10
     }
 });
