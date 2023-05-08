@@ -63,8 +63,8 @@ function Tabs () {
             })}
             //below describes all the possible tabs. so, we have 3 tabs. 
             >
-                <Tab.Screen name={pom} component={TimerStack}/>
-                <Tab.Screen name={taskBites} component={TaskBites} 
+                <Tab.Screen name={"Flow Timer"} component={TimerStack}/>
+                <Tab.Screen name={taskBites} component={TaskStack} 
                     // adds a + on the top right of TaskBites screen that takes to you to the ManageTask Screen 
                     options = {{
                         headerRight: () => (
@@ -94,10 +94,19 @@ function Tabs () {
 const Stack = createStackNavigator();
 function TimerStack() {
     return (
-      <Stack.Navigator initialRouteName="Flow Timer2">
-        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false}} />
+      <Stack.Navigator initialRouteName= 'Flow Timer'>
+        <Stack.Screen name="Flow Timer" component={PomodoroTimer} options={{ headerShown: false}} />
         <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false}} />
-        <Stack.Screen 
+      </Stack.Navigator>
+    );
+  }
+
+const Stack2 = createStackNavigator();
+function TaskStack() {
+    return (
+      <Stack2.Navigator initialRouteName= 'Task Bites'>
+        <Stack2.Screen name="Task Bites" component={TaskBites} options={{ headerShown: false}} />
+        <Stack2.Screen 
             name = "ManageTask" 
             component={ManageTask} 
             options = {{
@@ -113,7 +122,7 @@ function TimerStack() {
                 headerBackTitleVisible: false,
             }}
         />
-      </Stack.Navigator>
+      </Stack2.Navigator>
     );
   }
 
