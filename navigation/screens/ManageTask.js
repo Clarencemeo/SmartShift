@@ -31,40 +31,17 @@ function ManageTask({route, navigation}) {
         navigation.goBack();
     }
 
-    function confirmHandler() {
+    function confirmHandler(taskData) {
         if (isEditing) {
-            tasksCtx.updateTask(
-                editedTaskId,
-                {
-                    description: 'Tesk-Update', 
-                    dueDate: new Date('2023-05-30'),
-                    complete: true,
-                    urgent: false,
-                    important: false, 
-                }
-            );
+            tasksCtx.updateTask(editedTaskId, taskData);
         } else {
-            tasksCtx.addTask({
-                description: 'Test-Add', 
-                dueDate: new Date('2023-04-30'),
-                complete: false,
-                urgent: false,
-                important: false, 
-            }); 
+            tasksCtx.addTask(taskData); 
         }
         navigation.goBack();
     }
 
     return (
         <View style = {styles.modal}>
-            {/* <Pressable
-                style={[
-                    StyleSheet.absoluteFill,
-                    { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-                ]}
-                onPress={navigation.goBack}
-                // onPress={() => {navigation.navigate("taskBites")}}
-            /> */}
             <Animated.View
                 style={{
                 padding: 16,
@@ -85,16 +62,13 @@ function ManageTask({route, navigation}) {
                 <Text style= {styles.title}>
                     {isEditing ? 'Edit Task' : 'Add Task'}
                 </Text>
-                {/* <Text>
-                    Inside animated View Part of Manage Task 
-                </Text> */}
 
-                <TaskForm />
+                <TaskForm 
+                    onCancel = {cancelHandler} 
+                    onSubmit={confirmHandler}
+                    submitButtonLabel={isEditing ? 'Update' : 'Add'}
+                />
                 
-                <View style= {styles.buttons}>
-                    <Button mode = "flat" onPress={cancelHandler} style = {styles.button}>Cancel</Button>
-                    <Button onPress={confirmHandler} style = {styles.button}>{isEditing ? 'Update' : 'Add'}</Button>
-                </View>
                 {isEditing && (
                     <View style = {styles.deleteContainer}>
                         <IconButton 
@@ -122,8 +96,8 @@ export default ManageTask;
 const styles = StyleSheet.create({
     modal: {
         flex: 1,
-        height: '50%',
-        top: '50%',
+        height: '25%',
+        top: '25%',
         backgroundColor: '#F8AD9D',
         padding: 24
     }, 
@@ -144,13 +118,4 @@ const styles = StyleSheet.create({
         borderTopColor: 'black',
         alignItems: 'center'
     },
-    buttons: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignContent: 'center'
-    },
-    button: {
-        minWidth: 120,
-        marginHorizontal: 8
-    }
 })

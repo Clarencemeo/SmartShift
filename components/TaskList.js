@@ -13,7 +13,6 @@ function TaskList({tasks}) {
 
     return (
         <View style = {styles.container}> 
-            {/* <Text style = {styles.title}>{selection == 1 ? "All" : selection}</Text> */}
             <FlatList 
                 data = {tasks} 
                 renderItem={renderTaskItem} 
