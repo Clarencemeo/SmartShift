@@ -2,86 +2,32 @@ import {StyleSheet, View, Text} from 'react-native';
 import TaskList from './TaskList';
 import { SelectList } from 'react-native-dropdown-select-list'
 import React, { useState } from 'react';
+import { TaskContext } from '../store/tasks-context';
+import { useContext } from 'react';
 
 
-const DUMMY_TASKS = [
-    {
-        id: 't1',
-        description: 'work on CSE 115A',
-        dueDate: new Date('2023-04-30'),
-        complete: false,
-        urgent: false,
-        important: false, 
-    },
-    {
-        id: 't2',
-        description: 'work on CSE 108',
-        dueDate: new Date('2023-05-01'),
-        complete: false,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't3',
-        description: 'work on CSE 183',
-        dueDate: new Date('2023-05-02'),
-        complete: false,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't4',
-        description: 'work on project',
-        dueDate: new Date('2023-05-03'),
-        complete: false,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't5',
-        description: 'work on other project',
-        dueDate: new Date('2023-05-04'),
-        complete: true,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't6',
-        description: 'work on CSE 108',
-        dueDate: new Date('2023-05-01'),
-        complete: true,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't7',
-        description: 'work on CSE 183',
-        dueDate: new Date('2023-05-02'),
-        complete: false,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't8',
-        description: 'work on project',
-        dueDate: new Date('2023-05-03'),
-        complete: true,
-        urgent: false,
-        important: false,
-    },
-    {
-        id: 't9',
-        description: 'work on other project',
-        dueDate: new Date('2023-05-04'),
-        complete: false,
-        urgent: false,
-        important: false,
-    },
-]
-
-
-function TaskOutput({tasks}) { 
+function TaskOutput() { 
     const [selected, setSelected] = useState("");
+    const tasksCtx = useContext(TaskContext);
+
+    const incompleteTasks = tasksCtx.tasks.filter((task) => {
+        return task.complete === false; 
+    });
+
+    const completeTasks = tasksCtx.tasks.filter((task) => {
+        return task.complete === true;
+    }); 
+
+    function tasksRequested(selected) {
+        // console.log(selected);
+        if (selected === 'In Progress') {
+            return incompleteTasks;
+        } else if (selected === 'Complete') {
+            return completeTasks;
+        } else {
+            return tasksCtx.tasks;
+        }
+    }
 
     const data = [
         {key: '1', value: 'All'},
@@ -103,7 +49,7 @@ function TaskOutput({tasks}) {
                 NOW THIS IS WHERE TASK LIST WOULD GO 
                 The selected option is {selected}
             </Text> */}
-            <TaskList selection = {selected} tasks = {DUMMY_TASKS}/>
+            <TaskList tasks = {tasksRequested(selected)}/>
         </View>
     );
 

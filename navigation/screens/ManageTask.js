@@ -18,11 +18,17 @@ function ManageTask({route, navigation}) {
         });
     }, [navigation, isEditing]);
 
-    function deleteTaskHandler() {}
+    function deleteTaskHandler() {
+        navigation.goBack();
+    }
 
-    function cancelHandler() {}
+    function cancelHandler() {
+        navigation.goBack();
+    }
 
-    function confirmHandler() {}
+    function confirmHandler() {
+        navigation.goBack();
+    }
 
     return (
         <View style = {styles.modal}>
