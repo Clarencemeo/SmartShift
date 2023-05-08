@@ -104,11 +104,30 @@ function AuthStack(){
     )
 }
 
+const MainScreen = createStackNavigator();
+function MainStack(){
+    return(
+        <MainScreen.Navigator>
+            <MainScreen.Screen 
+            name ="Main"
+            component ={Tabs}
+            options ={{
+                headerShown: false,
+            }}
+            /> 
+
+   
+        </MainScreen.Navigator>
+    )
+}
+
+
+
 export default function MainContainer() {
     const {signedIn} = useContext(SignInContext)
     return (
             <NavigationContainer>
-                {signedIn.userToken === null  ?  <AuthStack />: <Tabs />}
+                {signedIn.userToken === null  ?  <AuthStack />: <MainStack />}
             </NavigationContainer>
     )
 }
