@@ -3,13 +3,20 @@ import {View, Text} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import PomodoroTimer from './screens/PomodoroTimer';
 import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
+import ManageTask from './screens/ManageTask';
+import IconButton from '../components/IconButton';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const pom = 'Flow Timer';
 const productivity = 'Productivity Scope';
@@ -19,6 +26,7 @@ const Tab = createBottomTabNavigator();
 
 //below handles the taskbar
 function Tabs () {
+    const navigation = useNavigation();
     return (
         <Tab.Navigator
             //initialRouteName describes the default screen
@@ -51,12 +59,26 @@ function Tabs () {
                 activeTintColor: 'tomato',
                 inactiveTintColor: 'grey',
                 labelStyle: {paddingBottom: 10, fontSize: 10},
-                style: {padding: 10, height: 70}
+                style: {padding: 10, height: 70},
             })}
             //below describes all the possible tabs. so, we have 3 tabs. 
             >
                 <Tab.Screen name={pom} component={TimerStack}/>
-                <Tab.Screen name={taskBites} component={TaskBites}/>
+                <Tab.Screen name={taskBites} component={TaskBites} 
+                    // adds a + on the top right of TaskBites screen that takes to you to the ManageTask Screen 
+                    options = {{
+                        headerRight: () => (
+                            <IconButton 
+                                icon = "add" 
+                                size = {24} 
+                                color = {'black'} 
+                                onPress={() => {
+                                    navigation.navigate('ManageTask');
+                                }}
+                            />
+                        ),
+                    }}
+                />
                 <Tab.Screen name={productivity} component={Productivity}/>
         </Tab.Navigator>
     );
@@ -74,7 +96,16 @@ function TimerStack() {
     return (
       <Stack.Navigator initialRouteName="Flow Timer2">
         <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false }} />
-        <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false }} />
+        <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false}} />
+        <Stack.Screen 
+            name = "ManageTask" 
+            component={ManageTask} 
+            options = {{
+                presentation: "transparentModal",
+                // presentation: "modal",
+                headerShown: false,
+            }}
+        />
       </Stack.Navigator>
     );
   }

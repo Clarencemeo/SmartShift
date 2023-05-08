@@ -1,11 +1,13 @@
 import {Pressable, StyleSheet, View, Text} from 'react-native';
 import { getFormattedDate } from '../util/date';
+import { useNavigation } from '@react-navigation/native';
 
 // documentation on Switches: https://reactnative.dev/docs/switch 
-function TaskItem({description, dueDate, urgent, important, complete}) {
+function TaskItem({description, dueDate, urgent, important, complete, }) {
+    const navigation = useNavigation();
     
     function taskPressHandler() {
-
+        navigation.navigate('ManageTask');
     }
 
     const backColorInProgress = "#fdf0d5";
@@ -14,7 +16,7 @@ function TaskItem({description, dueDate, urgent, important, complete}) {
 
     return (
         <Pressable
-            // onPress={taskPressHandler}
+            onPress={taskPressHandler}
             style={({ pressed }) => pressed && styles.pressed}
         >
             <View style={styles.taskItem} backgroundColor = {colorUsed}>
