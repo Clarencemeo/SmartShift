@@ -17,8 +17,8 @@ function TaskList({selection, tasks}) {
             <FlatList 
                 data = {tasks} 
                 renderItem={renderTaskItem} 
-                        // keyExtractor = {(item) => item.id}
-                keyExtractor = {(item, index) => index.toString()}
+                keyExtractor = {(item) => item.id}
+                // keyExtractor = {(item, index) => index.toString()}
             />
         </View>
     )

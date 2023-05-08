@@ -95,7 +95,7 @@ const Stack = createStackNavigator();
 function TimerStack() {
     return (
       <Stack.Navigator initialRouteName="Flow Timer2">
-        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false }} />
+        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false}} />
         <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false}} />
         <Stack.Screen 
             name = "ManageTask" 
@@ -103,7 +103,14 @@ function TimerStack() {
             options = {{
                 presentation: "transparentModal",
                 // presentation: "modal",
-                headerShown: false,
+                // headerShown: false,
+                // title: 'Manage Task'
+                // headerStyle: {
+                //     marginTop: 150,
+                // },
+                headerShown: false, 
+                headerBackVisible: false,
+                headerBackTitleVisible: false,
             }}
         />
       </Stack.Navigator>
@@ -117,3 +124,10 @@ export default function MainContainer() {
         </NavigationContainer>
     )
 }
+
+// const styles = StyleSheet.create({
+//     header: {
+//         height: '50%',
+//         top: '50%',
+//     }
+// })

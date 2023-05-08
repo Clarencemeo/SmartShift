@@ -3,11 +3,13 @@ import { getFormattedDate } from '../util/date';
 import { useNavigation } from '@react-navigation/native';
 
 // documentation on Switches: https://reactnative.dev/docs/switch 
-function TaskItem({description, dueDate, urgent, important, complete, }) {
+function TaskItem({id, description, dueDate, urgent, important, complete, }) {
     const navigation = useNavigation();
     
     function taskPressHandler() {
-        navigation.navigate('ManageTask');
+        navigation.navigate('ManageTask', {
+            taskId: id
+        });
     }
 
     const backColorInProgress = "#fdf0d5";
