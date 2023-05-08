@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'; 
 import {useState, useEffect, useRef, useContext} from 'react';
 import {StyleSheet, View, Text, TextInput} from 'react-native';
 import {auth} from '../../firebase/firebase-config'
