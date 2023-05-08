@@ -65,4 +65,10 @@ const styles = StyleSheet.create({
         paddingBottom: 0,
         width: "100%"
     },
+    infoText: {
+        color: 'red',
+        fontSize: 16,
+        textAlign: 'center',
+        marginTop: 32,
+    }
 });

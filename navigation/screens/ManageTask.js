@@ -4,8 +4,12 @@ import { useTheme } from '@react-navigation/native';
 import { useCardAnimation } from '@react-navigation/stack';
 import IconButton from '../../components/IconButton';
 import Button from '../../components/Button';
+import { TaskContext } from '../../store/tasks-context';
+import TaskForm from '../../components/TaskForm';
 
 function ManageTask({route, navigation}) {
+    const tasksCtx = useContext(TaskContext);
+
     const { colors } = useTheme();
     const { current } = useCardAnimation();
 
@@ -19,6 +23,7 @@ function ManageTask({route, navigation}) {
     }, [navigation, isEditing]);
 
     function deleteTaskHandler() {
+        tasksCtx.deleteTask(editedTaskId);
         navigation.goBack();
     }
 
@@ -27,6 +32,26 @@ function ManageTask({route, navigation}) {
     }
 
     function confirmHandler() {
+        if (isEditing) {
+            tasksCtx.updateTask(
+                editedTaskId,
+                {
+                    description: 'Tesk-Update', 
+                    dueDate: new Date('2023-05-30'),
+                    complete: true,
+                    urgent: false,
+                    important: false, 
+                }
+            );
+        } else {
+            tasksCtx.addTask({
+                description: 'Test-Add', 
+                dueDate: new Date('2023-04-30'),
+                complete: false,
+                urgent: false,
+                important: false, 
+            }); 
+        }
         navigation.goBack();
     }
 
@@ -60,10 +85,12 @@ function ManageTask({route, navigation}) {
                 <Text style= {styles.title}>
                     {isEditing ? 'Edit Task' : 'Add Task'}
                 </Text>
-                <Text>
+                {/* <Text>
                     Inside animated View Part of Manage Task 
-                </Text>
+                </Text> */}
 
+                <TaskForm />
+                
                 <View style= {styles.buttons}>
                     <Button mode = "flat" onPress={cancelHandler} style = {styles.button}>Cancel</Button>
                     <Button onPress={confirmHandler} style = {styles.button}>{isEditing ? 'Update' : 'Add'}</Button>
