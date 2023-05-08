@@ -15,7 +15,6 @@ import IconButton from '../components/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import TaskContextProvider from '../store/tasks-context';
 
 
 
@@ -129,11 +128,9 @@ function TaskStack() {
 
 export default function MainContainer() {
     return (
-        <TaskContextProvider>
-            <NavigationContainer>
-                <Tabs/>
-            </NavigationContainer>
-        </TaskContextProvider>
+        <NavigationContainer>
+            <Tabs/>
+        </NavigationContainer>
     )
 }
 
