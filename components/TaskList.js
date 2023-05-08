@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import {StyleSheet, View, Text, SafeAreaView, ScrollView, Button, Pressable, SectionList} from 'react-native';
 import TaskItem from './TaskItem';
 
-function TaskList({selection, tasks}) {
+function TaskList({tasks}) {
     function renderTaskItem(itemData) { 
         return <TaskItem {...itemData.item}/>
     }
