@@ -15,7 +15,7 @@ import IconButton from '../components/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
-
+import TaskContextProvider from '../store/tasks-context';
 
 
 const pom = 'Flow Timer';
@@ -94,8 +94,8 @@ function Tabs () {
 const Stack = createStackNavigator();
 function TimerStack() {
     return (
-      <Stack.Navigator initialRouteName= 'Flow Timer'>
-        <Stack.Screen name="Flow Timer" component={PomodoroTimer} options={{ headerShown: false}} />
+      <Stack.Navigator initialRouteName= 'Flow Timer2'>
+        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false}} />
         <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false}} />
       </Stack.Navigator>
     );
@@ -104,8 +104,8 @@ function TimerStack() {
 const Stack2 = createStackNavigator();
 function TaskStack() {
     return (
-      <Stack2.Navigator initialRouteName= 'Task Bites'>
-        <Stack2.Screen name="Task Bites" component={TaskBites} options={{ headerShown: false}} />
+      <Stack2.Navigator initialRouteName= 'Task Bites2'>
+        <Stack2.Screen name="Task Bites2" component={TaskBites} options={{ headerShown: false}} />
         <Stack2.Screen 
             name = "ManageTask" 
             component={ManageTask} 
@@ -128,9 +128,11 @@ function TaskStack() {
 
 export default function MainContainer() {
     return (
+        <TaskContextProvider>
         <NavigationContainer>
             <Tabs/>
         </NavigationContainer>
+        </TaskContextProvider>
     )
 }
 
