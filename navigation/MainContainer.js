@@ -10,10 +10,12 @@ import PomodoroTimer from './screens/PomodoroTimer';
 import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
+import SettingsPage from './screens/SettingsPage'; 
 
 const pom = 'Flow Timer';
 const productivity = 'Productivity Scope';
 const taskBites = 'Task Bites';
+const settingsPage = "Settings"; 
 
 const Tab = createBottomTabNavigator();
 
@@ -45,6 +47,9 @@ function Tabs () {
                     } else if (rn === productivity) {
                         iconName = focused ? 'bar-chart' : 'bar-chart-outline'
                     }
+                    else if (rn == settingsPage) {
+                        iconName = focused ? 'settings' : 'settings-outline'
+                    }
                     //Ionicons is a library of icons we can use provided by React
                     return <Ionicons name={iconName} size={size} color={color}/>
                 },
@@ -54,10 +59,12 @@ function Tabs () {
                 style: {padding: 10, height: 70}
             })}
             //below describes all the possible tabs. so, we have 3 tabs. 
+            //Added the settings page as a possible tab, upping the count to 4. 
             >
                 <Tab.Screen name={pom} component={TimerStack}/>
                 <Tab.Screen name={taskBites} component={TaskBites}/>
                 <Tab.Screen name={productivity} component={Productivity}/>
+                <Tab.Screen name={settingsPage} component = {SettingsPage}/>
         </Tab.Navigator>
     );
 }
