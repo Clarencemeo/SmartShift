@@ -102,8 +102,8 @@ export default ManageTask;
 const styles = StyleSheet.create({
     modal: {
         flex: 1,
-        height: '25%',
-        top: '25%',
+        height: '40%',
+        top: '40%',
         backgroundColor: '#F8AD9D',
         padding: 24
     }, 
