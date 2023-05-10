@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { StyleSheet, View, Modal, TextInput, Text, Pressable} from "react-native";
+import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
+import {auth} from '../firebase/firebase-config'
+import {db} from '../firebase/firebase-config'
+import {collection, onSnapshot, getDocs, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
 // Component that handles the Work Timer Modal that allows user to change the length of the Work Timer 
 
@@ -7,6 +10,16 @@ function WorkTimerInput(props) {
     // work timer text / number input handling 
     // sets the workTime value to the default previously selected/entered (25 if user hasn't changed it once already)
     const [workTime, setWorkTime] = useState(props.defaultValues ? props.defaultValues.toString() : "25",);
+    
+    const adjustSettings = async () => {
+        setDoc(
+            doc(db, 'users', auth.currentUser.uid), 
+            { workDuration: workTime},
+            { merge: true}
+          );
+    }
+    
+
     
     // sets the WorkTime to the value entered by user 
     function inputValueHandler(enteredText) {
@@ -34,7 +47,7 @@ function WorkTimerInput(props) {
                     />
                 </View>
                 <View style = {styles.buttonStyle}>
-                    <Pressable onPress = {changeWorkTime}>
+                    <Pressable onPress ={() => {changeWorkTime(); adjustSettings()}}>
                         <View>
                             <Text style= {styles.timerText}>Change</Text>
                         </View>
