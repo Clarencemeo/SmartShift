@@ -111,7 +111,7 @@ export default function PomodoroTimer(props) {
             <Text style = {styles.userProfile} onPress={() => {signOut()}}>Click here to logout: {auth.currentUser?.email}</Text>
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
             <View style = {styles.midcontainer}>   
-                
+              
                 {/* Creates a custom button that activates modal for user to use to set custom work timer*/}
                 <Pressable visible = {workModalIsVisible} onPress = {startWorkTimerModalHandler}>
                     <View>
@@ -156,8 +156,8 @@ export default function PomodoroTimer(props) {
             </View>
         </View>
     );
-
 }
+
 
 //below is just the styles. like css
 //review flexbox to understand flex, alignItems, justifyContent

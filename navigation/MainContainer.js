@@ -9,6 +9,7 @@ import PomodoroTimer from './screens/PomodoroTimer';
 import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
+import SettingsPage from './screens/SettingsPage'; 
 import ManageTask from './screens/ManageTask';
 import IconButton from '../components/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,6 +20,7 @@ import TaskContextProvider from '../store/tasks-context';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import { SignInContext } from '../userContexts/Context';
+const settingsPage = "Settings"; 
 
 const Tab = createBottomTabNavigator();
 
@@ -62,6 +64,9 @@ function Tabs () {
                     } else if (rn === "Productivity Scope") {
                         iconName = focused ? 'bar-chart' : 'bar-chart-outline'
                     }
+                    else if (rn == settingsPage) {
+                        iconName = focused ? 'settings' : 'settings-outline'
+                    }
                     //Ionicons is a library of icons we can use provided by React
                     return <Ionicons name={iconName} size={size} color={color}/>
                 },
@@ -75,6 +80,7 @@ function Tabs () {
             //                <Tab.Screen name={"Register"} component={Register} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
             //<Tab.Screen name={"Login"} component={Login} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
             //under "tabBarButton"; this ensures that the new screens don't appear on the taskbar
+            //Added the settings page as a possible tab, upping the count to 4. 
             >
                 <Tab.Screen name={"Flow Timer"} component={TimerStack}/>
                 <Tab.Screen name={"Task Bites"} component={TaskStack} 
@@ -93,6 +99,7 @@ function Tabs () {
                     }}
                 />
                 <Tab.Screen name={"Productivity Scope"} component={Productivity}/>
+                <Tab.Screen name={settingsPage} component = {SettingsPage}/>
         </Tab.Navigator>
     );
 }
