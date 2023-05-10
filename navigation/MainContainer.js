@@ -114,6 +114,35 @@ function TimerStack() {
     );
   }
 
+  const Auth = createStackNavigator();
+  function AuthStack(){
+      return(
+          <Auth.Navigator>
+  
+  
+                      <Auth.Screen 
+                          name ="Login"
+                          component = {Login}
+                          options ={{
+                              headerShown: false,
+                          }}
+                      /> 
+                      <Auth.Screen 
+                          name ="Register"
+                          component = {Register}
+                          options ={{
+                              headerShown: false,
+                          }}
+                      />  
+  
+            
+                     
+                     
+          </Auth.Navigator>
+      )
+  }
+  
+
 const Stack2 = createStackNavigator();
 function TaskStack() {
     return (
