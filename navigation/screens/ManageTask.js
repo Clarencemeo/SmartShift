@@ -16,6 +16,10 @@ function ManageTask({route, navigation}) {
     const editedTaskId = route.params?.taskId;
     const isEditing = !!editedTaskId;
 
+    const selectedTask = tasksCtx.tasks.find(
+        task => task.id === editedTaskId
+    );
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: isEditing ? 'Edit Task' : 'Add Task',
@@ -67,6 +71,7 @@ function ManageTask({route, navigation}) {
                     onCancel = {cancelHandler} 
                     onSubmit={confirmHandler}
                     submitButtonLabel={isEditing ? 'Update' : 'Add'}
+                    defaultValues = {selectedTask}
                 />
                 
                 {isEditing && (

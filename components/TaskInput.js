@@ -1,10 +1,10 @@
 import { StyleSheet, TextInput, View, Text, Animated, Pressable, } from 'react-native';
 
-function TaskInput({label, textInputConfig}) {
+function TaskInput({label, textInputConfig, invalid}) {
     return (
         <View style={styles.inputContainer}>
-            <Text style= {styles.label}>{label}</Text>
-            <TextInput style={styles.input} {...textInputConfig} />
+            <Text style= {[styles.label, invalid && styles.invalidLabel]}>{label}</Text>
+            <TextInput style={[styles.input, invalid && styles.invalidInput]} {...textInputConfig} />
         </View>
     );
 }
@@ -28,4 +28,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "#540b0e",
     },
+    invalidLabel: {
+        color: "#bf0603",
+    },
+    invalidInput: {
+        backgroundColor: "#da627d",
+    }
 });
