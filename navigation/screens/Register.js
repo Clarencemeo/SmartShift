@@ -6,6 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
 import {Icon, Button,SocialIcon} from 'react-native-elements'
 import {Formik} from 'formik';
+import {collection, onSnapshot, getDocs, doc, setDoc, addDoc} from 'firebase/firestore/lite'
+import {db} from '../../firebase/firebase-config'
 
 export default function Register() {
 
@@ -28,10 +30,24 @@ export default function Register() {
     })
     */
 
+    const adjustSettings = async (id, name, phone) => {
+        await setDoc(
+          doc(db, 'users', id), 
+          { 
+            firstName: name,
+            phoneNumber: phone,
+            workDuration: "25",
+            breakDuration: "5"
+          },
+          { merge: true }
+        );
+      }
+
     const RegisterUser = (data)=> {
-        const {password, email} = data
+        const {password, email, name, phone_number} = data
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+          adjustSettings(userCredential.user.uid, name, phone_number);
           // Signed in 
           const user = userCredential.user;
           alert('Successfully registered user!');

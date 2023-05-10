@@ -6,25 +6,31 @@ import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
 import {auth} from '../../firebase/firebase-config'
 import {db} from '../../firebase/firebase-config'
-import {collection, onSnapshot, getDocs, doc, setDo, addDoc} from 'firebase/firestore/lite'
+import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 import { SignInContext } from '../../userContexts/Context';
 
 export default function PomodoroTimer(props) {
     const {dispatchSignedIn} = useContext(SignInContext)
     const navigation = useNavigation();
+    const docRef = doc(db, "users", auth.currentUser.uid);
+    getDoc(docRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const workDuration = userData.workDuration;
+          const breakDuration = userData.breakDuration;
+          setWorkTimer(workDuration);
+          setBreakTimer(breakDuration);
+          console.log(workDuration); // prints the value of the workDuration field
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
 
 
-    const adjustSettings = async () => {
-        const doc = addDoc(collection(db, 'timerSettings'), { breakDuration: "5", workDuration: "12"})
-    }
-
-    const GetData = async() => {
-        const settingsCol = collection(db, 'timerSettings');
-        const settingsSnapshot = await getDocs(settingsCol);
-        const settingsList = settingsSnapshot.docs.map(doc => doc.data());
-
-        console.log(settingsList);
-    }
 
     async function signOut(){
         console.log("min")
@@ -42,7 +48,7 @@ export default function PomodoroTimer(props) {
 
     // work timer state (beginning at 25 for default)
     const [workTimer, setWorkTimer] = useState("25");
-    // break timer state (beginning at 25 for default)
+    // break timer state (beginning at 5 for default)
     const [breakTimer, setBreakTimer] = useState("5");
 
     // changes work timer value according to user input and then closes the work modal 
