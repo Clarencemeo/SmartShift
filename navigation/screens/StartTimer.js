@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { Component } from 'react';
+//import { Component } from 'react';
 import { useState, useMemo, useEffect } from 'react';
-import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
+//import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
-
+//import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import { SelectList } from 'react-native-dropdown-select-list'
 
-
-export default function TimerApp() {
+export default function TimerApp({route}) {
   //set to *60000 for actual time
-  //const workDuration = getTimerWorkDuration()*60000;
-  //const breakDuration = getTimerBreakDuration()*60000;
-  const workDuration = 10000;
-  const breakDuration = 6000;
+  const navigation = useNavigation(); 
+  const workDuration = route.params.workTimerDuration*60000;
+  const breakDuration = route.params.breakTimerDuration*60000;
+  //const workDuration = 10000;
+  //const breakDuration = 6000;
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
   const [timerEnd, setTimerEnd] = useState(false);
@@ -58,7 +58,7 @@ export default function TimerApp() {
             setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking);
           }}
           style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
-          activeOpacity={1.0}
+          /*activeOpacity={1.0}*/
         >
           <View style={styles.buttonBorder}>
             <Text style={[styles.buttonTitle]} color='#ffffff'>{timerEnd ? "Move On" : "Reset"}</Text>
@@ -69,8 +69,7 @@ export default function TimerApp() {
         <TouchableOpacity
           disabled={timerEnd}
           onPress={() => { setTimerStart(!timerStart); setTimerReset(false); }}
-          style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]
-          }
+          style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]}
         >
           <View style={styles.buttonBorder}>
             <Text style={[styles.buttonTitle]}>{timerStart ? "Pause" : "Resume"}</Text>
