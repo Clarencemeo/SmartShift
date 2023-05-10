@@ -88,7 +88,7 @@ export default function Login() {
                                 type ="material"
                                 style={{}}
                             />
-                            <TextInput style = {styles.input} placeholder='Email' value={props.values.email} ref={text1} onChangeText={props.handleChange('email')}/>
+                            <TextInput style = {styles.input} autoCorrect = {false} autoCapitalize = "none" placeholder='Email' keyboardType='email-address' value={props.values.email} ref={text1} onChangeText={props.handleChange('email')}/>
                         </View>
                     <View style = {styles.TextInput2}> 
                     <Icon 
@@ -97,7 +97,7 @@ export default function Login() {
                             type ="material"
                             style={{}}
                         />
-                    <TextInput style = {styles.input} placeholder='Password' value={props.values.password} ref={text2} secureTextEntry = {true} onChangeText={props.handleChange('password')}/>
+                    <TextInput style = {styles.input} placeholder='Password' autoCorrect = {false} autoCapitalize = "none" value={props.values.password} ref={text2} secureTextEntry = {true} onChangeText={props.handleChange('password')}/>
                     </View>
                     <Button title='Login' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
                     <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={() => {navigation.navigate('Register')}}/>

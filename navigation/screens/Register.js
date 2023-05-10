@@ -94,10 +94,10 @@ export default function Register() {
                             <TextInput style = {styles.typeFormat} placeholder='Name' value={props.values.name} autofocus = {false} onChangeText={props.handleChange('name')}/>
                         </View>
                         <View style = {styles.inputs}>
-                            <TextInput style = {styles.typeFormat} placeholder='Email' value={props.values.email} autofocus = {false} onChangeText={props.handleChange('email')}/>
+                            <TextInput style = {styles.typeFormat} autoCorrect = {false} autoCapitalize = "none" keyboardType='email-address' placeholder='Email' value={props.values.email} autofocus = {false} onChangeText={props.handleChange('email')}/>
                         </View>
                         <View style = {styles.inputs}>
-                            <TextInput style = {styles.typeFormat} placeholder='Password' value={props.values.password} secureTextEntry = {true} autofocus = {false} onChangeText={props.handleChange('password')}/>
+                            <TextInput style = {styles.typeFormat} autoCorrect = {false} autoCapitalize = "none" placeholder='Password' value={props.values.password} secureTextEntry = {true} autofocus = {false} onChangeText={props.handleChange('password')}/>
                         </View>
                         <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
                         </View>
