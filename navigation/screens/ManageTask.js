@@ -71,6 +71,7 @@ function ManageTask({route, navigation}) {
                     onCancel = {cancelHandler} 
                     onSubmit={confirmHandler}
                     submitButtonLabel={isEditing ? 'Update' : 'Add'}
+                    checkbox = {isEditing}
                     defaultValues = {selectedTask}
                 />
                 
