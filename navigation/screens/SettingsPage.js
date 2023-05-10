@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Checkbox from 'expo-checkbox';
 //Replace default useStates with an import from main, once we figure out how the firebase thing works...
 import WorkTimerInput from '../../components/WorkTimerInput';
@@ -8,30 +8,34 @@ import BreakTimerInput from '../../components/BreakTimerInput';
 
 export default function SettingsPage(navigation) {
     //Handles notifications for alarm.
-    const [enableAlarmNotif, setAlarmNotif] = useState(false);
+    const [enableAlarmNotif, setAlarmNotif] = useState(true);
     //Handles notifications for deadlines.
-    const [enableDeadlineNotif, setDeadlineNotif] = useState(false);
+    const [enableDeadlineNotif, setDeadlineNotif] = useState(true);
 
     // work timer state (beginning at 25 for default)
-    const [workTimer, setWorkTimer] = useState("25");
+    const [defaultWorkTimer, setWorkTimer] = useState("25");
     // break timer state (beginning at 5 for default)
-    const [breakTimer, setBreakTimer] = useState("5");
-    //I'm reusing the WorkTimerInput//BreakTimerInput components.
-    
+    const [defaultBreakTimer, setBreakTimer] = useState("5");    
 
     return (
+        
+
         <View style={styles.container}>
+        <Text style={styles.titleText}>Change Default Options</Text>
+        {/*Checkbox for Enabling Alarm Notifications*/}
         <View style={styles.section}>
-          <Checkbox style={styles.checkbox} value={enableAlarmNotif} onValueChange={setAlarmNotif} />
-          <Text style={styles.paragraph}>Notifications for Alarms</Text>
+          <Checkbox style={styles.checkbox} value={enableAlarmNotif} onValueChange={setAlarmNotif}/>
+          <TouchableOpacity style = {styles.button} onPress={() => {setAlarmNotif(!enableAlarmNotif)}}>
+            <Text style={styles.paragraph}>Enable Notifications for Alarms</Text>
+          </TouchableOpacity>  
         </View>
+        {/*Checkbox for Enabling  Notifications*/}
         <View style={styles.section}>
-          <Checkbox style={styles.checkbox} value={enableDeadlineNotif} onValueChange={setDeadlineNotif} />
-          <Text style={styles.paragraph}>Notifications for Deadlines</Text>
+          <Checkbox style={styles.checkbox} value={enableDeadlineNotif} onValueChange={setDeadlineNotif}/>
+          <TouchableOpacity style = {styles.button} onPress={() => {setDeadlineNotif(!enableDeadlineNotif)}}>
+            <Text style={styles.paragraph}>Enable Notifications for Deadlines</Text>
+          </TouchableOpacity>  
         </View>
-
-
-
         </View>
     ); 
 }
@@ -41,21 +45,37 @@ export default function SettingsPage(navigation) {
 //Option to change work/break timer (how long it is - default settings) (2 h) 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FF0000',
+    titleText: {
+        fontWeight: 'bold',
+        fontSize: 35,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 30
+        textAlign: 'center',
+        marginTop: 20,
       },
+
+    container: {
+        flex: 1,
+        backgroundColor: '#FBC4AB',
+        //alignItems: 'center',
+        //justifyContent: 'center',
+        //marginTop: 40
+    },
     section: {
       flexDirection: 'row',
       alignItems: 'center',
     },
     paragraph: {
-      fontSize: 15,
+      fontSize: 20,
+      alignItems: 'center',
     },
     checkbox: {
-      margin: 8,
+      margin: 20,
+      alignItems: 'center',
+    },
+    button: {
+        alignItems: 'center',
+        backgroundColor: '#FBC4AB',
+        padding: 10,
     },
   });
