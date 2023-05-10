@@ -92,7 +92,7 @@ function Tabs () {
                         ),
                     }}
                 />
-                <Tab.Screen name={productivity} component={Productivity}/>
+                <Tab.Screen name={"Productivity Scope"} component={Productivity}/>
         </Tab.Navigator>
     );
 }
@@ -166,6 +166,23 @@ function TaskStack() {
         />
       </Stack2.Navigator>
     );
+  }
+
+  const MainScreen = createStackNavigator();
+  function MainStack(){
+      return(
+          <MainScreen.Navigator>
+              <MainScreen.Screen 
+              name ="Main"
+              component ={Tabs}
+              options ={{
+                  headerShown: false,
+              }}
+              /> 
+  
+     
+          </MainScreen.Navigator>
+      )
   }
 
 export default function MainContainer() {
