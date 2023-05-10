@@ -3,8 +3,6 @@ import * as React from 'react';
 import { useState, useMemo, useEffect } from 'react';
 //import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight } from 'react-native';
-import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
-import {useState} from 'react';
 import { Timer } from 'react-native-stopwatch-timer';
 //import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import { SelectList } from 'react-native-dropdown-select-list'
