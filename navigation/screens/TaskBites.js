@@ -1,23 +1,26 @@
-import * as React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import TaskOutput from '../../components/TaskOutput';
 
-export default function TaskBites(navigation) {
+export default function TaskBites() {
+
     return (
-        <View style = {styles.timerContainer}> 
-            <Text style = {styles.timerText} onPress={() => navigation.navigate('PomodoroTimer')}>Task Bites</Text>
+        <View style = {styles.container}> 
+            <View style = {styles.timerContainer}> 
+                <TaskOutput/>
+            </View>
         </View>
     );
 
 }
 
 const styles = StyleSheet.create({
-    timerContainer: {
+    container: {
         flex: 1,
+        backgroundColor: '#fbc4ab',
+    },
+    timerContainer: {
+        flex: 5,
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    timerText: {
-        fontSize: 26,
-        fontWeight: 'bold'
     }
 });

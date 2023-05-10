@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState, useContext} from 'react';
-import {StyleSheet, View, Text, Fragment, TouchableOpacity, Pressable, Modal, TextInput, Button} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';

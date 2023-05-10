@@ -2,13 +2,20 @@ import * as React from 'react';
 import {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import PomodoroTimer from './screens/PomodoroTimer';
 import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
+import ManageTask from './screens/ManageTask';
+import IconButton from '../components/IconButton';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import TaskContextProvider from '../store/tasks-context';
+
 import Register from './screens/Register';
 import Login from './screens/Login';
 import { SignInContext } from '../userContexts/Context';
@@ -17,6 +24,7 @@ const Tab = createBottomTabNavigator();
 
 //below handles the taskbar
 function Tabs () {
+    const navigation = useNavigation();
     return (
         <Tab.Navigator
             //initialRouteName describes the default screen
@@ -60,7 +68,7 @@ function Tabs () {
                 activeTintColor: 'tomato',
                 inactiveTintColor: 'grey',
                 labelStyle: {paddingBottom: 10, fontSize: 10},
-                style: {padding: 10, height: 70}
+                style: {padding: 10, height: 70},
             })}
             //below describes all of the screens; define all screens here
             //any new screens you define here, make sure to also define up above 
@@ -68,66 +76,83 @@ function Tabs () {
             //<Tab.Screen name={"Login"} component={Login} options={{ headerShown: false, tabBarStyle: { display: 'none' } }}/>
             //under "tabBarButton"; this ensures that the new screens don't appear on the taskbar
             >
-                <Tab.Screen name={"Flow Timer"} component={PomodoroTimer} options={{ headerShown: false } }/>
-                <Tab.Screen name={"Task Bites"} component={TaskBites} options={{ headerShown: false }}/>
-                <Tab.Screen name={"Productivity Scope"} component={Productivity} options={{ headerShown: false }}/>
-                <Tab.Screen name={"StartTimer"} component={StartTimer} options={{ headerShown: false }}/>
+                <Tab.Screen name={"Flow Timer"} component={TimerStack}/>
+                <Tab.Screen name={"Task Bites"} component={TaskStack} 
+                    // adds a + on the top right of TaskBites screen that takes to you to the ManageTask Screen 
+                    options = {{
+                        headerRight: () => (
+                            <IconButton 
+                                icon = "add" 
+                                size = {24} 
+                                color = {'black'} 
+                                onPress={() => {
+                                    navigation.navigate('ManageTask');
+                                }}
+                            />
+                        ),
+                    }}
+                />
+                <Tab.Screen name={productivity} component={Productivity}/>
         </Tab.Navigator>
     );
 }
 
-const Auth = createStackNavigator();
-function AuthStack(){
-    return(
-        <Auth.Navigator>
+//The stack describes any screens associated with a particular screen.
+//Here, this is the stack of screens associated with the flow timer screen.
+//The flow timer can either go to itself or the StartTimer screen.
+//Define any new screens related to the flow timer screen here.
+//Feel free to make a new stack for a new list of screens.
+//It's also useful to link screens in a stack, since this is
+//how the program determines which screen the "back button" on a phone links to
+const Stack = createStackNavigator();
+function TimerStack() {
+    return (
+      <Stack.Navigator initialRouteName= 'Flow Timer2'>
+        <Stack.Screen name="Flow Timer2" component={PomodoroTimer} options={{ headerShown: false}} />
+        <Stack.Screen name='StartTimer' component={StartTimer} options={{ headerShown: false}} />
+      </Stack.Navigator>
+    );
+  }
 
-
-                    <Auth.Screen 
-                        name ="Login"
-                        component = {Login}
-                        options ={{
-                            headerShown: false,
-                        }}
-                    /> 
-                    <Auth.Screen 
-                        name ="Register"
-                        component = {Register}
-                        options ={{
-                            headerShown: false,
-                        }}
-                    />  
-
-          
-                   
-                   
-        </Auth.Navigator>
-    )
-}
-
-const MainScreen = createStackNavigator();
-function MainStack(){
-    return(
-        <MainScreen.Navigator>
-            <MainScreen.Screen 
-            name ="Main"
-            component ={Tabs}
-            options ={{
-                headerShown: false,
+const Stack2 = createStackNavigator();
+function TaskStack() {
+    return (
+      <Stack2.Navigator initialRouteName= 'Task Bites2'>
+        <Stack2.Screen name="Task Bites2" component={TaskBites} options={{ headerShown: false}} />
+        <Stack2.Screen 
+            name = "ManageTask" 
+            component={ManageTask} 
+            options = {{
+                presentation: "transparentModal",
+                // presentation: "modal",
+                // headerShown: false,
+                // title: 'Manage Task'
+                // headerStyle: {
+                //     marginTop: 150,
+                // },
+                headerShown: false, 
+                headerBackVisible: false,
+                headerBackTitleVisible: false,
             }}
-            /> 
-
-   
-        </MainScreen.Navigator>
-    )
-}
-
-
+        />
+      </Stack2.Navigator>
+    );
+  }
 
 export default function MainContainer() {
     const {signedIn} = useContext(SignInContext)
     return (
-            <NavigationContainer>
+            <TaskContextProvider>
+        <NavigationContainer>
                 {signedIn.userToken === null  ?  <AuthStack />: <MainStack />}
             </NavigationContainer>
+        </TaskContextProvider>
     )
 }
+
+// const styles = StyleSheet.create({
+//     header: {
+//         height: '50%',
+//         top: '50%',
+//     }
+// })
