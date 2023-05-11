@@ -17,7 +17,7 @@ function BreakTimerInput(props) {
             if (docSnap.exists()) {
               const userData = docSnap.data();
               const breakDuration = userData.breakDuration;
-              setBreakTimer(breakDuration);
+              setBreakTime(breakDuration);
             } else {
               console.log("No such document!");
             }
