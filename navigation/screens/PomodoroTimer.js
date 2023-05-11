@@ -33,7 +33,6 @@ export default function PomodoroTimer(props) {
 
 
     async function signOut(){
-        console.log("min")
         try{
             auth.signOut()
             .then(

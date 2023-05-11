@@ -1,4 +1,7 @@
 import { createContext, useReducer } from "react";
+import {auth} from '../firebase/firebase-config'
+import {db} from '../firebase/firebase-config'
+import {collection, onSnapshot, getDocs, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
 const DUMMY_TASKS = [
     {
@@ -82,10 +85,36 @@ export const TaskContext = createContext({
     updateTask: (id, {description, dueDate, complete, urgent, important}) => {}, 
 });
 
+
+const adjustSettings = async (action) => {
+    await setDoc(
+        doc(db, 'users', auth.currentUser.uid, 'tasks', "task1"), 
+        { 
+        description: "made changes"
+        },
+        { merge: true }
+    );
+    }
+
+    const adjustSettings2 = async (action) => {
+        await setDoc(
+            doc(db, 'users', auth.currentUser.uid, 'tasks', action.payload.id), 
+            { 
+            description: action.payload.description,
+            dueDate: action.payload.dueDate,
+            complete: action.payload.complete,
+            urgent: action.payload.urgent,
+            important: action.payload.important,
+            },
+            { merge: true }
+        );
+        }
+
 function taskReducer(state, action) {
     switch (action.type) {
         case 'ADD':
             const id = new Date().toString() + Math.random().toString();
+            adjustSettings(action)
             return [{ ...action.payload, id: id }, ...state]
         case 'UPDATE':
             const updatableTaskIndex = state.findIndex(

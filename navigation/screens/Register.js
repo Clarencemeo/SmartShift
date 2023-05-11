@@ -91,7 +91,7 @@ export default function Register() {
                             <TextInput style = {styles.typeFormat} placeholder='Mobile Number' keyboardType= "number-pad" autoFocus = {false} value={props.values.phone_number} onChangeText={props.handleChange('phone_number')}/>
                         </View>
                         <View style = {styles.inputs}>
-                            <TextInput style = {styles.typeFormat} placeholder='Name' value={props.values.name} autofocus = {false} onChangeText={props.handleChange('name')}/>
+                            <TextInput style = {styles.typeFormat} autoCorrect = {false} placeholder='Name' value={props.values.name} autofocus = {false} onChangeText={props.handleChange('name')}/>
                         </View>
                         <View style = {styles.inputs}>
                             <TextInput style = {styles.typeFormat} autoCorrect = {false} autoCapitalize = "none" keyboardType='email-address' placeholder='Email' value={props.values.email} autofocus = {false} onChangeText={props.handleChange('email')}/>

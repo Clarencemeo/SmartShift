@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View, Modal, TextInput, Button, Text, Pressable} from "react-native";
 import {auth} from '../firebase/firebase-config'
 import {db} from '../firebase/firebase-config'
-import {collection, onSnapshot, getDocs, doc, setDoc, addDoc} from 'firebase/firestore/lite'
+import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
 // Component that handles the Work Timer Modal that allows user to change the length of the Work Timer 
 
 function WorkTimerInput(props) {
     // work timer text / number input handling 
     // sets the workTime value to the default previously selected/entered (25 if user hasn't changed it once already)
+
     const [workTime, setWorkTime] = useState(props.defaultValues ? props.defaultValues.toString() : "25",);
+    const docRef = doc(db, "users", auth.currentUser.uid);
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const docRef = doc(db, "users", auth.currentUser.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              const userData = docSnap.data();
+              const workDuration = userData.workDuration;
+              setBreakTimer(workDuration);
+            } else {
+              console.log("No such document!");
+            }
+          } catch (error) {
+            console.log("Error getting document:", error);
+          }
+        };
     
+        fetchData();
+      }, []);
     const adjustSettings = async () => {
         setDoc(
             doc(db, 'users', auth.currentUser.uid), 
@@ -63,7 +83,7 @@ function WorkTimerInput(props) {
     )
 }; 
 
-export default WorkTimerInput; 
+export default WorkTimerInput;
 
 const styles = StyleSheet.create({
     inputContainer: {
