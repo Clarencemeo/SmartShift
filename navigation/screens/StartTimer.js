@@ -136,7 +136,7 @@ export default function TimerApp({route}) {
         <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
           reset={timerReset}
           options={timerDesign}
-          handleFinish={() => { setTimerStart(false); setTimerEnd(true); }}
+          handleFinish={() => { setTimerStart(false); setTimerEnd(true); setPlay(true); }}
           getTime={time => { }} />
       </View>
 
