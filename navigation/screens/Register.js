@@ -30,10 +30,11 @@ export default function Register() {
     })
     */
 
-    const adjustSettings = async (id, name, phone) => {
+    const adjustSettings = async (id, name, phone, email) => {
         await setDoc(
           doc(db, 'users', id), 
           { 
+            email: email,
             firstName: name,
             phoneNumber: phone,
             workDuration: "25",
@@ -47,7 +48,7 @@ export default function Register() {
         const {password, email, name, phone_number} = data
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          adjustSettings(userCredential.user.uid, name, phone_number);
+          adjustSettings(userCredential.user.uid, name, phone_number, email);
           // Signed in 
           const user = userCredential.user;
           alert('Successfully registered user!');

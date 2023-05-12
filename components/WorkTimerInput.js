@@ -20,7 +20,7 @@ function WorkTimerInput(props) {
             if (docSnap.exists()) {
               const userData = docSnap.data();
               const workDuration = userData.workDuration;
-              setBreakTimer(workDuration);
+              setWorkTime(workDuration);
             } else {
               console.log("No such document!");
             }

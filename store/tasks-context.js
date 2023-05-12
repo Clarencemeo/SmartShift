@@ -1,7 +1,7 @@
 import { createContext, useReducer } from "react";
 import {auth} from '../firebase/firebase-config'
 import {db} from '../firebase/firebase-config'
-import {collection, onSnapshot, getDocs, doc, setDoc, addDoc} from 'firebase/firestore/lite'
+import {collection, onSnapshot, getDocs, doc, setDoc, deleteDoc, addDoc} from 'firebase/firestore/lite'
 
 const DUMMY_TASKS = [
     {
@@ -78,6 +78,7 @@ const DUMMY_TASKS = [
     },
 ]
 
+
 export const TaskContext = createContext({
     tasks: [],
     addTask: ({description, dueDate, complete, urgent, important}) => {},
@@ -86,35 +87,51 @@ export const TaskContext = createContext({
 });
 
 
-const adjustSettings = async (action) => {
-    await setDoc(
-        doc(db, 'users', auth.currentUser.uid, 'tasks', "task1"), 
+
+const adjustSettings2 = async (action, id) => {
+    try {
+      await setDoc(
+        doc(db, 'users', auth.currentUser.uid, 'tasks', id), //can replace taskData.description with the task id 
         { 
-        description: "made changes"
+          description: action.payload.description,
+          dueDate: action.payload.dueDate,
+          complete: action.payload.complete,
+          urgent: action.payload.urgent,
+          important: action.payload.important,
         },
         { merge: true }
-    );
+      );
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    const adjustSettings2 = async (action) => {
-        await setDoc(
-            doc(db, 'users', auth.currentUser.uid, 'tasks', action.payload.id), 
-            { 
-            description: action.payload.description,
-            dueDate: action.payload.dueDate,
-            complete: action.payload.complete,
-            urgent: action.payload.urgent,
-            important: action.payload.important,
-            },
-            { merge: true }
-        );
-        }
+//call below for UPDATE, the one above is for ADD
+const adjustSettings3 = async (action) => {
+    try {
+      await setDoc(
+        doc(db, 'users', auth.currentUser.uid, 'tasks', action.payload.id), //can replace taskData.description with the task id 
+        { 
+          description: action.payload.data.description,
+          dueDate: action.payload.data.dueDate,
+          complete: action.payload.data.complete,
+          urgent: action.payload.data.urgent,
+          important: action.payload.data.important,
+        },
+        { merge: true }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
 function taskReducer(state, action) {
     switch (action.type) {
         case 'ADD':
             const id = new Date().toString() + Math.random().toString();
-            adjustSettings(action)
+            adjustSettings2(action, id)
+            console.log(action)
             return [{ ...action.payload, id: id }, ...state]
         case 'UPDATE':
             const updatableTaskIndex = state.findIndex(
@@ -124,8 +141,12 @@ function taskReducer(state, action) {
             const updatedItem = { ...updatableTask, ...action.payload.data };      
             const updatedTasks = [...state];
             updatedTasks[updatableTaskIndex] = updatedItem; 
-            return updatedTasks;
+            console.log("YO")
+            console.log(action.payload.id)
+            console.log(action.payload.data.description)
+            adjustSettings3(action)
         case 'DELETE':
+
             return state.filter((task) => task.id !== action.payload);
         default:
             return state;
@@ -137,9 +158,12 @@ function TaskContextProvider({children}) {
 
     function addTask(taskData) {
         dispatch({type: 'ADD', payload: taskData});
+        //adjustSettings2(taskData);
     }
 
     function deleteTask(id) {
+        const tasksRef = doc(db, 'users', auth.currentUser.uid, 'tasks', id);
+        deleteDoc(tasksRef)
         dispatch({type: 'DELETE', payload: id});
     }
 

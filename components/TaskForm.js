@@ -43,6 +43,8 @@ function TaskForm({submitButtonLabel, onCancel, onSubmit, defaultValues, checkbo
             description: inputs.description.value,
             dueDate: new Date(inputs.dueDate.value), 
             complete: inputs.complete.value,
+            urgent: "insert here",
+            important: "insert here",
         }; 
 
         const descriptionIsValid = taskData.description.trim().length > 0;
