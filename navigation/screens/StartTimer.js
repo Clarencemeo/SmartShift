@@ -3,10 +3,126 @@ import * as React from 'react';
 import { useState, useMemo, useEffect } from 'react';
 //import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Component } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
+import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight, Vibration} from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
 //import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import { SelectList } from 'react-native-dropdown-select-list'
 
+import { SelectList } from 'react-native-dropdown-select-list';
+
+import { Audio } from 'expo-av';
+
+export default function TimerApp() {
+  //set to *60000 for actual time
+  //const workDuration = getTimerWorkDuration()*60000;
+  //const breakDuration = getTimerBreakDuration()*60000;
+  const workDuration = 10000;
+  const breakDuration = 6000;
+  const [timerStart, setTimerStart] = useState(true);
+  const [timerReset, setTimerReset] = useState(false);
+  const [timerEnd, setTimerEnd] = useState(false);
+  const [timerWorking, setTimerWorking] = useState(true);
+  const [selected, setSelected] = useState("");
+  const [play, setPlay] = useState(false);
+
+  const notificationSounds = [
+    { key: '1', value: 'Alarm Sound 1' },
+    { key: '2', value: 'Alarm Sound 2' },
+    { key: '3', value: 'Alarm Sound 3' },
+    { key: '4', value: 'Alarm Sound 4' },
+    { key: '5', value: 'Alarm Sound 5' },
+    { key: '6', value: 'Alarm Sound 6' },
+    { key: '7', value: 'Alarm Sound 7' },
+    { key: '8', value: 'Vibration' },
+    { key: '9', value: 'None' },
+  ]
+  const [alarm, setAlarm] = useState();
+
+  async function playSound(val) {
+    if (alarm != undefined) {
+      alarm.unloadAsync();
+    }
+    // console.log(val);
+    let key = Object.keys(notificationSounds).find(k=>notificationSounds[k].value === val)
+    const sound = new Audio.Sound();
+    if (key == 0) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound1.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 1) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound2.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 2) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound3.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 3) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound4.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 4) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound5.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 5) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound6.mp3'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 6) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound7.mp3'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 7) {
+      Vibration.vibrate();
+    }
+  }  
+
+  useEffect(() => {
+    if ((play == true) &&(selected != "None")&&(selected != "")&&(alarm != undefined)) {
+      console.log("ready to play", "selected:", selected);
+      playSound(selected);  
+      alarm.unloadAsync();
+      setSelected("");
+      setPlay(false);
+    } else if ((play == true) &&(selected == "")){
+      playSound("Alarm Sound 1");  
+      alarm.unloadAsync();
+      setSelected("");
+      setPlay(false);
+    }
+  }, [alarm, selected, play]);
 export default function TimerApp({route}) {
   //set to *60000 for actual time
   //const navigation = useNavigation(); 
@@ -20,15 +136,6 @@ export default function TimerApp({route}) {
   const [timerWorking, setTimerWorking] = useState(true);
   const [selected, setSelected] = useState("");
 
-  const notificationSounds = [
-    { key: '1', value: 'Alarm Sound 1' },
-    { key: '2', value: 'Alarm Sound 2' },
-    { key: '3', value: 'Alarm Sound 3' },
-    { key: '4', value: 'Alarm Sound 4' },
-    { key: '5', value: 'Alarm Sound 5' },
-    { key: '6', value: 'Alarm Sound 6' },
-    { key: '7', value: 'Alarm Sound 7' },
-  ]
 
   return (
     <View justifyContent='center' backgroundColor='#F4978E' height='100%'>
@@ -115,6 +222,68 @@ export default function TimerApp({route}) {
   );
 }
 
+const styles = StyleSheet.create({
+  titleText: {
+    fontWeight: 'bold',
+    fontSize: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FF0000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 30
+  },
+  buttonBorder: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#C05050'
+  },
+  buttonTitle: {
+    fontSize: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#A00000',
+    textAlign: 'center',
+  },
+  //the row with two buttons
+  buttonsRow: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    justifyContent: 'space-between',
+    marginHorizontal: '10%'
+  },
+  roundButton: {
+    width: 90,
+    height: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 90,
+    borderColor: '#C05050',
+    borderWidth: '1',
+  },
+  skipBreakTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#900000',
+    textAlign: 'center',
+  },
+
+  listBox: {
+    borderColor: '#C05050',
+    borderWidth: '1',
+    borderRadius: '15'
+  }
 const styles = StyleSheet.create({
   titleText: {
     fontWeight: 'bold',
