@@ -2,23 +2,21 @@ import * as React from 'react';
 //import { Component } from 'react';
 import { useState, useMemo, useEffect } from 'react';
 //import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
-import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Component } from 'react';
-import { useState, useMemo, useEffect } from 'react';
 import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight, Vibration} from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
 //import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import { SelectList } from 'react-native-dropdown-select-list'
 
 import { SelectList } from 'react-native-dropdown-select-list';
 
 import { Audio } from 'expo-av';
 
-export default function TimerApp() {
+export default function TimerApp({route}) {
   //set to *60000 for actual time
-  //const workDuration = getTimerWorkDuration()*60000;
-  //const breakDuration = getTimerBreakDuration()*60000;
+  //const navigation = useNavigation(); 
+  //const workDuration = route.params.workTimerDuration*60000;
+  //const breakDuration = route.params.breakTimerDuration*60000;
   const workDuration = 10000;
   const breakDuration = 6000;
   const [timerStart, setTimerStart] = useState(true);
@@ -123,18 +121,6 @@ export default function TimerApp() {
       setPlay(false);
     }
   }, [alarm, selected, play]);
-export default function TimerApp({route}) {
-  //set to *60000 for actual time
-  //const navigation = useNavigation(); 
-  const workDuration = route.params.workTimerDuration*60000;
-  const breakDuration = route.params.breakTimerDuration*60000;
-  //const workDuration = 10000;
-  //const breakDuration = 6000;
-  const [timerStart, setTimerStart] = useState(true);
-  const [timerReset, setTimerReset] = useState(false);
-  const [timerEnd, setTimerEnd] = useState(false);
-  const [timerWorking, setTimerWorking] = useState(true);
-  const [selected, setSelected] = useState("");
 
 
   return (
@@ -209,7 +195,7 @@ export default function TimerApp({route}) {
       </View>
 
       <View height='40%' width='50%' alignSelf='center'>
-        <SelectList setSelected={setSelected}
+        <SelectList setSelected={(val) => {setSelected(val); playSound(val);}} 
           data={notificationSounds}
           save="value"
           search={false}
@@ -221,69 +207,7 @@ export default function TimerApp({route}) {
     </View >
   );
 }
-
-const styles = StyleSheet.create({
-  titleText: {
-    fontWeight: 'bold',
-    fontSize: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#FF0000',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 30
-  },
-  buttonBorder: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#C05050'
-  },
-  buttonTitle: {
-    fontSize: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#A00000',
-    textAlign: 'center',
-  },
-  //the row with two buttons
-  buttonsRow: {
-    flexDirection: 'row',
-    alignSelf: 'stretch',
-    justifyContent: 'space-between',
-    marginHorizontal: '10%'
-  },
-  roundButton: {
-    width: 90,
-    height: 90,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 90,
-    borderColor: '#C05050',
-    borderWidth: '1',
-  },
-  skipBreakTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#900000',
-    textAlign: 'center',
-  },
-
-  listBox: {
-    borderColor: '#C05050',
-    borderWidth: '1',
-    borderRadius: '15'
-  }
+//setSelected={(val) => {setSelected(val); playSound(val);}} 
 const styles = StyleSheet.create({
   titleText: {
     fontWeight: 'bold',
