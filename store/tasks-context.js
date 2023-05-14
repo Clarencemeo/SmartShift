@@ -58,14 +58,14 @@ const DUMMY_TASKS = [
         dueDate: new Date('2023-05-02'),
         complete: false,
         urgent: false,
-        important: false,
+        important: true,
     },
     {
         id: 't8',
         description: 'work on project',
         dueDate: new Date('2023-05-03'),
         complete: true,
-        urgent: false,
+        urgent: true,
         important: false,
     },
     {
@@ -73,8 +73,8 @@ const DUMMY_TASKS = [
         description: 'work on other project',
         dueDate: new Date('2023-05-04'),
         complete: false,
-        urgent: false,
-        important: false,
+        urgent: true,
+        important: true,
     },
 ]
 
