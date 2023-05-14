@@ -2,10 +2,15 @@ import * as React from 'react';
 //import { Component } from 'react';
 import { useState, useMemo, useEffect } from 'react';
 //import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
-import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Component } from 'react';
+import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
+import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight, Vibration} from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
 //import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import { SelectList } from 'react-native-dropdown-select-list'
+
+import { SelectList } from 'react-native-dropdown-select-list';
+
+import { Audio } from 'expo-av';
 
 export default function TimerApp({route}) {
   //set to *60000 for actual time
@@ -19,6 +24,7 @@ export default function TimerApp({route}) {
   const [timerEnd, setTimerEnd] = useState(false);
   const [timerWorking, setTimerWorking] = useState(true);
   const [selected, setSelected] = useState("");
+  const [play, setPlay] = useState(false);
 
   const notificationSounds = [
     { key: '1', value: 'Alarm Sound 1' },
@@ -28,7 +34,94 @@ export default function TimerApp({route}) {
     { key: '5', value: 'Alarm Sound 5' },
     { key: '6', value: 'Alarm Sound 6' },
     { key: '7', value: 'Alarm Sound 7' },
+    { key: '8', value: 'Vibration' },
+    { key: '9', value: 'None' },
   ]
+  const [alarm, setAlarm] = useState();
+
+  async function playSound(val) {
+    if (alarm != undefined) {
+      alarm.unloadAsync();
+    }
+    // console.log(val);
+    let key = Object.keys(notificationSounds).find(k=>notificationSounds[k].value === val)
+    const sound = new Audio.Sound();
+    if (key == 0) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound1.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 1) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound2.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 2) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound3.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 3) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound4.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 4) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound5.wav'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 5) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound6.mp3'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 6) {
+      try {
+        await sound.loadAsync(require('../../resources/alarms/AlarmSound7.mp3'));
+        setAlarm(sound);
+        await sound.playAsync();
+      } catch (error) {
+        console.log("errorrrrr")
+      }
+    } else if (key == 7) {
+      Vibration.vibrate();
+    }
+  }  
+
+  useEffect(() => {
+    if ((play == true) &&(selected != "None")&&(selected != "")&&(alarm != undefined)) {
+      console.log("ready to play", "selected:", selected);
+      playSound(selected);  
+      alarm.unloadAsync();
+      setSelected("");
+      setPlay(false);
+    } else if ((play == true) &&(selected == "")){
+      playSound("Alarm Sound 1");  
+      alarm.unloadAsync();
+      setSelected("");
+      setPlay(false);
+    }
+  }, [alarm, selected, play]);
+
 
   return (
     <View justifyContent='center' backgroundColor='#F4978E' height='100%'>
@@ -43,7 +136,7 @@ export default function TimerApp({route}) {
         <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
           reset={timerReset}
           options={timerDesign}
-          handleFinish={() => { setTimerStart(false); setTimerEnd(true); }}
+          handleFinish={() => { setTimerStart(false); setTimerEnd(true); setPlay(true); }}
           getTime={time => { }} />
       </View>
 
@@ -102,7 +195,7 @@ export default function TimerApp({route}) {
       </View>
 
       <View height='40%' width='50%' alignSelf='center'>
-        <SelectList setSelected={setSelected}
+        <SelectList setSelected={(val) => {setSelected(val); playSound(val);}} 
           data={notificationSounds}
           save="value"
           search={false}
@@ -114,7 +207,7 @@ export default function TimerApp({route}) {
     </View >
   );
 }
-
+//setSelected={(val) => {setSelected(val); playSound(val);}} 
 const styles = StyleSheet.create({
   titleText: {
     fontWeight: 'bold',

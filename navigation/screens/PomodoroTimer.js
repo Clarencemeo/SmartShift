@@ -1,19 +1,53 @@
 import * as React from 'react';
-import {useState} from 'react';
-import {StyleSheet, View, Text, Fragment, TouchableOpacity, Pressable, Modal, TextInput, Button} from 'react-native';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import TaskBites from './TaskBites';
-import Stacker from '../MainContainer';
+import {useState, useContext} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
+import {auth} from '../../firebase/firebase-config'
+import {db} from '../../firebase/firebase-config'
+import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
+import { SignInContext } from '../../userContexts/Context';
 
-export default function PomodoroTimer() {
+export default function PomodoroTimer(props) {
+    const {dispatchSignedIn} = useContext(SignInContext)
     const navigation = useNavigation();
+    const docRef = doc(db, "users", auth.currentUser.uid);
+    getDoc(docRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const workDuration = userData.workDuration;
+          const breakDuration = userData.breakDuration;
+          setWorkTimer(workDuration);
+          setBreakTimer(breakDuration);
+          console.log(workDuration); // prints the value of the workDuration field
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+
+
+
+    async function signOut(){
+        try{
+            auth.signOut()
+            .then(
+                ()=>{console.log("USER SUCCESSFULLY SIGNED OUT")
+                dispatchSignedIn({type:"UPDATE_SIGN_IN",payload:{userToken:null}})
+            })
+    
+        }catch(error){
+            alert(error.code)
+        }
+    }
 
     // work timer state (beginning at 25 for default)
     const [workTimer, setWorkTimer] = useState("25");
-    // break timer state (beginning at 25 for default)
+    // break timer state (beginning at 5 for default)
     const [breakTimer, setBreakTimer] = useState("5");
 
     // changes work timer value according to user input and then closes the work modal 
@@ -70,9 +104,10 @@ export default function PomodoroTimer() {
     //the TouchableOpacity BELOW is our START button.
     //for BACKEND: when this button is clicked, start the timer.
     //navigation.navigate tells us which screen to go to next,
-    //but the screen MUST be defined in the StackNavigation first in MainContainer.js
+    //but the screen MUST be defined in the TabNavigation first in MainContainer.js
     return (
         <View style = {styles.timerContainer}> 
+            <Text style = {styles.userProfile} onPress={() => {signOut()}}>Click here to logout: {auth.currentUser?.email}</Text>
             <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
             <View style = {styles.midcontainer}>   
               
@@ -157,6 +192,11 @@ const styles = StyleSheet.create({
         flex: 0.3,
         fontSize: 46,
         fontWeight: 'bold',
+        borderRadius: 20
+    },
+    userProfile: {
+        flex: 0.1,
+        fontSize: 18,
         borderRadius: 20
     },
     buttonStyle: {

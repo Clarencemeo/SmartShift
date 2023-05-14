@@ -1,10 +1,13 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
 import Checkbox from 'expo-checkbox';
 //Replace default useStates with an import from main, once we figure out how the firebase thing works...
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
+import {auth} from '../../firebase/firebase-config'
+import {db} from '../../firebase/firebase-config'
+import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
 export default function SettingsPage(navigation) {
     //Handles notifications for alarm.
@@ -20,6 +23,47 @@ export default function SettingsPage(navigation) {
     const [breakModalIsVisible, setBreakTimerModalIsVisible] = useState(false);
     // work timer modal useState, initially set to invisible (false)
     const [workModalIsVisible, setWorkTimerModalIsVisible] = useState(false);
+
+    const adjustSettings = async () => {
+        try {
+          await setDoc(
+            doc(db, "users", auth.currentUser.uid),
+            {
+              workDuration: defaultWorkTimer,
+              breakDuration: defaultBreakTimer, // add breakDuration field
+            },
+            { merge: true }
+          );
+          console.log("Settings updated successfully.");
+        } catch (error) {
+          console.error("Error updating settings:", error);
+        }
+      };
+
+    const docRef = doc(db, "users", auth.currentUser.uid);
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const docRef = doc(db, "users", auth.currentUser.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              const userData = docSnap.data();
+              const workDuration = userData.workDuration;
+              const breakDuration = userData.breakDuration;
+              setWorkTimer(workDuration);
+              setBreakTimer(breakDuration);
+              console.log(workDuration); // prints the value of the workDuration field
+            } else {
+              console.log("No such document!");
+            }
+          } catch (error) {
+            console.log("Error getting document:", error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+    
     
     // changes work timer value according to user input and then closes the work modal 
     function userInputWorkTimer(enteredValue) {
@@ -80,7 +124,7 @@ export default function SettingsPage(navigation) {
             </View>
         </Pressable>
         {/* The custom modal to allow user to change Work Timer value */}
-        <WorkTimerInput 
+        <WorkTimerInput
             // passes value to make modal visible 
             visible = {workModalIsVisible} 
             // passes function that closes modal
@@ -119,7 +163,7 @@ export default function SettingsPage(navigation) {
                 <Text style={styles.optionsText}>Restore Defaults</Text>
             </TouchableOpacity>  
             {/*Button to Confirm Choices*/}
-            <TouchableOpacity style = {styles.buttonConfirm} onPress={() => {}}>
+            <TouchableOpacity style = {styles.buttonConfirm} onPress={() => {adjustSettings()}}>
                 <Text style={styles.optionsText}>Confirm</Text>
             </TouchableOpacity>  
         </View>        
