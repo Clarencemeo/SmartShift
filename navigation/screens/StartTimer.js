@@ -10,10 +10,10 @@ import { SelectList } from 'react-native-dropdown-select-list'
 export default function TimerApp({route}) {
   //set to *60000 for actual time
   //const navigation = useNavigation(); 
-  const workDuration = route.params.workTimerDuration*60000;
-  const breakDuration = route.params.breakTimerDuration*60000;
-  //const workDuration = 10000;
-  //const breakDuration = 6000;
+  //const workDuration = route.params.workTimerDuration*60000;
+  //const breakDuration = route.params.breakTimerDuration*60000;
+  const workDuration = 10000;
+  const breakDuration = 6000;
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
   const [timerEnd, setTimerEnd] = useState(false);

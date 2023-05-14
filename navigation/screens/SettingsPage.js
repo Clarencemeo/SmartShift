@@ -21,7 +21,7 @@ export default function SettingsPage(navigation) {
     // work timer modal useState, initially set to invisible (false)
     const [workModalIsVisible, setWorkTimerModalIsVisible] = useState(false);
     
-        // changes work timer value according to user input and then closes the work modal 
+    // changes work timer value according to user input and then closes the work modal 
     function userInputWorkTimer(enteredValue) {
         setWorkTimer(Number(enteredValue));
         endWorkTimerModalHandler();
@@ -91,7 +91,7 @@ export default function SettingsPage(navigation) {
             defaultValues = {defaultWorkTimer}
         />
         <Text style = {styles.titleText}>Set Default Break Time</Text>
-        {/* Creates a custom button thatr activate modal for user to use to set custom break timer */}
+        {/* Creates a custom button that activates modal for user to use to set custom break timer */}
         <Pressable visible = {breakModalIsVisible} onPress={startBreakTimerModalHandler}>
             <View>
                 <Text style= {styles.timerText}>{defaultBreakTimer} Minutes</Text>
@@ -108,6 +108,10 @@ export default function SettingsPage(navigation) {
             // passes default value of Break Timer (whatever was previously entered, default starting at 5)
             defaultValues = {defaultBreakTimer}
         />
+        {/*Modal for page to modify account settings*/}
+        <TouchableOpacity style = {styles.buttonConfirm} onPress={() => {}}>
+            <Text style={styles.optionsText}>Account Settings</Text>
+        </TouchableOpacity>  
         </View>
         <View style={styles.section}>
             {/*Button to Restore Defaults*/}
