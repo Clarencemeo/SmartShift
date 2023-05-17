@@ -1,7 +1,6 @@
 import * as React from 'react';
 //import { Component } from 'react';
 import { useState, useMemo, useEffect } from 'react';
-//import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { Component } from 'react';
 import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight, Vibration} from 'react-native';
@@ -43,13 +42,13 @@ export default function TimerApp({route}) {
     if (alarm != undefined) {
       alarm.unloadAsync();
     }
-    // console.log(val);
     let key = Object.keys(notificationSounds).find(k=>notificationSounds[k].value === val)
     const sound = new Audio.Sound();
     if (key == 0) {
       try {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound1.wav'));
         setAlarm(sound);
+        console.log("setAlarm", alarm);
         await sound.playAsync();
       } catch (error) {
         console.log("errorrrrr")
@@ -111,15 +110,19 @@ export default function TimerApp({route}) {
     if ((play == true) &&(selected != "None")&&(selected != "")&&(alarm != undefined)) {
       console.log("ready to play", "selected:", selected);
       playSound(selected);  
-      alarm.unloadAsync();
       setSelected("");
       setPlay(false);
-    } else if ((play == true) &&(selected == "")){
+    } else if ((play == true) &&(selected == "")&&(alarm == undefined)){
       playSound("Alarm Sound 1");  
-      alarm.unloadAsync();
       setSelected("");
       setPlay(false);
     }
+    return alarm 
+      ? () => {
+        console.log('unloading');
+        alarm.unloadAsync();
+      }
+      : undefined;
   }, [alarm, selected, play]);
 
 
@@ -148,7 +151,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           onPress={() => {
-            setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking);
+            setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking); setAlarm(undefined);
           }}
           style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
           /*activeOpacity={1.0}*/
@@ -161,7 +164,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           disabled={timerEnd}
-          onPress={() => { setTimerStart(!timerStart); setTimerReset(false); }}
+          onPress={() => { setTimerStart(!timerStart); setTimerReset(false);}}
           style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]}
         >
           <View style={styles.buttonBorder}>
