@@ -126,7 +126,7 @@ export default function Login() {
                     </View>
                 }
             </Formik>
-            <View>
+            <View style = {styles.googleButton}>
                 <SocialIcon
                     title = "Sign in With Google"
                     button 
@@ -168,10 +168,13 @@ const styles = StyleSheet.create({
        backgroundColor: "#FBC4AB",
        textShadowColor: 'white', 
     },
+    googleButton: {
+        width: '95%',
+    },
     socialMedia: {
         borderRadius: 12,
         height: 50,
-        padding: 10
+        padding: 10,
     },
     buttonDesign: {
         // backgroundColor:"#FBC4AB",
