@@ -1,4 +1,20 @@
-import React, {useState} from 'react'; 
+import * as React from 'react';
+import MainContainer from './navigation/MainContainer';
+import  {SignInContextProvider}  from './userContexts/Context'
+import { authentication } from './firebase/firebase-config'
+import {useState, useEffect} from 'react';
+
+function App() {
+  return (
+    <SignInContextProvider> 
+      <MainContainer/>
+    </SignInContextProvider>
+  )
+}
+
+export default App;
+
+/*import React, {useState} from 'react'; 
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { Timer } from 'react-native-stopwatch-timer';
 
@@ -17,7 +33,7 @@ function RoundButton({title, color, background, onPress, disabled }) {
     >
       <View style = {styles.buttonBorder}>
         <Text style = { [styles.buttonTitle, {color}]}>{title}</Text>
-      </View>
+      </View>ç
     </TouchableOpacity>
   )
 }
@@ -136,4 +152,4 @@ const timerDesign = {
     color: "#FFFFFF",
     fontWeight: '200',
   }
-};
+}; */
