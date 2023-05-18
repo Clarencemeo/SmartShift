@@ -5,8 +5,13 @@ import { useState, useMemo, useEffect } from 'react';
 import { Component } from 'react';
 import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight, Vibration} from 'react-native';
-import { Timer } from 'react-native-stopwatch-timer';
+
+//Old Timer.
+//import { Timer } from 'react-native-stopwatch-timer';
 //import {NavigationContainer, useNavigation} from '@react-navigation/native';
+
+//New Timer? 
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 
 import { SelectList } from 'react-native-dropdown-select-list';
 
@@ -17,14 +22,21 @@ export default function TimerApp({route}) {
   //const navigation = useNavigation(); 
   //const workDuration = route.params.workTimerDuration*60000;
   //const breakDuration = route.params.breakTimerDuration*60000;
-  const workDuration = 10000;
-  const breakDuration = 6000;
+  const workDuration = 10;
+  const breakDuration = 6;
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
   const [timerEnd, setTimerEnd] = useState(false);
   const [timerWorking, setTimerWorking] = useState(true);
   const [selected, setSelected] = useState("");
+  
+  //handles whether or not the Timer is counting down.
   const [play, setPlay] = useState(false);
+  //Handles the reset of the timer. 
+  const [key, setKey] = useState(0);
+
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [formattedTime, setTime] = useState();
 
   const notificationSounds = [
     { key: '1', value: 'Alarm Sound 1' },
@@ -115,18 +127,24 @@ export default function TimerApp({route}) {
   }  
 
   useEffect(() => {
+    if ((play == true)) {
+        console.log("ready to play", "selected:", selected);
+        playSound(selected);  
+        setPlay(false);
+    }
+    /*
     if ((play == true) &&(selected != "None")&&(selected != "")&&(alarm != undefined)) {
       console.log("ready to play", "selected:", selected);
       playSound(selected);  
       setSelected("");
       setPlay(false);
     } else if ((play == true) &&(selected == "")){
-      playSound("Alarm Sound 1");  
+      playSound("Vibration");  
       setSelected("");
       setPlay(false);
     }
+    */
   }, [alarm, selected, play]);
-
 
   return (
     <View justifyContent='center' backgroundColor='#F4978E' height='100%'>
@@ -138,11 +156,19 @@ export default function TimerApp({route}) {
       </View>
 
       <View height='20%' justifyContent='center'>
-        <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
-          reset={timerReset}
-          options={timerDesign}
-          handleFinish={() => {if(!timerEnd){console.log("trigger here"); setTimerStart(false); setTimerEnd(true); setPlay(true);};}}
-          getTime={time => { }} />
+            <CountdownCircleTimer
+            key = {key}
+            isPlaying = {isPlaying}
+            duration={timerWorking ? workDuration : breakDuration}
+            //initialRemainingTime = {timerWorking ? workDuration : breakDuration}
+            colors="#A30000"
+            onComplete={() => {console.log("trigger here"); setTimerStart(false); setTimerEnd(true); setPlay(true); setIsPlaying(prev => !prev);
+            // do your stuff here
+            return { shouldRepeat: false, } 
+    }}
+            >
+                {({ remainingTime }) => <Text>{remainingTime}</Text>}
+            </CountdownCircleTimer>
       </View>
 
 
@@ -153,7 +179,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           onPress={() => {
-            setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking);
+            setKey(prevKey => prevKey + 1); setIsPlaying(false); setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking);
           }}
           style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
           /*activeOpacity={1.0}*/
@@ -166,7 +192,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           disabled={timerEnd}
-          onPress={() => { setTimerStart(!timerStart); setTimerReset(false); }}
+          onPress={() => { setIsPlaying(prev => !prev); setTimerStart(!timerStart); setTimerReset(false); console.log(formattedTime); }}
           style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]}
         >
           <View style={styles.buttonBorder}>
@@ -189,7 +215,7 @@ export default function TimerApp({route}) {
           >
             <TouchableOpacity
               onPress={() => {
-                setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
+                setIsPlaying(false); setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
               }
               }>
               <Text style={styles.skipBreakTitle}>Skip Break</Text>
