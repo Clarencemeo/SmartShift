@@ -16,6 +16,14 @@ function TaskItem({id, description, dueDate, urgent, important, complete, }) {
     const backColorComplete = "#ffcdb2";
     const colorUsed = complete ? backColorComplete : backColorInProgress;
 
+    const backColorUrgent = "#ff0a54";
+    const backColorNotUrgent = "white";
+    const urgentColor = urgent ? backColorUrgent : backColorNotUrgent; 
+
+    const backColorImportant = "#c9184a";
+    const backColorNotImportant = "white";
+    const importantColor = important ? backColorImportant : backColorNotImportant; 
+
     return (
         <Pressable
             onPress={taskPressHandler}
@@ -32,11 +40,13 @@ function TaskItem({id, description, dueDate, urgent, important, complete, }) {
                 <Text style={styles.amount}>{amount.toFixed(2)}</Text>
                 </View> */}
                 <View style = {styles.subcontainer2}>
-                    <View>
+                    <View style = {styles.urgentContainer}>
                         <Text style={styles.textBase}>Urgent</Text>
+                        <View style={styles.urgentBubble} backgroundColor = {urgentColor}></View>
                     </View>
                     <View>
                         <Text style={styles.textBase}>Important</Text>
+                        <View style = {styles.importantBubble} backgroundColor={importantColor}></View>
                     </View>
                 </View>
             </View>
@@ -91,6 +101,33 @@ const styles = StyleSheet.create({
     amount: {
         color: "#3e04c3",
         fontWeight: 'bold',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-
+    urgentBubble: {
+        marginTop: 3,  
+        marginLeft: 10,
+        width: 20, 
+        height: 20,
+        borderColor: "white",
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    urgentContainer: {
+        flex: "column", 
+    },
+    importantContainer: {
+        flex: "column"
+    },
+    importantBubble: {
+        marginTop: 3,  
+        marginLeft: 20,
+        width: 20, 
+        height: 20,
+        borderColor: "white",
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });
