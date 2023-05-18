@@ -1,7 +1,8 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect, useState } from "react";
 import {auth} from '../firebase/firebase-config'
 import {db} from '../firebase/firebase-config'
 import {collection, onSnapshot, getDocs, doc, setDoc, deleteDoc, addDoc} from 'firebase/firestore/lite'
+
 
 const DUMMY_TASKS = [
     {
@@ -125,9 +126,14 @@ const adjustSettings3 = async (action) => {
     }
   };
 
+  
 
 function taskReducer(state, action) {
     switch (action.type) {
+        case 'ADD_TASKS':
+            return [...state, ...action.payload];
+        case 'ADD_INITIAL':
+            return [{ ...action.payload, id: action.payload.id }, ...state]
         case 'ADD':
             const id = new Date().toString() + Math.random().toString();
             adjustSettings2(action, id)
@@ -145,21 +151,106 @@ function taskReducer(state, action) {
             console.log(action.payload.id)
             console.log(action.payload.data.description)
             adjustSettings3(action)
+            return updatedTasks;
         case 'DELETE':
-
             return state.filter((task) => task.id !== action.payload);
+        case 'RESET':
+                return DUMMY_TASKS;
         default:
             return state;
     }
 }
 
+
+const getUserTasks = async (userId) => {
+    try {
+      const tasksRef = collection(db, 'users', userId, 'tasks');
+      const snapshot = await getDocs(tasksRef);
+  
+      const tasks = [];
+      snapshot.forEach((doc) => {
+        const taskData = doc.data();
+        const task = {
+          id: doc.id,
+          ...taskData,
+          dueDate: taskData.dueDate.toDate() // Convert the dueDate field to a Date object
+        };
+        tasks.push(task);
+      });
+  
+      return tasks;
+    } catch (error) {
+      console.error('Error retrieving tasks:', error);
+      return [];
+    }
+  };
+
+  
+
 function TaskContextProvider({children}) {
+    
     const[taskState, dispatch] = useReducer(taskReducer, DUMMY_TASKS);
+    const [userId, setUserId] = useState(null);
+    //const userId = auth.currentUser.uid;
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+          if (user) {
+            setUserId(user.uid);
+          } else {
+            setUserId(null);
+            dispatch({ type: 'RESET' });
+          }
+        });
+    
+        return () => {
+          unsubscribe();
+        };
+      }, []);
+    
+    useEffect(() => {
+        if (userId) {
+            console.log("reading")
+            const fetchData = async () => {
+            try {
+              const tasks = await getUserTasks(userId);
+              console.log('User tasks:', tasks);
+              tasks.forEach((task) => {
+                addTaskInitial(task); //stop generating a new ID, use the one already in the database! 
+              });
+              //dispatch({ type: 'ADD_TASKS', payload: tasks });
+              // Do something with the tasks, such as updating the taskState using dispatch
+            } catch (error) {
+                console.error('reached here');
+                console.error('ERROR IN USE EFFECT:', error);
+            }
+          };
+    
+          fetchData();
+        }
+      }, [userId]);
+
 
     function addTask(taskData) {
-        dispatch({type: 'ADD', payload: taskData});
-        //adjustSettings2(taskData);
-    }
+        if (taskData && typeof taskData === 'object') {
+          // Check if taskData is defined and an object
+          const serializedTaskData = taskData.toJSON ? taskData.toJSON() : taskData;
+          //dispatch({ type: 'ADD_TASKS', payload: [serializedTaskData] });
+          dispatch({type: 'ADD', payload: serializedTaskData});
+          // Adjust other settings if needed
+        }
+      }
+
+    //add a task to show on the list, but don't update the firebase
+    function addTaskInitial(taskData) {
+        if (taskData && typeof taskData === 'object') {
+          // Check if taskData is defined and an object
+          const serializedTaskData = taskData.toJSON ? taskData.toJSON() : taskData;
+          //dispatch({ type: 'ADD_TASKS', payload: [serializedTaskData] });
+          dispatch({type: 'ADD_INITIAL', payload: serializedTaskData});
+          // Adjust other settings if needed
+        }
+      }
 
     function deleteTask(id) {
         const tasksRef = doc(db, 'users', auth.currentUser.uid, 'tasks', id);
@@ -167,6 +258,8 @@ function TaskContextProvider({children}) {
         dispatch({type: 'DELETE', payload: id});
     }
 
+    //PS if you try to update one of the placeholder tasks,
+    //there could be weird behavior. this is because the placeholder tasks aren't in the database! 
     function updateTask(id, taskData) {
         dispatch({type: 'UPDATE', payload: {id: id, data: taskData}});
     }
