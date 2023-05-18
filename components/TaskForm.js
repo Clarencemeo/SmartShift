@@ -20,11 +20,11 @@ function TaskForm({submitButtonLabel, onCancel, onSubmit, defaultValues, checkbo
             isValid: true
         }, 
         urgent: {
-            value: false, 
+            value: defaultValues ? defaultValues.complete : false,
             isValid: true
         }, 
         important: {
-            value: false, 
+            value: defaultValues ? defaultValues.complete : false, 
             isValid: true
         }, 
     });
@@ -43,8 +43,8 @@ function TaskForm({submitButtonLabel, onCancel, onSubmit, defaultValues, checkbo
             description: inputs.description.value,
             dueDate: new Date(inputs.dueDate.value), 
             complete: inputs.complete.value,
-            urgent: "insert here",
-            important: "insert here",
+            urgent: inputs.urgent.value,
+            important: inputs.important.value,
         }; 
 
         const descriptionIsValid = taskData.description.trim().length > 0;
@@ -86,9 +86,27 @@ function TaskForm({submitButtonLabel, onCancel, onSubmit, defaultValues, checkbo
                     value: inputs.dueDate.value,
                 }}
             />
+            <View style = {styles.urgentView}>
+                <Text style = {styles.checkText}>Urgent?</Text>
+                <Checkbox 
+                    checked = {inputs.urgent.value}
+                    onChange={inputChangedHandler.bind(this, 'urgent')}
+                    buttonStyle={styles.checkboxBase}
+                    activeButtonStyle={styles.checkboxChecked}
+                />
+            </View>
+            <View style = {styles.checkView}>
+                <Text style = {styles.checkText}>Important?</Text>
+                <Checkbox 
+                    checked = {inputs.important.value}
+                    onChange={inputChangedHandler.bind(this, 'important')}
+                    buttonStyle={styles.checkboxBase}
+                    activeButtonStyle={styles.checkboxChecked}
+                />
+            </View>
             {checkbox && 
-                <View style={styles.completeCheck}> 
-                    <Text style = {styles.completeText}>Complete?</Text>
+                <View style={styles.checkView}> 
+                    <Text style = {styles.checkText}>Complete?</Text>
                     <Checkbox 
                         checked={inputs.complete.value}
                         onChange={inputChangedHandler.bind(this, 'complete')}
@@ -146,14 +164,21 @@ const styles = StyleSheet.create({
         borderColor: '#d90429',
         backgroundColor: 'transparent',
     },
-    completeCheck: {
+    checkView: {
         flexDirection: 'row',
         alignItems: 'center',
         // justifyContent: 'space-between',
         marginHorizontal: 4,
         marginVertical: 8
     }, 
-    completeText: {
+    urgentView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'space-between',
+        marginHorizontal: 4,
+        marginVertical: 8
+    }, 
+    checkText: {
         fontSize: 12,
         color: "#d90429",
         marginBottom: 4,
