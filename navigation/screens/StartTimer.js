@@ -51,6 +51,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound1.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -59,6 +60,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound2.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -67,6 +69,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound3.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -75,6 +78,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound4.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -83,6 +87,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound5.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -91,6 +96,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound6.mp3'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -99,6 +105,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound7.mp3'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -111,12 +118,10 @@ export default function TimerApp({route}) {
     if ((play == true) &&(selected != "None")&&(selected != "")&&(alarm != undefined)) {
       console.log("ready to play", "selected:", selected);
       playSound(selected);  
-      alarm.unloadAsync();
       setSelected("");
       setPlay(false);
     } else if ((play == true) &&(selected == "")){
       playSound("Alarm Sound 1");  
-      alarm.unloadAsync();
       setSelected("");
       setPlay(false);
     }
@@ -136,7 +141,7 @@ export default function TimerApp({route}) {
         <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
           reset={timerReset}
           options={timerDesign}
-          handleFinish={() => { setTimerStart(false); setTimerEnd(true); setPlay(true); }}
+          handleFinish={() => {if(!timerEnd){console.log("trigger here"); setTimerStart(false); setTimerEnd(true); setPlay(true);};}}
           getTime={time => { }} />
       </View>
 
