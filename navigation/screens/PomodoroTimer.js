@@ -52,13 +52,21 @@ export default function PomodoroTimer(props) {
 
     // changes work timer value according to user input and then closes the work modal 
     function userInputWorkTimer(enteredValue) {
-        setWorkTimer(Number(enteredValue));
+        if (Number(enteredValue) == 0) {
+            setWorkTimer(Number(enteredValue) + 1);
+        } else {
+            setWorkTimer(Number(enteredValue));
+        }
         endWorkTimerModalHandler();
     }
 
     // changes break timer value according to user input and then closes the break modal 
     function userInputBreakTimer(enteredValue) {
-        setBreakTimer(Number(enteredValue));
+        if (Number(enteredValue) == 0) {
+            setWorkTimer(Number(enteredValue) + 1);
+        } else {
+            setWorkTimer(Number(enteredValue));
+        }
         endBreakTimerModalHandler();
     }
     

@@ -18,12 +18,12 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { Audio } from 'expo-av';
 
 export default function TimerApp({route}) {
-  //set to *60000 for actual time
   //const navigation = useNavigation(); 
-  //const workDuration = route.params.workTimerDuration*60000;
-  //const breakDuration = route.params.breakTimerDuration*60000;
-  const workDuration = 10;
-  const breakDuration = 6;
+  //The timer takes time in seconds, so convert to that. 
+  const workDuration = route.params.workTimerDuration*60;
+  const breakDuration = route.params.breakTimerDuration*60;
+  //const workDuration = 10;
+  //const breakDuration = 6;
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
   const [timerEnd, setTimerEnd] = useState(false);
@@ -36,7 +36,6 @@ export default function TimerApp({route}) {
   const [key, setKey] = useState(0);
 
   const [isPlaying, setIsPlaying] = useState(true)
-  const [formattedTime, setTime] = useState();
 
   const notificationSounds = [
     { key: '1', value: 'Alarm Sound 1' },
@@ -146,7 +145,8 @@ export default function TimerApp({route}) {
     */
   }, [alarm, selected, play]);
 
-  return (
+
+    return (
     <View justifyContent='center' backgroundColor='#F4978E' height='100%'>
       <View height='15%'>
         <Text
@@ -154,9 +154,9 @@ export default function TimerApp({route}) {
           style={styles.titleText}
         >{timerWorking ? "Work Cycle" : "Break Time!"}</Text>
       </View>
-
-      <View height='20%' justifyContent='center'>
-            <CountdownCircleTimer
+      <View height='20%' justifyContent='center' alignItems = 'center'>
+          <CountdownCircleTimer
+            size = {225}
             key = {key}
             isPlaying = {isPlaying}
             duration={timerWorking ? workDuration : breakDuration}
@@ -165,10 +165,14 @@ export default function TimerApp({route}) {
             onComplete={() => {console.log("trigger here"); setTimerStart(false); setTimerEnd(true); setPlay(true); setIsPlaying(prev => !prev);
             // do your stuff here
             return { shouldRepeat: false, } 
-    }}
+            }}
             >
-                {({ remainingTime }) => <Text>{remainingTime}</Text>}
-            </CountdownCircleTimer>
+            
+            {({ remainingTime }) => (
+                <Text style = {styles.timerText}>{String(Math.floor(remainingTime/60)).padStart(2, "0")}:{String(remainingTime % 60).padStart(2, "0")}</Text>
+            )}    
+
+          </CountdownCircleTimer>
       </View>
 
 
@@ -192,7 +196,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           disabled={timerEnd}
-          onPress={() => { setIsPlaying(prev => !prev); setTimerStart(!timerStart); setTimerReset(false); console.log(formattedTime); }}
+          onPress={() => { setIsPlaying(prev => !prev); setTimerStart(!timerStart); setTimerReset(false);}}
           style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]}
         >
           <View style={styles.buttonBorder}>
@@ -215,7 +219,7 @@ export default function TimerApp({route}) {
           >
             <TouchableOpacity
               onPress={() => {
-                setIsPlaying(false); setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
+                setKey(prevKey => prevKey + 1); setIsPlaying(false); setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
               }
               }>
               <Text style={styles.skipBreakTitle}>Skip Break</Text>
@@ -243,6 +247,13 @@ const styles = StyleSheet.create({
   titleText: {
     fontWeight: 'bold',
     fontSize: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  timerText: {
+    fontWeight: 'bold',
+    fontSize: 40,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
