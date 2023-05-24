@@ -69,9 +69,9 @@ export default function Login() {
 
     return (
         <View style = {styles.timerContainer}> 
-             <View style ={{marginLeft:20, marginTop:10}}>
+            <View style ={styles.titleTextContainer}>
                  <Text style ={styles.title}>Sign in with your account!</Text>
-             </View> 
+            </View> 
             <Formik
                 initialValues = {{email:'',password:''}}
                 onSubmit = {(values) => {
@@ -84,27 +84,49 @@ export default function Login() {
                         <View style = {styles.TextInput2}> 
                             <Icon 
                                 name ="mail"
-                                iconStyle ={{color:'#86939e'}}
+                                // iconStyle ={{color:'#86939e'}}
+                                iconStyle = {{color: 'white'}}
                                 type ="material"
                                 style={{}}
                             />
-                            <TextInput style = {styles.input} autoCorrect = {false} autoCapitalize = "none" placeholder='Email' keyboardType='email-address' value={props.values.email} ref={text1} onChangeText={props.handleChange('email')}/>
+                            <TextInput 
+                                style = {styles.input}
+                                placeholderTextColor = {"white"} 
+                                autoCorrect = {false} 
+                                autoCapitalize = "none" 
+                                placeholder='Email' 
+                                keyboardType='email-address' 
+                                value={props.values.email} 
+                                ref={text1} 
+                                onChangeText={props.handleChange('email')}
+                            />
                         </View>
-                    <View style = {styles.TextInput2}> 
-                    <Icon 
-                            name ="lock"
-                            iconStyle ={{color:'#86939e'}}
-                            type ="material"
-                            style={{}}
-                        />
-                    <TextInput style = {styles.input} placeholder='Password' autoCorrect = {false} autoCapitalize = "none" value={props.values.password} ref={text2} secureTextEntry = {true} onChangeText={props.handleChange('password')}/>
-                    </View>
-                    <Button title='Login' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
-                    <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={() => {navigation.navigate('Register')}}/>
+                        <View style = {styles.TextInput2}> 
+                            <Icon 
+                                name ="lock"
+                                // iconStyle ={{color:'#86939e'}}
+                                iconStyle = {{color: 'white'}}
+                                type ="material"
+                                style={{}}
+                            />
+                            <TextInput 
+                                style = {styles.input} 
+                                placeholderTextColor = {"white"} 
+                                placeholder='Password' 
+                                autoCorrect = {false} 
+                                autoCapitalize = "none" 
+                                value={props.values.password} 
+                                ref={text2} 
+                                secureTextEntry = {true} 
+                                onChangeText={props.handleChange('password')}
+                            />
+                        </View>
+                        <Button title='Login' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
+                        <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={() => {navigation.navigate('Register')}}/>
                     </View>
                 }
             </Formik>
-            <View>
+            <View style = {styles.googleButton}>
                 <SocialIcon
                     title = "Sign in With Google"
                     button 
@@ -122,29 +144,47 @@ const styles = StyleSheet.create({
     timerContainer: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: '#fbc4ab',
     },
     timerText: {
         fontSize: 26,
         fontWeight: 'bold'
     },
+    titleTextContainer: {
+        marginHorizontal:20, 
+        marginVertical:10, 
+        justifyContent: 'center', 
+        alignContent: 'center',
+    },
     input: {
        flex:1,
        paddingHorizontal: 5,
        marginVertical: 10,
+    //    color: "#000000",
+       color: "white",
+    //    color: "#ffffff",
+       fontSize: 16,
+       backgroundColor: "#FBC4AB",
+       textShadowColor: 'white', 
+    },
+    googleButton: {
+        width: '95%',
     },
     socialMedia: {
         borderRadius: 12,
         height: 50,
-        padding: 10
+        padding: 10,
     },
     buttonDesign: {
-        backgroundColor:"#FBC4AB",
+        // backgroundColor:"#FBC4AB",
         alignContent:"center",
         justifyContent:"center",
         borderRadius:12,
         borderWidth:3, 
-        borderColor:"#F08080",
+        // borderColor:"#F08080",
+        borderColor: '#f08080',
+        backgroundColor:'#f4978e',
         height:40,
         paddingHorizontal:20,
         marginVertical: 10
@@ -154,25 +194,34 @@ const styles = StyleSheet.create({
         fontSize:16,  
         fontWeight:"bold" ,
         alignItems:"center",
-        justifyContent:"center"  ,
-        marginTop:-3
-      },
+        justifyContent:"center",
+        marginTop:-3,
+    },
     TextInput2:{
-        borderWidth:1,
+        borderWidth:3,
         borderRadius:12,
-        marginHorizontal:20,
+        // marginHorizontal:20,
+        width: '90%',
         marginVertical: 5,
-        borderColor:"#86939e",
+        // borderColor:"#86939e",
+        borderColor: '#f08080',
         flexDirection:"row",
-        justifyContent:"space-between",
+        // justifyContent:"space-between",
         alignContent:"center",
         alignItems:"center",
         paddingLeft:10
       },
     title:{
-        color:"#F08080",
-        fontSize :20,
-        fontWeight:"bold",
-        padding: 10
+        // color:"#F08080",
+        fontSize :32,
+        // fontWeight:"bold",
+        padding: 10,
+        // justifyContent: 'center', 
+        // alignContent: 'center',
+        // flex: 0.3,
+        // fontSize: 46,
+        fontWeight: 'bold',
+        // borderRadius: 20
+        textAlign: 'center'
     }
 });
