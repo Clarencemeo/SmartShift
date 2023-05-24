@@ -6,6 +6,10 @@ import UserNameInput from '../../components/UserNameInput';
 import {auth} from '../../firebase/firebase-config'
 import {db} from '../../firebase/firebase-config'
 import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
+import { storage } from '../../firebase/firebase-config'
+import { ref, uploadBytes } from 'firebase/storage';
+
+import * as FileSystem from 'expo-file-system';
 
 export default function AccountSettings({route}) {
     
@@ -13,9 +17,28 @@ export default function AccountSettings({route}) {
     const [userName, setUserName] = useState(null);
     
     const [userNameModalIsVisible, setUserNameModalIsVisible] = useState(false);
+    
+
+    const fetchData = async () => {  
+      try {
+        const docRef = doc(db, "users", auth.currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const userName = userData.firstName;
+          const image_base64 = userData.image;
+
+          setUserName(userName);
+        } else {
+           console.log("No such document!");
+        }
+        } catch (error) {
+          console.log("Error getting document:", error);
+        }
+    };
 
     useEffect(() => {
-        checkForCameraRollPermission(); checkIfUserNameSet();
+        fetchData(); checkForCameraRollPermission(); checkIfUserNameSet();
     }, []);
 
     const addImage = async() => {
@@ -23,17 +46,27 @@ export default function AccountSettings({route}) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4,3],
-        quality: 1,
+        quality: 0.5,
         });
         console.log(JSON.stringify(_image));
         if(!_image.canceled) {
             setImage(_image.uri);
+            const uri = _image.uri;
+            const res =  await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
+            //console.log(res);
+            try {
+                const userRef = doc(db, 'users', auth.currentUser.uid);
+                await setDoc(userRef, { image: res }, { merge:true });
+                console.log('image storing worked????');
+            } catch (error) {
+                console.log('Error storing image:', error);
+            }
         }
     }; 
 
     const checkForCameraRollPermission = async() => {
         const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
+        if (status != 'granted') {
             alert("Please grant camera roll permissions inside your system's settings.")
         } else{
             console.log('Media Permissions are granted')

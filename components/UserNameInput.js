@@ -11,15 +11,15 @@ function UserNameInput(props) {
     const [userName, setUserName] = useState(props.defaultValues);
     
     useEffect(() => {
-        /*
+        
         const fetchData = async () => {
           try {
             const docRef = doc(db, "users", auth.currentUser.uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               const userData = docSnap.data();
-              const breakDuration = userData.breakDuration;
-              setBreakTime(breakDuration);
+              const userName = userData.firstName;
+              setUserName(userName);
             } else {
               console.log("No such document!");
             }
@@ -29,8 +29,8 @@ function UserNameInput(props) {
         };
     
         fetchData();
-        */
-        console.log("i dunno firebase, sorry.");
+        
+        //console.log("i dunno firebase, sorry.");
       }, []);
     
 
@@ -46,14 +46,14 @@ function UserNameInput(props) {
 
     
     const adjustSettings = async () => {
-        /*
+        
         setDoc(
             doc(db, 'users', auth.currentUser.uid), 
-            { breakDuration: breakTime},
+            { firstName: userName},
             { merge: true}
           );
-        */
-        console.log("i dunno firebase, sorry.");
+        
+        //console.log("i dunno firebase, sorry.");
     }
     
 
