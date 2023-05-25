@@ -3,13 +3,14 @@ import {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
 import Checkbox from 'expo-checkbox';
 //Replace default useStates with an import from main, once we figure out how the firebase thing works...
+import {useNavigation} from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
 import {auth} from '../../firebase/firebase-config'
 import {db} from '../../firebase/firebase-config'
 import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
-export default function SettingsPage(navigation) {
+export default function SettingsPage() {
     //Handles notifications for alarm.
     const [enableAlarmNotif, setAlarmNotif] = useState(true);
     //Handles notifications for deadlines.
@@ -23,6 +24,8 @@ export default function SettingsPage(navigation) {
     const [breakModalIsVisible, setBreakTimerModalIsVisible] = useState(false);
     // work timer modal useState, initially set to invisible (false)
     const [workModalIsVisible, setWorkTimerModalIsVisible] = useState(false);
+    
+    const navigation = useNavigation();
 
     const adjustSettings = async () => {
         try {
@@ -65,7 +68,7 @@ export default function SettingsPage(navigation) {
       }, []);
     
     
-        // changes work timer value according to user input and then closes the work modal 
+    // changes work timer value according to user input and then closes the work modal 
     function userInputWorkTimer(enteredValue) {
         setWorkTimer(Number(enteredValue));
         endWorkTimerModalHandler();
@@ -96,7 +99,12 @@ export default function SettingsPage(navigation) {
     function endBreakTimerModalHandler() {
         setBreakTimerModalIsVisible(false);
     }
-
+    
+    function accountSettingsHandler() {
+        navigation.navigate('AccountSettings', {
+        });
+    }
+    
     return (
         <View style={styles.container}>
         <Text style={styles.titleText}>Change Default Options</Text>
@@ -135,7 +143,7 @@ export default function SettingsPage(navigation) {
             defaultValues = {defaultWorkTimer}
         />
         <Text style = {styles.titleText}>Set Default Break Time</Text>
-        {/* Creates a custom button thatr activate modal for user to use to set custom break timer */}
+        {/* Creates a custom button that activates modal for user to use to set custom break timer */}
         <Pressable visible = {breakModalIsVisible} onPress={startBreakTimerModalHandler}>
             <View>
                 <Text style= {styles.timerText}>{defaultBreakTimer} Minutes</Text>
@@ -152,6 +160,10 @@ export default function SettingsPage(navigation) {
             // passes default value of Break Timer (whatever was previously entered, default starting at 5)
             defaultValues = {defaultBreakTimer}
         />
+        {/*Navigation to Account Settings*/}
+        <TouchableOpacity style = {styles.buttonConfirm} onPress={accountSettingsHandler}>
+            <Text style={styles.optionsText}>Account Settings</Text>
+        </TouchableOpacity>  
         </View>
         <View style={styles.section}>
             {/*Button to Restore Defaults*/}

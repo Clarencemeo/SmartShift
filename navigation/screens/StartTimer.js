@@ -4,26 +4,37 @@ import { useState, useMemo, useEffect } from 'react';
 import { Component } from 'react';
 import { getTimerBreakDuration, getTimerWorkDuration } from './PomodoroTimer';
 import { StyleSheet, View, Text, Fragment, TouchableOpacity, TouchableHighlight, Vibration} from 'react-native';
-import { Timer } from 'react-native-stopwatch-timer';
+
+//Old Timer.
+//import { Timer } from 'react-native-stopwatch-timer';
 //import {NavigationContainer, useNavigation} from '@react-navigation/native';
+
+//New Timer? 
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 
 import { SelectList } from 'react-native-dropdown-select-list';
 
 import { Audio } from 'expo-av';
 
 export default function TimerApp({route}) {
-  //set to *60000 for actual time
   //const navigation = useNavigation(); 
-  //const workDuration = route.params.workTimerDuration*60000;
-  //const breakDuration = route.params.breakTimerDuration*60000;
-  const workDuration = 10000;
-  const breakDuration = 6000;
+  //The timer takes time in seconds, so convert to that. 
+  const workDuration = route.params.workTimerDuration*60;
+  const breakDuration = route.params.breakTimerDuration*60;
+  //const workDuration = 10;
+  //const breakDuration = 6;
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
   const [timerEnd, setTimerEnd] = useState(false);
   const [timerWorking, setTimerWorking] = useState(true);
   const [selected, setSelected] = useState("");
+  
+  //handles whether or not the Timer is counting down.
   const [play, setPlay] = useState(false);
+  //Handles the reset of the timer. 
+  const [key, setKey] = useState(0);
+
+  const [isPlaying, setIsPlaying] = useState(true)
 
   const notificationSounds = [
     { key: '1', value: 'Alarm Sound 1' },
@@ -50,6 +61,7 @@ export default function TimerApp({route}) {
         setAlarm(sound);
         console.log("setAlarm", alarm);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -58,6 +70,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound2.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -66,6 +79,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound3.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -74,6 +88,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound4.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -82,6 +97,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound5.wav'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -90,6 +106,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound6.mp3'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -98,6 +115,7 @@ export default function TimerApp({route}) {
         await sound.loadAsync(require('../../resources/alarms/AlarmSound7.mp3'));
         setAlarm(sound);
         await sound.playAsync();
+        alarm.unloadAsync();
       } catch (error) {
         console.log("errorrrrr")
       }
@@ -107,26 +125,27 @@ export default function TimerApp({route}) {
   }  
 
   useEffect(() => {
+    if ((play == true)) {
+        console.log("ready to play", "selected:", selected);
+        playSound(selected);  
+        setPlay(false);
+    }
+    /*
     if ((play == true) &&(selected != "None")&&(selected != "")&&(alarm != undefined)) {
       console.log("ready to play", "selected:", selected);
       playSound(selected);  
       setSelected("");
       setPlay(false);
-    } else if ((play == true) &&(selected == "")&&(alarm == undefined)){
-      playSound("Alarm Sound 1");  
+    } else if ((play == true) &&(selected == "")){
+      playSound("Vibration");  
       setSelected("");
       setPlay(false);
     }
-    return alarm 
-      ? () => {
-        console.log('unloading');
-        alarm.unloadAsync();
-      }
-      : undefined;
+    */
   }, [alarm, selected, play]);
 
 
-  return (
+    return (
     <View justifyContent='center' backgroundColor='#F4978E' height='100%'>
       <View height='15%'>
         <Text
@@ -134,13 +153,25 @@ export default function TimerApp({route}) {
           style={styles.titleText}
         >{timerWorking ? "Work Cycle" : "Break Time!"}</Text>
       </View>
+      <View height='20%' justifyContent='center' alignItems = 'center'>
+          <CountdownCircleTimer
+            size = {225}
+            key = {key}
+            isPlaying = {isPlaying}
+            duration={timerWorking ? workDuration : breakDuration}
+            //initialRemainingTime = {timerWorking ? workDuration : breakDuration}
+            colors="#A30000"
+            onComplete={() => {console.log("trigger here"); setTimerStart(false); setTimerEnd(true); setPlay(true); setIsPlaying(prev => !prev);
+            // do your stuff here
+            return { shouldRepeat: false, } 
+            }}
+            >
+            
+            {({ remainingTime }) => (
+                <Text style = {styles.timerText}>{String(Math.floor(remainingTime/60)).padStart(2, "0")}:{String(remainingTime % 60).padStart(2, "0")}</Text>
+            )}    
 
-      <View height='20%' justifyContent='center'>
-        <Timer totalDuration={(timerWorking ? workDuration : breakDuration)} secs start={timerStart}
-          reset={timerReset}
-          options={timerDesign}
-          handleFinish={() => { setTimerStart(false); setTimerEnd(true); setPlay(true); }}
-          getTime={time => { }} />
+          </CountdownCircleTimer>
       </View>
 
 
@@ -151,7 +182,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           onPress={() => {
-            setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking); setAlarm(undefined);
+            setKey(prevKey => prevKey + 1); setIsPlaying(false); setTimerEnd(false); setTimerStart(false); setTimerReset(true); setTimerWorking(timerEnd ? !timerWorking : timerWorking);
           }}
           style={[styles.roundButton, { backgroundColor: '#FFDAB9' }]}
           /*activeOpacity={1.0}*/
@@ -164,7 +195,7 @@ export default function TimerApp({route}) {
 
         <TouchableOpacity
           disabled={timerEnd}
-          onPress={() => { setTimerStart(!timerStart); setTimerReset(false);}}
+          onPress={() => { setIsPlaying(prev => !prev); setTimerStart(!timerStart); setTimerReset(false);}}
           style={[styles.roundButton, { backgroundColor: timerStart ? '#FFFFFF' : '#FFDAB9' }]}
         >
           <View style={styles.buttonBorder}>
@@ -187,7 +218,7 @@ export default function TimerApp({route}) {
           >
             <TouchableOpacity
               onPress={() => {
-                setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
+                setKey(prevKey => prevKey + 1); setIsPlaying(false); setTimerStart(false); setTimerReset(true); setTimerWorking(!timerWorking);
               }
               }>
               <Text style={styles.skipBreakTitle}>Skip Break</Text>
@@ -215,6 +246,13 @@ const styles = StyleSheet.create({
   titleText: {
     fontWeight: 'bold',
     fontSize: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  timerText: {
+    fontWeight: 'bold',
+    fontSize: 40,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
