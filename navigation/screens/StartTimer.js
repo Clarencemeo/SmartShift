@@ -210,9 +210,9 @@ export default function TimerApp({route}) {
           <View alignItems='center'
             alignSelf='stretch'
             backgroundColor='#F08080'
-            borderWidth='2'
+            borderWidth={2}
             borderColor='#900000'
-            borderRadius='20'
+            borderRadius={20}
             marginHorizontal='30%'
             marginTop='2%'
           >
