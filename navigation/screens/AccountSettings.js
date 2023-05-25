@@ -27,7 +27,7 @@ export default function AccountSettings({route}) {
           const userData = docSnap.data();
           const userName = userData.firstName;
           const image_base64 = userData.image;
-
+          setImage(`data:image/jpeg;base64,${image_base64}`);
           setUserName(userName);
         } else {
            console.log("No such document!");
