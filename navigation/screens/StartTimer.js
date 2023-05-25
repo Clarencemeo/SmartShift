@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 90,
     borderColor: '#C05050',
-    borderWidth: '1',
+    borderWidth: 1,
   },
   skipBreakTitle: {
     fontSize: 25,
@@ -308,8 +308,8 @@ const styles = StyleSheet.create({
 
   listBox: {
     borderColor: '#C05050',
-    borderWidth: '1',
-    borderRadius: '15'
+    borderWidth: 1,
+    borderRadius: 15
   }
 });
 
@@ -318,8 +318,8 @@ const timerDesign = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: '5',
-    borderRadius: '1000',
+    borderWidth: 5,
+    borderRadius: 1000,
     backgroundColor: '#FBC4AB',
     borderColor: '#FFFFFF',
     width: '90%',
