@@ -43,6 +43,22 @@ export default function SettingsPage() {
         }
       };
 
+    const setDefault = async () => {
+        try {
+          await setDoc(
+            doc(db, "users", auth.currentUser.uid),
+            {
+              workDuration: "25",
+              breakDuration: "5", // add breakDuration field
+            },
+            { merge: true }
+          );
+          console.log("Settings updated successfully.");
+        } catch (error) {
+          console.error("Error updating settings:", error);
+        }
+      };
+
     const docRef = doc(db, "users", auth.currentUser.uid);
     useFocusEffect(
         React.useCallback(() => {
@@ -62,7 +78,7 @@ export default function SettingsPage() {
             .catch((error) => {
               console.log('Error getting document:', error);
             });
-        })
+        }, [defaultWorkTimer, defaultBreakTimer]) // Add workTimer and breakTimer as dependencies
       );
 
     
@@ -166,7 +182,7 @@ export default function SettingsPage() {
         </View>
         <View style={styles.section}>
             {/*Button to Restore Defaults*/}
-            <TouchableOpacity style = {styles.buttonRestore} onPress={() => {setAlarmNotif(true); setDeadlineNotif(true); setWorkTimer(25); setBreakTimer(5);}}>
+            <TouchableOpacity style = {styles.buttonRestore} onPress={() => {setAlarmNotif(true); setDeadlineNotif(true); setWorkTimer(25); setBreakTimer(5); setDefault()}}>
                 <Text style={styles.optionsText}>Restore Defaults</Text>
             </TouchableOpacity>  
             {/*Button to Confirm Choices*/}
