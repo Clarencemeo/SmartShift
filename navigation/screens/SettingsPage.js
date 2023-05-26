@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
 import Checkbox from 'expo-checkbox';
 //Replace default useStates with an import from main, once we figure out how the firebase thing works...
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
 import {auth} from '../../firebase/firebase-config'
@@ -44,28 +44,27 @@ export default function SettingsPage() {
       };
 
     const docRef = doc(db, "users", auth.currentUser.uid);
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const docRef = doc(db, "users", auth.currentUser.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-              const userData = docSnap.data();
-              const workDuration = userData.workDuration;
-              const breakDuration = userData.breakDuration;
-              setWorkTimer(workDuration);
-              setBreakTimer(breakDuration);
-              console.log(workDuration); // prints the value of the workDuration field
-            } else {
-              console.log("No such document!");
-            }
-          } catch (error) {
-            console.log("Error getting document:", error);
-          }
-        };
-    
-        fetchData();
-      }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+          const docRef = doc(db, 'users', auth.currentUser.uid);
+          getDoc(docRef)
+            .then((docSnap) => {
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const workDuration = userData.workDuration;
+                const breakDuration = userData.breakDuration;
+                setWorkTimer(workDuration);
+                setBreakTimer(breakDuration);
+              } else {
+                console.log('No such document!');
+              }
+            })
+            .catch((error) => {
+              console.log('Error getting document:', error);
+            });
+        })
+      );
+
     
     
     // changes work timer value according to user input and then closes the work modal 

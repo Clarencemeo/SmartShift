@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
 import { auth } from '../../firebase/firebase-config'
@@ -12,22 +12,26 @@ import { SignInContext } from '../../userContexts/Context';
 export default function PomodoroTimer(props) {
     const { dispatchSignedIn } = useContext(SignInContext)
     const navigation = useNavigation();
-    const docRef = doc(db, "users", auth.currentUser.uid);
-    getDoc(docRef)
-        .then((docSnap) => {
-            if (docSnap.exists()) {
+    useFocusEffect(
+        React.useCallback(() => {
+          const docRef = doc(db, 'users', auth.currentUser.uid);
+          getDoc(docRef)
+            .then((docSnap) => {
+              if (docSnap.exists()) {
                 const userData = docSnap.data();
                 const workDuration = userData.workDuration;
                 const breakDuration = userData.breakDuration;
                 setWorkTimer(workDuration);
                 setBreakTimer(breakDuration);
-            } else {
-                console.log("No such document!");
-            }
+              } else {
+                console.log('No such document!');
+              }
+            })
+            .catch((error) => {
+              console.log('Error getting document:', error);
+            });
         })
-        .catch((error) => {
-            console.log("Error getting document:", error);
-        });
+      );
 
 
 
