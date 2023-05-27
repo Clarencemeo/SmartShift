@@ -87,20 +87,20 @@ export default function Register() {
                     }}
                 > 
                     { (props) => 
-                        <View style = {styles.form}> 
-                            <View style = {styles.inputs}>
-                                <TextInput style = {styles.typeFormat} placeholder='Mobile Number' keyboardType= "number-pad" autoFocus = {false} value={props.values.phone_number} onChangeText={props.handleChange('phone_number')}/>
-                            </View>
-                            <View style = {styles.inputs}>
-                                <TextInput style = {styles.typeFormat} autoCorrect = {false} placeholder='Name' value={props.values.name} autofocus = {false} onChangeText={props.handleChange('name')}/>
-                            </View>
-                            <View style = {styles.inputs}>
-                                <TextInput style = {styles.typeFormat} autoCorrect = {false} autoCapitalize = "none" keyboardType='email-address' placeholder='Email' value={props.values.email} autofocus = {false} onChangeText={props.handleChange('email')}/>
-                            </View>
-                            <View style = {styles.inputs}>
-                                <TextInput style = {styles.typeFormat} autoCorrect = {false} autoCapitalize = "none" placeholder='Password' value={props.values.password} secureTextEntry = {true} autofocus = {false} onChangeText={props.handleChange('password')}/>
-                            </View>
-                            <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
+                        <View> 
+                        <View style = {styles.inputs}>
+                            <TextInput style = {styles.typeFormat} placeholderTextColor = {"white"} placeholder='Mobile Number' keyboardType= "number-pad" autoFocus = {false} value={props.values.phone_number} onChangeText={props.handleChange('phone_number')}/>
+                        </View>
+                        <View style = {styles.inputs}>
+                            <TextInput style = {styles.typeFormat} placeholderTextColor = {"white"}  autoCorrect = {false} placeholder='Name' value={props.values.name} autofocus = {false} onChangeText={props.handleChange('name')}/>
+                        </View>
+                        <View style = {styles.inputs}>
+                            <TextInput style = {styles.typeFormat} placeholderTextColor = {"white"}  autoCorrect = {false} autoCapitalize = "none" keyboardType='email-address' placeholder='Email' value={props.values.email} autofocus = {false} onChangeText={props.handleChange('email')}/>
+                        </View>
+                        <View style = {styles.inputs}>
+                            <TextInput style = {styles.typeFormat} placeholderTextColor = {"white"} autoCorrect = {false} autoCapitalize = "none" placeholder='Password' value={props.values.password} secureTextEntry = {true} autofocus = {false} onChangeText={props.handleChange('password')}/>
+                        </View>
+                        <Button title='Create Account' buttonStyle = {styles.buttonDesign} titleStyle = {styles.titleButton} onPress={props.handleSubmit}/>
                         </View>
                     }
                 </Formik>
@@ -114,11 +114,11 @@ export default function Register() {
 const styles = StyleSheet.create({
     timerContainer: {
         flex: 1,
-        // marginTop: 40,
+        paddingTop: 50,
+        backgroundColor: '#fbc4ab',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fbc4ab',
-        // width: '100%'
+        textAlign: 'center',
     },
     timerText: {
         fontSize: 26,
@@ -132,11 +132,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4,
         padding: 10,
-        backgroundColor: '#fff'
-    },
-    socialMedia: {
-        borderRadius: 12,
-        height: 50
+        backgroundColor: '#fff',
     },
     inputs: {
         flexDirection:'row',
@@ -144,40 +140,48 @@ const styles = StyleSheet.create({
         // borderColor: 'grey',
         borderColor:"#F08080",
         // width: '100%',
+        height:48,      
+        borderWidth:3,
         borderRadius:12,
-        paddingLeft:5,
-        marginTop:20,
-        height:48        
+        width: '100%',
+        marginVertical: 5,
+        borderColor: '#f08080',
+        flexDirection:"row",
+        alignContent:"center",
+        alignItems:"center",
+        paddingLeft:10,
     },
     typeFormat: {
-        fontSize: 16
+        paddingHorizontal: 5,
+        marginVertical: 10,
+        color: "white",
+        fontSize: 16,
+        backgroundColor: "#FBC4AB",
+        textShadowColor: 'white', 
     },
     title:{
-        justifyContent:'center',
-        alignItems: 'center',
-        marginTop: 50,
-        paddingHorizontal:15,
-        fontSize :32,
-        padding: 10,
-        fontWeight: 'bold',
-        textAlign: 'center'
+        marginHorizontal:20, 
+        marginVertical:10, 
+        justifyContent: 'center', 
+        alignContent: 'center',
    },
    titleText: {
         fontSize:22,
-        fontWeight:'bold'
+        fontWeight:'bold',
+        padding: 10,
+        textAlign: 'center',
    },
    buttonDesign: {
-        // backgroundColor:"#FBC4AB",
         alignContent:"center",
         justifyContent:"center",
         borderRadius:12,
         borderWidth:3, 
-        borderColor:"#F08080",
+        borderColor: '#f08080',
+        backgroundColor:'#f4978e',
         height:40,
         paddingHorizontal:20,
         marginVertical: 10,
-        
-        backgroundColor:'#f4978e',
+        width: '100%'
     },
     titleButton:{
         color:"white",
@@ -185,6 +189,6 @@ const styles = StyleSheet.create({
         fontWeight:"bold" ,
         alignItems:"center",
         justifyContent:"center"  ,
-        marginTop:-3
+        marginTop:-3,
     },
 });

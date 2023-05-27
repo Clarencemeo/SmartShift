@@ -161,9 +161,7 @@ const styles = StyleSheet.create({
        flex:1,
        paddingHorizontal: 5,
        marginVertical: 10,
-    //    color: "#000000",
        color: "white",
-    //    color: "#ffffff",
        fontSize: 16,
        backgroundColor: "#FBC4AB",
        textShadowColor: 'white', 
@@ -177,12 +175,10 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     buttonDesign: {
-        // backgroundColor:"#FBC4AB",
         alignContent:"center",
         justifyContent:"center",
         borderRadius:12,
         borderWidth:3, 
-        // borderColor:"#F08080",
         borderColor: '#f08080',
         backgroundColor:'#f4978e',
         height:40,
@@ -200,28 +196,18 @@ const styles = StyleSheet.create({
     TextInput2:{
         borderWidth:3,
         borderRadius:12,
-        // marginHorizontal:20,
         width: '90%',
         marginVertical: 5,
-        // borderColor:"#86939e",
         borderColor: '#f08080',
         flexDirection:"row",
-        // justifyContent:"space-between",
         alignContent:"center",
         alignItems:"center",
         paddingLeft:10
       },
     title:{
-        // color:"#F08080",
         fontSize :32,
-        // fontWeight:"bold",
         padding: 10,
-        // justifyContent: 'center', 
-        // alignContent: 'center',
-        // flex: 0.3,
-        // fontSize: 46,
         fontWeight: 'bold',
-        // borderRadius: 20
         textAlign: 'center'
     }
 });

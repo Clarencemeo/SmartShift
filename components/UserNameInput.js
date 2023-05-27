@@ -6,18 +6,20 @@ import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/fire
 
 // Component that handles the Break Timer Modal that allows user to change the length of the Break Timer 
 
-function BreakTimerInput(props) {
-    // sets the breakTime value to the default previously selected/entered (5 if user hasn't changed it once already)
-    const [breakTime, setBreakTime] = useState(props.defaultValues ? props.defaultValues.toString() : "5",);
+function UserNameInput(props) {
+    // sets the userName value to the default previously selected/entered, default is the name attatched to email.
+    const [userName, setUserName] = useState(props.defaultValues);
+    
     useEffect(() => {
+        
         const fetchData = async () => {
           try {
             const docRef = doc(db, "users", auth.currentUser.uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               const userData = docSnap.data();
-              const breakDuration = userData.breakDuration;
-              setBreakTime(breakDuration);
+              const userName = userData.firstName;
+              setUserName(userName);
             } else {
               console.log("No such document!");
             }
@@ -27,43 +29,48 @@ function BreakTimerInput(props) {
         };
     
         fetchData();
+        
+        //console.log("i dunno firebase, sorry.");
       }, []);
     
-    // sets the breakTime to the value entered by user 
+
+    // sets the userName to the value entered by user 
     function inputValueHandler(enteredText) { 
-        setBreakTime(enteredText)
+        setUserName(enteredText)
     }
 
-    // saves the change that the user made to breakTime and then closes the modal 
-    function changeBreakTime() {
-        props.onSubmit(breakTime);
+    // saves the change that the user made to userName and then closes the modal 
+    function changeUserName() {
+        props.onSubmit(userName);
     }
 
+    
     const adjustSettings = async () => {
+        
         setDoc(
             doc(db, 'users', auth.currentUser.uid), 
-            { breakDuration: breakTime},
+            { firstName: userName},
             { merge: true}
           );
+        
+        //console.log("i dunno firebase, sorry.");
     }
+    
 
     return (
         // returns a modal that is visible depending on props.visisble and slides up 
         <Modal visible = {props.visible} animationType = "slide" >
             <View style={styles.inputContainer}>
                 <View style={styles.inputTop}>
-                    <Text style= {styles.changeTitle}>Change Break Time</Text>
+                    <Text style= {styles.changeTitle}>Change Username</Text>
                     <TextInput
-                        inputMode = 'numeric'
-                        keyboardType = "number-pad" 
-                        maxLength = {4}
                         onChangeText = {inputValueHandler}
-                        value = {breakTime}
+                        value = {userName}
                         style = {styles.numberInput}
                     />
                 </View>
                 <View style = {styles.buttonStyle}>
-                    <Pressable onPress ={() => {changeBreakTime(); adjustSettings()}}>
+                    <Pressable onPress ={() => {changeUserName(); adjustSettings()}}>
                         <View>
                             <Text style= {styles.timerText}>Change</Text>
                         </View>
@@ -80,7 +87,7 @@ function BreakTimerInput(props) {
 
 };
 
-export default BreakTimerInput; 
+export default UserNameInput; 
 
 const styles = StyleSheet.create({
     inputContainer: {

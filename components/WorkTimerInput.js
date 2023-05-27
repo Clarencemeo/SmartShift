@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     buttonStyle: {
-        alignItems: 'top',
         flex: 1,
         flexDirection: 'row',
         fontSize: 46,

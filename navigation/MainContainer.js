@@ -9,7 +9,8 @@ import PomodoroTimer from './screens/PomodoroTimer';
 import Productivity from './screens/Productivity';
 import TaskBites from './screens/TaskBites';
 import StartTimer from './screens/StartTimer';
-import SettingsPage from './screens/SettingsPage'; 
+import SettingsPage from './screens/SettingsPage';
+import AccountSettings from './screens/AccountSettings'; 
 import ManageTask from './screens/ManageTask';
 import IconButton from '../components/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -20,6 +21,7 @@ import TaskContextProvider from '../store/tasks-context';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import { SignInContext } from '../userContexts/Context';
+import { Settings } from 'react-native';
 const settingsPage = "Settings"; 
 
 const Tab = createBottomTabNavigator();
@@ -41,7 +43,8 @@ function Tabs () {
                     //all the screens listed here will not show up in the task bar, but can still be navigated to 
                     "Register",
                     "Login",
-                    "StartTimer"
+                    "StartTimer",
+                    "AccountSettings",
                   ].includes(route.name)
                     ? () => {
                         return null;
@@ -63,8 +66,7 @@ function Tabs () {
                         iconName = focused ? 'ios-newspaper' : 'ios-newspaper-outline'
                     } else if (rn === "Productivity Scope") {
                         iconName = focused ? 'bar-chart' : 'bar-chart-outline'
-                    }
-                    else if (rn == settingsPage) {
+                    }else if (rn == "Settings") {
                         iconName = focused ? 'settings' : 'settings-outline'
                     }
                     //Ionicons is a library of icons we can use provided by React
@@ -99,7 +101,7 @@ function Tabs () {
                     }}
                 />
                 <Tab.Screen name={"Productivity Scope"} component={Productivity}/>
-                <Tab.Screen name={settingsPage} component = {SettingsPage}/>
+                <Tab.Screen name={"Settings"} component = {SettingsStack}/>
         </Tab.Navigator>
     );
 }
@@ -120,6 +122,16 @@ function TimerStack() {
       </Stack.Navigator>
     );
   }
+
+const SetStack = createStackNavigator();
+function SettingsStack() {
+    return (
+        <Stack.Navigator initialRouteName = 'Settings Page'>
+            <Stack.Screen name="Settings Page" component={SettingsPage} options={{ headerShown: false}} />
+            <Stack.Screen name ='AccountSettings' component={AccountSettings} options={{ headerShown: false}} />
+        </Stack.Navigator>
+    );
+}
 
   const Auth = createStackNavigator();
   function AuthStack(){
