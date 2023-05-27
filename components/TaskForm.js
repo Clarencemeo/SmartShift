@@ -20,11 +20,11 @@ function TaskForm({submitButtonLabel, onCancel, onSubmit, defaultValues, checkbo
             isValid: true
         }, 
         urgent: {
-            value: defaultValues ? defaultValues.complete : false,
+            value: defaultValues ? defaultValues.urgent : false,
             isValid: true
         }, 
         important: {
-            value: defaultValues ? defaultValues.complete : false, 
+            value: defaultValues ? defaultValues.important : false, 
             isValid: true
         }, 
     });
