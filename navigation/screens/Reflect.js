@@ -5,11 +5,13 @@ export default function Reflect({ route }) {
   return (
     <View style={styles.timerContainer}>
       <Text
-        style={styles.timerText}
-        onPress={() => navigation.navigate("Reflect")}
+        // style={styles.timerText}
+        // onPress={() => navigation.navigate("Reflect")}
       >
-        {Reflect}
+        Num Slices: {route.params.numOfSlices} 
       </Text>
+      <Text>Work Duration: {route.params.workDuration}</Text>
+      <Text>Break Duration: {route.params.breakDuration}</Text>
     </View>
   );
 }
