@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Vibration,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
@@ -18,12 +19,10 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { Audio } from "expo-av";
 
 export default function TimerApp({ route }) {
-  //const navigation = useNavigation();
+  const navigation = useNavigation();
   //The timer takes time in seconds, so convert to that.
-  //const workDuration = route.params.workTimerDuration * 60;
-  //const breakDuration = route.params.breakTimerDuration * 60;
-  const workDuration = 5;
-  const breakDuration = 3;
+  const workDuration = route.params.workTimerDuration * 60;
+  const breakDuration = route.params.breakTimerDuration * 60;
 
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
@@ -66,7 +65,6 @@ export default function TimerApp({ route }) {
           require("../../resources/alarms/AlarmSound1.wav")
         );
         setAlarm(sound);
-        console.log("setAlarm", alarm);
         await sound.playAsync();
         alarm.unloadAsync();
       } catch (error) {
@@ -154,6 +152,8 @@ export default function TimerApp({ route }) {
   function reflectHandler() {
     navigation.navigate("Reflect", {
       numOfSlices: slices,
+      workDuration: workDuration,
+      breakDuration: breakDuration,
     });
   }
 
@@ -177,8 +177,6 @@ export default function TimerApp({ route }) {
             setPlay(true);
             setIsPlaying((prev) => !prev);
             setSlices((slices) => slices + 1);
-            console.log(slices);
-            // do your stuff here
             return { shouldRepeat: false };
           }}
         >
@@ -196,7 +194,6 @@ export default function TimerApp({ route }) {
         <TouchableOpacity
           onPress={() => {
             setKey((prevKey) => prevKey + 1);
-            console.log(key);
             setIsPlaying(false);
             setTimerEnd(false);
             setTimerStart(false);
@@ -247,18 +244,30 @@ export default function TimerApp({ route }) {
           >
             <TouchableOpacity
               onPress={() => {
-                reflectHandler;
-                // setKey(prevKey => prevKey + 1);
-                // setIsPlaying(false);
-                // setTimerStart(false);
-                // setTimerReset(true);
-                // setTimerWorking(!timerWorking);
-
-                // TESTTTTTTIIING
-                // TESTTTTTIIIIIINGGGG
+                setKey((prevKey) => prevKey + 1);
+                setIsPlaying(false);
+                setTimerStart(false);
+                setTimerReset(true);
+                setTimerWorking(!timerWorking);
               }}
             >
               <Text style={styles.skipBreakTitle}>Skip Break</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {timerWorking && (
+          <View
+            alignItems="center"
+            alignSelf="stretch"
+            backgroundColor="#F08080"
+            borderWidth={2}
+            borderColor="#900000"
+            borderRadius={20}
+            marginHorizontal="30%"
+            marginTop="2%"
+          >
+            <TouchableOpacity onPress={reflectHandler}>
+              <Text style={styles.skipBreakTitle}>End Work</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -280,7 +289,7 @@ export default function TimerApp({ route }) {
     </View>
   );
 }
-//setSelected={(val) => {setSelected(val); playSound(val);}}
+
 const styles = StyleSheet.create({
   titleText: {
     fontWeight: "bold",
