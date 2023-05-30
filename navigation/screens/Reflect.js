@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Button from "../../components/Button";
 import ReflectInput from "../../components/ReflectInput";
 
-export default function Reflect({ route }) {
+export default function Reflect({ route, navigation }) {
 
 
   // how I did the current Date thing is based on this example found here: 
@@ -69,6 +69,10 @@ export default function Reflect({ route }) {
     });
   }
 
+  function skipHandler() {
+    navigation.goBack();
+  }
+
   function submitHandler() {
     const reflectData = {
       title: inputs.title.value,
@@ -93,7 +97,12 @@ export default function Reflect({ route }) {
       return;
     }
 
-    onSubmit(reflectData); 
+    // need to store the data in reflect-context 
+    // with the addReflection method. 
+    
+    // onSubmit(reflectData); // currently don't have an onSubmit function! need to make one 
+
+    navigation.goBack();
   }
 
   const formIsInvalid = !inputs.title.isValid || !inputs.reflection.isValid; 
@@ -130,11 +139,11 @@ export default function Reflect({ route }) {
         />
       </View>
       <View style = {styles.buttons}>
-        <Pressable>
-          <Text style={styles.button}>Add Reflection</Text>
-        </Pressable>
-        <Pressable>
+        <Pressable onPress = {skipHandler}>
           <Text style={styles.button}>Skip</Text>
+        </Pressable>
+        <Pressable onPress= {submitHandler}>
+          <Text style={styles.button}>Add Reflection</Text>
         </Pressable>
       </View>
     </View>
