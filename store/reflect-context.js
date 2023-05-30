@@ -11,7 +11,7 @@ const DUMMY_REFLECTIONS = [
         breakTime: 4*60,
         slices: 1,
         reflection: 'Test reflection 1',
-        date: "5/25/2023",
+        date: "2023-05-29",
         dateTime: "5/25/2023 4:35 pm",
     },
     {
@@ -21,7 +21,7 @@ const DUMMY_REFLECTIONS = [
         breakTime: 5*60,
         slices: 1,
         reflection: 'Test reflection 2',
-        date: "5/27/2023",
+        date: "2023-05-30",
         dateTime: "5/27/2023 4:35 pm",
     },
 ];

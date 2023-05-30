@@ -27,7 +27,7 @@ function Reflect({ route, navigation }) {
       month + '/' + date + '/' + year + ' ' + hours + ':' + min + " " + AMorPM
     );
     setCurrentDate(
-      month + '/' + date + '/' + year
+      year + '-' + month + '-' + date
     );
   }, []);
 

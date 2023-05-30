@@ -1,7 +1,35 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { ReflectContext } from '../../store/reflect-context';
+import { useState, useEffect, useContext} from 'react';
+import { Agenda } from 'react-native-calendars';
+// install react-native-calendars
+import {Card, Avatar} from 'react-native-paper';
+// install react-native-paper
 
-export default function Productivity(navigation) {
+
+// type Reflection = {
+//     id: string;
+//     title: string;
+//     workingTime: number;
+//     breakTime: number;
+//     slices: number;
+//     reflection: string;
+//     // date: string;
+//     dateTime: string;
+// }; 
+
+// type Item = {
+//     name: string;
+//     cookies: Boolean;
+// };
+
+function timeToString(time) {
+    const date = new Date(time);
+    return date.toISOString().split('T')[0];
+};
+
+const Productivity = () => {
 
     // https://www.youtube.com/watch?v=RdaQIkE47Og 
     // to do calendar agenda list for reflections with dummy data 
@@ -29,13 +57,84 @@ export default function Productivity(navigation) {
     //   - Trash  = to delete the form / reflection permenantly 
     //   - Finish = to submit all edits made / stop looking at form 
 
+    const reflectCtx = useContext(ReflectContext);
+
+    // const [items, setItems] = useState({
+    //     '2023-05-29': [
+    //         {name: "test1", cookies: true},
+    //         {name: "test4", cookies: true},
+    //         {name: "test5", cookies: true},
+    //     ],
+    //     '2023-05-30': [{name: "test2", cookies: false}],
+    // });
+
+
+    // const [items, setItems] = useState<{[key: string]: Reflection[]}>({
+    const [items, setItems] = useState({});
+
+    useEffect(() => {
+        function getData() {
+            const data = reflectCtx.reflections;
+
+            const reduced = data.reduce((acc, currentItem) => {
+                const {date, ...item} = currentItem;
+                
+                acc[date] = [item];
+
+                return acc;
+                }, 
+                {}
+            );
+
+            setItems(reduced);
+        };
+        getData();
+    }, []);
+
+    console.log("items: ");
+    console.log(items);
+
+    function renderItem(item) {
+        console.log("item: ");
+        console.log(item);
+        return (
+            // <View style= {styles.itemContainer}>
+            //     <Text>{item.title}</Text>
+            //     <Text>{item.cookies ? 'YES' : "NO"}</Text>
+            // </View>
+            <TouchableOpacity style={{marginRight: 10, marginTop: 17}}>
+                <Card>
+                    <Card.Content>
+                        <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}>
+                        {/* <Typography>{item.name}</Typography> */}
+                        <Text>{item.title}</Text>
+                        <Avatar.Text label="J" />
+                        </View>
+                    </Card.Content>
+                </Card>
+            </TouchableOpacity>
+        );
+    };
+
     return (
-        <View style={styles.timerContainer}>
-            <Text style={styles.timerText} onPress={() => navigation.navigate('PomodoroTimer')}>Productivity Scope</Text>
-        </View>
+        <SafeAreaView style={styles.safe}>
+        {/* <View style = {{flex:1}}> */}
+            <Agenda items={items} renderItem = {renderItem}/>
+        {/* </View> */}
+        </SafeAreaView>
+        // <View style={styles.timerContainer}>
+        //     {/* <Text style={styles.timerText} onPress={() => navigation.navigate('PomodoroTimer')}>Productivity Scope</Text> */}
+        // </View>
     );
 
-}
+};
+
+export default Productivity;
 
 const styles = StyleSheet.create({
     timerContainer: {
@@ -47,5 +146,17 @@ const styles = StyleSheet.create({
     timerText: {
         fontSize: 26,
         fontWeight: 'bold'
-    }
+    },
+    safe: {
+        flex: 1,
+        backgroundColor: '#fbc4ab',
+    },
+    itemContainer: {
+        backgroundColor: 'white',
+        margin: 5,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+    },
 });
