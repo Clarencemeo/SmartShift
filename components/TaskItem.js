@@ -1,9 +1,9 @@
-import {Pressable, StyleSheet, View, Text} from 'react-native';
+import { Pressable, StyleSheet, View, Text } from 'react-native';
 import { getFormattedDate } from '../util/date';
 import { useNavigation } from '@react-navigation/native';
 
 // documentation on Switches: https://reactnative.dev/docs/switch 
-function TaskItem({id, description, dueDate, urgent, important, complete, }) {
+function TaskItem({ id, description, dueDate, urgent, important, complete, }) {
     const navigation = useNavigation();
 
     function taskPressHandler() {
@@ -18,19 +18,19 @@ function TaskItem({id, description, dueDate, urgent, important, complete, }) {
 
     const backColorUrgent = "#ff0a54";
     const backColorNotUrgent = "white";
-    const urgentColor = urgent ? backColorUrgent : backColorNotUrgent; 
+    const urgentColor = urgent ? backColorUrgent : backColorNotUrgent;
 
     const backColorImportant = "#c9184a";
     const backColorNotImportant = "white";
-    const importantColor = important ? backColorImportant : backColorNotImportant; 
+    const importantColor = important ? backColorImportant : backColorNotImportant;
 
     return (
         <Pressable
             onPress={taskPressHandler}
             style={({ pressed }) => pressed && styles.pressed}
         >
-            <View style={styles.taskItem} backgroundColor = {colorUsed}>
-                <View style = {styles.subcontainer1}>
+            <View style={styles.taskItem} backgroundColor={colorUsed}>
+                <View style={styles.subcontainer1}>
                     <Text style={[styles.textBase, styles.description]}>
                         {description}
                     </Text>
@@ -39,14 +39,14 @@ function TaskItem({id, description, dueDate, urgent, important, complete, }) {
                 {/* <View style={styles.amountContainer}>
                 <Text style={styles.amount}>{amount.toFixed(2)}</Text>
                 </View> */}
-                <View style = {styles.subcontainer2}>
-                    <View style = {styles.urgentContainer}>
+                <View style={styles.subcontainer2}>
+                    <View style={styles.urgentContainer}>
                         <Text style={styles.textBase}>Urgent</Text>
-                        <View style={styles.urgentBubble} backgroundColor = {urgentColor}></View>
+                        <View style={styles.urgentBubble} backgroundColor={urgentColor}></View>
                     </View>
                     <View>
                         <Text style={styles.textBase}>Important</Text>
-                        <View style = {styles.importantBubble} backgroundColor={importantColor}></View>
+                        <View style={styles.importantBubble} backgroundColor={importantColor}></View>
                     </View>
                 </View>
             </View>
@@ -54,7 +54,7 @@ function TaskItem({id, description, dueDate, urgent, important, complete, }) {
     )
 }
 
-export default TaskItem; 
+export default TaskItem;
 
 const styles = StyleSheet.create({
     pressed: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.4,
-    }, 
+    },
     textBase: {
         color: "#6d6875",
     },
@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     urgentBubble: {
-        marginTop: 3,  
+        marginTop: 3,
         marginLeft: 10,
-        width: 20, 
+        width: 20,
         height: 20,
         borderColor: "white",
         borderRadius: 25,
@@ -115,15 +115,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     urgentContainer: {
-        flex: 1, 
+        flex: 1,
     },
     importantContainer: {
         flex: 1
     },
     importantBubble: {
-        marginTop: 3,  
+        marginTop: 3,
         marginLeft: 20,
-        width: 20, 
+        width: 20,
         height: 20,
         borderColor: "white",
         borderRadius: 25,
