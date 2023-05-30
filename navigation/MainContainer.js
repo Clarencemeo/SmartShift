@@ -100,7 +100,7 @@ function Tabs () {
                         ),
                     }}
                 />
-                <Tab.Screen name={"Productivity Scope"} component={Productivity}/>
+                <Tab.Screen name={"Productivity Scope"} component={Productivity} />
                 <Tab.Screen name={"Settings"} component = {SettingsStack}/>
         </Tab.Navigator>
     );
@@ -138,7 +138,7 @@ function SettingsStack() {
       return(
           <Auth.Navigator>
   
-  
+
                       <Auth.Screen 
                           name ="Login"
                           component = {Login}
@@ -207,8 +207,8 @@ function TaskStack() {
 export default function MainContainer() {
     const {signedIn} = useContext(SignInContext)
     return (
-            <TaskContextProvider>
-        <NavigationContainer>
+        <TaskContextProvider>
+            <NavigationContainer>
                 {signedIn.userToken === null  ?  <AuthStack />: <MainStack />}
             </NavigationContainer>
         </TaskContextProvider>
