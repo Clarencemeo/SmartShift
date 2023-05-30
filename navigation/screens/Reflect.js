@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet, View, Text, TextInput, Pressable} from "react-native";
 import { useState, useEffect } from 'react';
 import Button from "../../components/Button";
+import ReflectInput from "../../components/ReflectInput";
 
 export default function Reflect({ route }) {
 
@@ -29,6 +30,73 @@ export default function Reflect({ route }) {
   // {route.params.numOfSlices}
   // {route.params.workDuration}
   // {route.params.breakDuration}
+
+  // { title, workingTime, breakTime, slices, reflection }
+
+  const [inputs, setInputs] = useState({
+    title: {
+      value: "",
+      isValid: true,
+    },
+    reflection: {
+      value: "", 
+      isValid: true,
+    },
+    workingTime: {
+      value: route.params.workDuration, 
+      isValid: true
+    }, 
+    breakTime: {
+      value: route.params.breakDuration,
+      isValid: true
+    }, 
+    slices: {
+      value: route.params.numOfSlices, 
+      isValid: true
+    }, 
+    date: {
+      value: currentDate,
+      isValid: true
+    }
+  });
+
+  function inputChangedHandler(inputIdentifier, enteredValue) {
+    setInputs((curInputs) => {
+      return {
+        ...curInputs, 
+        [inputIdentifier]: {value: enteredValue, isValid: true},
+      };
+    });
+  }
+
+  function submitHandler() {
+    const reflectData = {
+      title: inputs.title.value,
+      reflection: inputs.reflection.value, 
+      workingTime: inputs.workingTime.value,
+      breakTime: inputs.breakTime.value,
+      slices: inputs.slices.value,
+      date: inputs.date.value,
+    }; 
+
+    const titleIsValid = reflectData.title.trim().length > 0;
+    const reflectionIsValid = reflectData.reflection.trim().length > 0; 
+
+    if (!titleIsValid || !reflectionIsValid) {
+      // Alert.alert('Invalid input', 'Please check your input values'); 
+      setInputs((curInputs) => {
+        return {
+          title: {value: curInputs.title.value, isValid: titleIsValid},
+          reflection: {value: curInputs.reflection.value, isValid: reflectionIsValid}
+        }; 
+      });
+      return;
+    }
+
+    onSubmit(reflectData); 
+  }
+
+  const formIsInvalid = !inputs.title.isValid || !inputs.reflection.isValid; 
   
   return (
     <View style={styles.timerContainer}>
@@ -37,16 +105,29 @@ export default function Reflect({ route }) {
         <View style = {styles.formTextContainer}> 
           <Text style = {styles.formText}>Feel free to write a reflection for what you accomplished: </Text>
         </View>
-        <View style = {styles.formTextContainer}> 
-          <Text style = {styles.formText}>Title: </Text>
-          {/* <TextInput>
-
-          </TextInput> */}
-        </View>
+        <ReflectInput
+          label="Title: "
+          invalid = {!inputs.title.isValid}
+          textInputConfig={{
+            onChangeText: inputChangedHandler.bind(this, 'title'),
+            value: inputs.title.value,
+          }}
+        />
         <View style = {styles.formTextContainer}>
           <Text style = {styles.formText}>Date: </Text>
           <Text style = {styles.formTextAutoSet}>{currentDate}</Text>
         </View>
+        <ReflectInput
+          label=""
+          invalid = {!inputs.reflection.isValid}
+          textInputConfig={{
+            onChangeText: inputChangedHandler.bind(this, 'reflection'),
+            value: inputs.reflection.value,
+            multiline: true,
+            placeholder: "Write your reflection here",
+            placeholderTextColor: "#540b0e", 
+          }}
+        />
       </View>
       <View style = {styles.buttons}>
         <Pressable>
@@ -76,17 +157,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   formTextContainer: {
-    // justifyContent: "space-between",
     flexDirection: "row",
     marginHorizontal: 10,
-    marginVertical: 5,
+    marginTop: 5,
   },
   formText: {
     fontSize: 20, 
     textAlign: "left",
   },
   formTextAutoSet: {
-    color: "red",
+    color: "#540b0e",
     fontSize: 20,
   },
   date: {
@@ -94,14 +174,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   dateText: {
-    color: "#e85d04",
     textAlign: "right",
     textAlignVertical: "top"
   },
   buttons:{
     flex: 2,
-    flexDirection: "column",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    marginHorizontal: 10,
   },
   button: {
     alignItems: "center",
@@ -113,7 +194,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#f4978e",
     borderWidth: 5,
     borderColor: "#f08080",
-    //backgroundColor: 'red',
     fontWeight: "bold",
     opacity: 0.8,
     overflow: "hidden",
