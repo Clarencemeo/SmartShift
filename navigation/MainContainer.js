@@ -24,6 +24,7 @@ import Register from './screens/Register';
 import Login from './screens/Login';
 import { SignInContext } from '../userContexts/Context';
 import { Settings } from 'react-native';
+import ReflectContextProvider from '../store/reflect-context';
 const settingsPage = "Settings";
 
 const Tab = createBottomTabNavigator();
@@ -170,12 +171,6 @@ function TaskStack() {
                 component={ManageTask}
                 options={{
                     presentation: "transparentModal",
-                    // presentation: "modal",
-                    // headerShown: false,
-                    // title: 'Manage Task'
-                    // headerStyle: {
-                    //     marginTop: 150,
-                    // },
                     headerShown: false,
                     headerBackVisible: false,
                     headerBackTitleVisible: false,
@@ -188,6 +183,7 @@ function TaskStack() {
 const MainScreen = createStackNavigator();
 function MainStack() {
     return (
+        <ReflectContextProvider>
         <MainScreen.Navigator>
             <MainScreen.Screen
                 name="Main"
@@ -196,9 +192,8 @@ function MainStack() {
                     headerShown: false,
                 }}
             />
-
-
         </MainScreen.Navigator>
+        </ReflectContextProvider>
     )
 }
 

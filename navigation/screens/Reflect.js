@@ -1,15 +1,18 @@
 import * as React from "react";
-import { StyleSheet, View, Text, TextInput, Pressable} from "react-native";
-import { useState, useEffect } from 'react';
-import Button from "../../components/Button";
+import { StyleSheet, View, Text, Pressable} from "react-native";
+import { useState, useEffect, useContext } from 'react';
 import ReflectInput from "../../components/ReflectInput";
+import { ReflectContext } from "../../store/reflect-context";
 
-export default function Reflect({ route, navigation }) {
 
+function Reflect({ route, navigation }) {
+
+  const reflectCtx = useContext(ReflectContext);
 
   // how I did the current Date thing is based on this example found here: 
   // https://aboutreact.com/react-native-get-current-date-time/ 
   const [currentDate, setCurrentDate] = useState('');
+  const [currentDateTime, setCurrentDateTime] = useState('');
 
   useEffect(() => {
     var date = new Date().getDate(); //Current Date
@@ -20,8 +23,11 @@ export default function Reflect({ route, navigation }) {
     var AMorPM = ((hours - 12) > 0) ? "pm" : "am";
     hours = ((hours - 12) > 0) ? (hours - 12) : hours;
     // var sec = new Date().getSeconds(); //Current Seconds
-    setCurrentDate(
+    setCurrentDateTime(
       month + '/' + date + '/' + year + ' ' + hours + ':' + min + " " + AMorPM
+    );
+    setCurrentDate(
+      month + '/' + date + '/' + year
     );
   }, []);
 
@@ -57,8 +63,14 @@ export default function Reflect({ route, navigation }) {
     date: {
       value: currentDate,
       isValid: true
-    }
+    },
+    dateTime: {
+      value: currentDateTime,
+      isValid: true
+    },
   });
+  
+  // console.log("current date is " + currentDate);
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
@@ -80,7 +92,10 @@ export default function Reflect({ route, navigation }) {
       workingTime: inputs.workingTime.value,
       breakTime: inputs.breakTime.value,
       slices: inputs.slices.value,
-      date: inputs.date.value,
+      // date: inputs.date.value,
+      date: currentDate,
+      // dateTime: inputs.dateTime.value,
+      dateTime: currentDateTime,
     }; 
 
     const titleIsValid = reflectData.title.trim().length > 0;
@@ -99,11 +114,15 @@ export default function Reflect({ route, navigation }) {
 
     // need to store the data in reflect-context 
     // with the addReflection method. 
+
+    reflectCtx.addReflection(reflectData);
     
     // onSubmit(reflectData); // currently don't have an onSubmit function! need to make one 
 
     navigation.goBack();
   }
+
+
 
   const formIsInvalid = !inputs.title.isValid || !inputs.reflection.isValid; 
   
@@ -151,6 +170,8 @@ export default function Reflect({ route, navigation }) {
     </View>
   );
 }
+
+export default Reflect;
 
 const styles = StyleSheet.create({
   timerContainer: {
