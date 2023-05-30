@@ -137,7 +137,9 @@ export default function Reflect({ route, navigation }) {
             placeholderTextColor: "#540b0e", 
           }}
         />
+        {formIsInvalid && <Text style = {styles.errorText}>Invalid Input Values </Text>}
       </View>
+
       <View style = {styles.buttons}>
         <Pressable onPress = {skipHandler}>
           <Text style={styles.button}>Skip</Text>
@@ -207,4 +209,11 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     overflow: "hidden",
   },
+  errorText: {
+    textAlign: 'center', 
+    color: "#bf0603",
+    // marginBottom: 6,
+    marginTop: 5,
+    fontSize: 26,
+},
 });
