@@ -60,9 +60,18 @@ function ReflectContextProvider({children}) {
     // const [reflectState, dispatch] = useReducer(reflectReducer);
     const [reflectState, dispatch] = useReducer(reflectReducer, DUMMY_REFLECTIONS);
 
+    //function addReflection(reflectData) {
+    //    dispatch({ type: 'ADD', payload: reflectData});
+    //}
+
     function addReflection(reflectData) {
-        dispatch({ type: 'ADD', payload: reflectData});
-    }
+        if (reflectData && typeof reflectData === 'object') {
+          // Check if taskData is defined and an object
+          const serializeReflectData = reflectData.toJSON ? reflectData.toJSON() : reflectData;
+          dispatch({ type: 'ADD', payload: serializeReflectData });
+          // Adjust other settings if needed
+        }
+      }
 
     function deleteReflection(id) {
         dispatch({ type: 'DELETE', payload: id});
