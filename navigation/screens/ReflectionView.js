@@ -13,12 +13,14 @@ import { Agenda } from "react-native-calendars";
 import { Card, Avatar } from "react-native-paper";
 // install react-native-paper
 import IconButton from "../../components/IconButton";
+import ReflectInput from "../../components/ReflectInput";
+import ReflectionViewForm from "../../components/ReflectionViewForm";
 
 function ReflectionView({ route, navigation }) {
   const reflectCtx = useContext(ReflectContext);
 
-  const reflectionId = route.params?.reflectionId;
-  //   const [reflectionId, setReflectionId] = useState();
+  // const reflectionId = route.params?.reflectionId;
+  const [reflectionId, setReflectionId] = useState();
 
   //   const [selectedReflection, setSelectedReflection] = useState();
 
@@ -26,69 +28,33 @@ function ReflectionView({ route, navigation }) {
     (reflections) => reflections.id === reflectionId
   );
 
+  // console.log(selectedReflection);
+
   //   const selectedReflection;
 
-  //   useEffect(() => {
-  //     setReflectionId(route.params?.reflectionId);
+  useEffect(() => {
+    setReflectionId(route.params?.reflectionId);
+  }, [reflectCtx.reflections]);
 
-  //     const selectedReflection = reflectCtx.reflections.find(
-  //       (reflections) => reflections.id === reflectionId
-  //     );
-  //     setSelectedReflection(selectedReflection);
-  //   }, [reflectCtx.reflections]);
-
-  //   function deleteReflectionHandler() {
-  //     navigation.navigate("Productivity Page");
-  //     reflectCtx.deleteReflection(reflectionId);
-  //     // navigation.navigate("Productivity Page");
-  //     // navigation.goBack();
-  //   }
+  function deleteReflectionHandler() {
+    navigation.navigate("Productivity Page");
+    reflectCtx.deleteReflection(reflectionId);
+    // navigation.navigate("Productivity Page");
+    // navigation.goBack();
+  }
 
   return (
-    !!reflectionId && (
-      <View style={styles.timerContainer}>
-        <View style={styles.date}>
-          <Text style={styles.dateText}>{selectedReflection.dateTime}</Text>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.text}>Title: </Text>
-          <Text style={styles.inputText}> {selectedReflection.title} </Text>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.text}>Slices: </Text>
-          <Text style={styles.inputText}> {selectedReflection.slices} </Text>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.text}>Working Time: </Text>
-          <Text style={styles.inputText}>
-            {" "}
-            {selectedReflection.workingTime / 60} minutes
-          </Text>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.text}>Break Time: </Text>
-          <Text style={styles.inputText}>
-            {" "}
-            {selectedReflection.breakTime / 60} minutes
-          </Text>
-        </View>
-        <View style={styles.reflectionContainer}>
-          <Text style={styles.text}>Reflection: </Text>
-          <Text style={styles.reflectionText}>
-            {" "}
-            {selectedReflection.reflection}
-          </Text>
-        </View>
-        {/* <View style={styles.deleteContainer}>
-          <IconButton
-            icon="trash"
-            color={"red"}
-            size={36}
-            onPress={deleteReflectionHandler}
-          />
-        </View> */}
+    <View style={styles.timerContainer}>
+      <ReflectionViewForm defaultValues={selectedReflection} />
+      <View style={styles.deleteContainer}>
+        <IconButton
+          icon="trash"
+          color={"red"}
+          size={36}
+          onPress={deleteReflectionHandler}
+        />
       </View>
-    )
+    </View>
   );
 }
 
