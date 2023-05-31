@@ -131,10 +131,6 @@ function Reflect({ route, navigation }) {
           <Text style={styles.formText}>DateTime: </Text>
           <Text style={styles.formTextAutoSet}>{currentDateTime}</Text>
         </View>
-        <View style={styles.formTextContainer}>
-          <Text style={styles.formText}>Date: </Text>
-          <Text style={styles.formTextAutoSet}>{currentDate}</Text>
-        </View>
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         <ReflectInput
           label=""
