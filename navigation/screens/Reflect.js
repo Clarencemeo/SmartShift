@@ -193,14 +193,6 @@ const styles = StyleSheet.create({
     color: "#540b0e",
     fontSize: 20,
   },
-  date: {
-    marginTop: 10,
-    marginHorizontal: 10,
-  },
-  dateText: {
-    textAlign: "right",
-    textAlignVertical: "top",
-  },
   buttons: {
     flex: 2,
     flexDirection: "row",

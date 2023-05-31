@@ -75,10 +75,6 @@ function ReflectionsAgenda({ route, navigation }) {
 
   function renderItem(item) {
     return (
-      //   <TouchableOpacity
-      //     style={{ marginRight: 10, marginTop: 17 }}
-      //     onPress={itemClickHandler(item.id)}
-      //   >
       <Pressable
         style={({ pressed }) => pressed && styles.pressed}
         onPress={() => {
@@ -86,7 +82,6 @@ function ReflectionsAgenda({ route, navigation }) {
             reflectionId: item.id,
           });
         }}
-        // onPress={itemClickHandler(item.id)}
       >
         <Card style={{ marginRight: 10, marginTop: 17 }}>
           <Card.Content>
@@ -95,8 +90,6 @@ function ReflectionsAgenda({ route, navigation }) {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                // margin: 10,
-                // padding: 10,
               }}
             >
               <Text style={styles.timerText}>{item.title}</Text>
@@ -105,24 +98,7 @@ function ReflectionsAgenda({ route, navigation }) {
           </Card.Content>
         </Card>
       </Pressable>
-      //   </TouchableOpacity>
     );
-  }
-
-  //   function reflectHandler() {
-  //     navigation.navigate("Reflect", {
-  //       numOfSlices: slices,
-  //       workDuration: workDuration,
-  //       breakDuration: breakDuration,
-  //     });
-  //   }
-
-  function itemClickHandler(id) {
-    () => {
-      navigation.navigate("Reflection View", {
-        reflectionId: id,
-      });
-    };
   }
 
   return (
