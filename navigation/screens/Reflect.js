@@ -40,11 +40,11 @@ function Reflect({ route, navigation }) {
       isValid: true,
     },
     workingTime: {
-      value: route.params.workDuration*60, 
+      value: route.params.workDuration, 
       isValid: true
     }, 
     breakTime: {
-      value: route.params.breakDuration*60,
+      value: route.params.breakDuration,
       isValid: true
     }, 
     slices: {
