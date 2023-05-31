@@ -109,9 +109,6 @@ function TaskContextProvider({ children }) {
 
   const [taskState, dispatch] = useReducer(taskReducer, []);
   const [userId, setUserId] = useState(null);
-  //const userId = auth.currentUser.uid;
-
-
   //this first useEffect is responsible for resetting 
   //the display of the task list whenever the user logs out. 
   useEffect(() => {
