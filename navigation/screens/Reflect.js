@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Pressable} from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import ReflectInput from "../../components/ReflectInput";
 import { ReflectContext } from "../../store/reflect-context";
+import { getFormattedDate } from "../../util/date";
 
 
 function Reflect({ route, navigation }) {
@@ -16,28 +17,17 @@ function Reflect({ route, navigation }) {
 
   useEffect(() => {
     var date = new Date().getDate(); //Current Date
+    date = (date < 10) ? ("0" + date) : date; 
     var month = new Date().getMonth() + 1; //Current Month
+    month = (month < 10) ? ("0" + month) : month;
     var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var AMorPM = ((hours - 12) > 0) ? "pm" : "am";
-    hours = ((hours - 12) > 0) ? (hours - 12) : hours;
-    // var sec = new Date().getSeconds(); //Current Seconds
     setCurrentDateTime(
-      month + '/' + date + '/' + year + ' ' + hours + ':' + min + " " + AMorPM
+      new Date().toLocaleString()
     );
     setCurrentDate(
       year + '-' + month + '-' + date
     );
   }, []);
-
-  // to get the values for numOfSlices, workDuration and breakDuration passed by route
-  // do the following: 
-  // {route.params.numOfSlices}
-  // {route.params.workDuration}
-  // {route.params.breakDuration}
-
-  // { title, workingTime, breakTime, slices, reflection }
 
   const [inputs, setInputs] = useState({
     title: {
@@ -92,9 +82,7 @@ function Reflect({ route, navigation }) {
       workingTime: inputs.workingTime.value,
       breakTime: inputs.breakTime.value,
       slices: inputs.slices.value,
-      // date: inputs.date.value,
       date: currentDate,
-      // dateTime: inputs.dateTime.value,
       dateTime: currentDateTime,
     }; 
 
@@ -102,7 +90,6 @@ function Reflect({ route, navigation }) {
     const reflectionIsValid = reflectData.reflection.trim().length > 0; 
 
     if (!titleIsValid || !reflectionIsValid) {
-      // Alert.alert('Invalid input', 'Please check your input values'); 
       setInputs((curInputs) => {
         return {
           title: {value: curInputs.title.value, isValid: titleIsValid},
@@ -112,12 +99,7 @@ function Reflect({ route, navigation }) {
       return;
     }
 
-    // need to store the data in reflect-context 
-    // with the addReflection method. 
-
     reflectCtx.addReflection(reflectData);
-    
-    // onSubmit(reflectData); // currently don't have an onSubmit function! need to make one 
 
     navigation.goBack();
   }
@@ -141,6 +123,10 @@ function Reflect({ route, navigation }) {
             value: inputs.title.value,
           }}
         />
+        <View style = {styles.formTextContainer}>
+          <Text style = {styles.formText}>DateTime: </Text>
+          <Text style = {styles.formTextAutoSet}>{currentDateTime}</Text>
+        </View>
         <View style = {styles.formTextContainer}>
           <Text style = {styles.formText}>Date: </Text>
           <Text style = {styles.formTextAutoSet}>{currentDate}</Text>

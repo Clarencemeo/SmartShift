@@ -24,6 +24,16 @@ const DUMMY_REFLECTIONS = [
         date: "2023-05-30",
         dateTime: "5/27/2023 4:35 pm",
     },
+    {
+        id: `3`,
+        title: 'Test3',
+        workingTime: 25*60,
+        breakTime: 5*60,
+        slices: 1,
+        reflection: 'Test reflection 3',
+        date: "2023-05-30",
+        dateTime: "5/27/2023 4:35 pm",
+    },
 ];
 
 export const ReflectContext = createContext({
@@ -38,7 +48,7 @@ function reflectReducer(state, action) {
             const id = new Date().toString() + Math.random().toString();
             // console.log("inside add in context");
             // console.log(action.payload);
-            return [{...action.payload, id: id}, ...state];
+            return [...state, {...action.payload, id: id}];
         case 'DELETE':
             return state.filter((reflection) => reflection.id !== action.payload);
         default: 
