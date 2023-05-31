@@ -46,18 +46,7 @@ function ReflectionsAgenda() {
   //   - Finish = to submit all edits made / stop looking at form
 
   const reflectCtx = useContext(ReflectContext);
-  // const numOfReflections = reflectCtx.reflections.length();
 
-  // const [items, setItems] = useState({
-  //     '2023-05-29': [
-  //         {name: "test1", cookies: true},
-  //         {name: "test4", cookies: true},
-  //         {name: "test5", cookies: true},
-  //     ],
-  //     '2023-05-30': [{name: "test2", cookies: false}],
-  // });
-
-  // const [items, setItems] = useState<{[key: string]: Reflection[]}>({
   const [items, setItems] = useState({});
   const [startDate, setStartDate] = useState("");
 
@@ -103,8 +92,6 @@ function ReflectionsAgenda() {
       </TouchableOpacity>
     );
   }
-
-  console.log(startDate);
 
   return (
     <SafeAreaView style={styles.safe}>
