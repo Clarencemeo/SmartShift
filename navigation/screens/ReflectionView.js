@@ -12,6 +12,7 @@ import { Agenda } from "react-native-calendars";
 // install react-native-calendars
 import { Card, Avatar } from "react-native-paper";
 // install react-native-paper
+import IconButton from "../../components/IconButton";
 
 function ReflectionView({ route, navigation }) {
   const reflectCtx = useContext(ReflectContext);
@@ -21,6 +22,11 @@ function ReflectionView({ route, navigation }) {
   const selectedReflection = reflectCtx.reflections.find(
     (reflections) => reflections.id === reflectionId
   );
+
+  function deleteReflectionHandler() {
+    reflectCtx.deleteReflection(reflectionId);
+    navigation.navigate("Productivity Page");
+  }
 
   return (
     <View style={styles.timerContainer}>
@@ -56,7 +62,14 @@ function ReflectionView({ route, navigation }) {
           {selectedReflection.reflection}
         </Text>
       </View>
-      {/* <Text style={styles.timerText}>Reflection View Page</Text> */}
+      <View style={styles.deleteContainer}>
+        <IconButton
+          icon="trash"
+          color={"red"}
+          size={36}
+          onPress={deleteReflectionHandler}
+        />
+      </View>
     </View>
   );
 }
@@ -108,5 +121,13 @@ const styles = StyleSheet.create({
     color: "#540b0e",
     marginVertical: 10,
     marginHorizontal: 10,
+  },
+  deleteContainer: {
+    marginTop: 16,
+    marginHorizontal: 20,
+    paddingTop: 8,
+    borderTopWidth: 2,
+    borderTopColor: "black",
+    alignItems: "center",
   },
 });
