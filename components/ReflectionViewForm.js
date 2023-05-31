@@ -1,30 +1,12 @@
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  Text,
-  Animated,
-  Pressable,
-  Alert,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import ReflectInput from "./ReflectInput";
 
 function ReflectionViewForm({ defaultValues }) {
   return (
     <View>
-      <View style={styles.date}>
-        <ReflectInput
-          label="Date: "
-          style={styles.dateText}
-          textInputConfig={{
-            value: defaultValues ? defaultValues.dateTime : "",
-            editable: false,
-          }}
-        />
-      </View>
       <View style={styles.titleContainer}>
         <ReflectInput
-          label="Title"
+          label="Title: "
           style={styles.inputText}
           textInputConfig={{
             value: defaultValues ? defaultValues.title : "",
@@ -32,39 +14,53 @@ function ReflectionViewForm({ defaultValues }) {
           }}
         />
       </View>
-      <View style={styles.titleContainer}>
-        <ReflectInput
-          label="Slices: "
-          style={styles.inputText}
-          textInputConfig={{
-            value: defaultValues ? defaultValues.slices.toString() : "0",
-            editable: false,
-          }}
-        />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={styles.date}>
+          <ReflectInput
+            label="Date: "
+            style={styles.dateText}
+            textInputConfig={{
+              value: defaultValues ? defaultValues.dateTime : "",
+              editable: false,
+            }}
+          />
+        </View>
+        <View style={styles.titleContainer}>
+          <ReflectInput
+            label="Slices: "
+            style={styles.inputText}
+            textInputConfig={{
+              value: defaultValues ? defaultValues.slices.toString() : "0",
+              editable: false,
+            }}
+          />
+        </View>
       </View>
-      <View style={styles.titleContainer}>
-        <ReflectInput
-          label="Working Time: "
-          style={styles.inputText}
-          textInputConfig={{
-            value: defaultValues
-              ? defaultValues.workingTime / 60 + " minutes"
-              : "",
-            editable: false,
-          }}
-        />
-      </View>
-      <View style={styles.titleContainer}>
-        <ReflectInput
-          label="Break Time: "
-          style={styles.inputText}
-          textInputConfig={{
-            value: defaultValues
-              ? defaultValues.breakTime / 60 + " minutes"
-              : "",
-            editable: false,
-          }}
-        />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={styles.titleContainer}>
+          <ReflectInput
+            label="Working Time: "
+            style={styles.inputText}
+            textInputConfig={{
+              value: defaultValues
+                ? defaultValues.workingTime / 60 + " minutes"
+                : "",
+              editable: false,
+            }}
+          />
+        </View>
+        <View style={styles.titleContainer}>
+          <ReflectInput
+            label="Break Time: "
+            style={styles.inputText}
+            textInputConfig={{
+              value: defaultValues
+                ? defaultValues.breakTime / 60 + " minutes"
+                : "",
+              editable: false,
+            }}
+          />
+        </View>
       </View>
       <View style={styles.reflectionContainer}>
         <ReflectInput
@@ -90,12 +86,12 @@ const styles = StyleSheet.create({
   dateText: {
     textAlign: "right",
     textAlignVertical: "top",
-    // color: "#f48c06",
+    backgroundColor: "#fbc4ab",
   },
   titleContainer: {
     flexDirection: "row",
     marginHorizontal: 10,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   text: {
     fontSize: 20,
