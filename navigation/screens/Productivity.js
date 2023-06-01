@@ -9,10 +9,6 @@ import {
 } from "react-native";
 import { ReflectContext } from "../../store/reflect-context";
 import { useState, useEffect, useContext } from "react";
-import { Agenda } from "react-native-calendars";
-// install react-native-calendars
-import { Card, Avatar } from "react-native-paper";
-// install react-native-paper
 
 function Productivity({ route, navigation }) {
   const reflectCtx = useContext(ReflectContext);
@@ -27,11 +23,14 @@ function Productivity({ route, navigation }) {
 
   return (
     <View style={styles.timerContainer}>
-      <Text style={styles.timerText}>Main Productivity Page</Text>
+      {/* <Text style={styles.timerText}>Main Productivity Page</Text> */}
+      <Text style={styles.text}>
+        There are currently {numOfReflections} reflections created!
+      </Text>
       {reflectionsExist && (
         <View>
           <Pressable onPress={showReflectionsHandler}>
-            <Text>View Reflections</Text>
+            <Text style={styles.button}>View Reflections</Text>
           </Pressable>
         </View>
       )}
@@ -45,12 +44,17 @@ const styles = StyleSheet.create({
   timerContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     backgroundColor: "#fbc4ab",
   },
   timerText: {
     fontSize: 26,
     fontWeight: "bold",
+  },
+  text: {
+    marginVertical: 10,
+    fontSize: 20,
+    textAlignVertical: "top",
   },
   safe: {
     flex: 1,
@@ -63,5 +67,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 10,
+    fontSize: 26,
+    borderRadius: 30,
+    padding: 10,
+    backgroundColor: "#f4978e",
+    borderWidth: 5,
+    borderColor: "#f08080",
+    fontWeight: "bold",
+    opacity: 0.8,
+    overflow: "hidden",
   },
 });

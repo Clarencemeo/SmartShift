@@ -5,6 +5,7 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { ReflectContext } from "../../store/reflect-context";
 import { useState, useEffect, useContext } from "react";
@@ -18,7 +19,7 @@ function timeToString(time) {
   return date.toISOString().split("T")[0];
 }
 
-function ReflectionsAgenda() {
+function ReflectionsAgenda({ route, navigation }) {
   // https://www.youtube.com/watch?v=RdaQIkE47Og
   // to do calendar agenda list for reflections with dummy data
 
@@ -46,18 +47,7 @@ function ReflectionsAgenda() {
   //   - Finish = to submit all edits made / stop looking at form
 
   const reflectCtx = useContext(ReflectContext);
-  // const numOfReflections = reflectCtx.reflections.length();
 
-  // const [items, setItems] = useState({
-  //     '2023-05-29': [
-  //         {name: "test1", cookies: true},
-  //         {name: "test4", cookies: true},
-  //         {name: "test5", cookies: true},
-  //     ],
-  //     '2023-05-30': [{name: "test2", cookies: false}],
-  // });
-
-  // const [items, setItems] = useState<{[key: string]: Reflection[]}>({
   const [items, setItems] = useState({});
   const [startDate, setStartDate] = useState("");
 
@@ -66,7 +56,7 @@ function ReflectionsAgenda() {
       const data = reflectCtx.reflections;
 
       const initialDate = reflectCtx.reflections[0].date;
-      console.log(initialDate);
+      //   console.log(initialDate);
 
       const reduced = data.reduce((acc, currentItem) => {
         const { date, ...item } = currentItem;
@@ -85,8 +75,15 @@ function ReflectionsAgenda() {
 
   function renderItem(item) {
     return (
-      <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
-        <Card>
+      <Pressable
+        style={({ pressed }) => pressed && styles.pressed}
+        onPress={() => {
+          navigation.navigate("Reflection View", {
+            reflectionId: item.id,
+          });
+        }}
+      >
+        <Card style={{ marginRight: 10, marginTop: 17 }}>
           <Card.Content>
             <View
               style={{
@@ -95,16 +92,14 @@ function ReflectionsAgenda() {
                 alignItems: "center",
               }}
             >
-              <Text>{item.title}</Text>
+              <Text style={styles.timerText}>{item.title}</Text>
               <Avatar.Text label={item.slices} />
             </View>
           </Card.Content>
         </Card>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
-
-  console.log(startDate);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -116,26 +111,16 @@ function ReflectionsAgenda() {
 export default ReflectionsAgenda;
 
 const styles = StyleSheet.create({
-  timerContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fbc4ab",
+  pressed: {
+    opacity: 0.75,
+    // margin: 10,
   },
   timerText: {
-    fontSize: 26,
-    fontWeight: "bold",
+    fontSize: 20,
+    // fontWeight: "bold",
   },
   safe: {
     flex: 1,
     backgroundColor: "#fbc4ab",
-  },
-  itemContainer: {
-    backgroundColor: "white",
-    margin: 5,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
   },
 });

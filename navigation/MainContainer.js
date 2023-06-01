@@ -17,6 +17,7 @@ import AccountSettings from "./screens/AccountSettings";
 import ManageTask from "./screens/ManageTask";
 import Reflect from "./screens/Reflect";
 import ReflectionsAgenda from "./screens/ReflectionsAgenda";
+import ReflectionView from "./screens/ReflectionView";
 
 import IconButton from "../components/IconButton";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -187,6 +188,22 @@ function ProductivityPageStack() {
               color={"black"}
               onPress={() => {
                 navigation.navigate("Productivity Page");
+              }}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Reflection View"
+        component={ReflectionView}
+        options={{
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-back"
+              size={24}
+              color={"black"}
+              onPress={() => {
+                navigation.navigate("Reflections Agenda");
               }}
             />
           ),

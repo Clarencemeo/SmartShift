@@ -51,8 +51,9 @@ const adjustSettings3 = async (action) => {
 
 function taskReducer(state, action) {
   switch (action.type) {
-    case 'ADD_TASKS':
-      return [...state, ...action.payload];
+    //case 'ADD_TASKS':
+    //  return [...state, ...action.payload];
+    //This adds a task to the task display, but does not update the firebase
     case 'ADD_INITIAL':
       return [{ ...action.payload, id: action.payload.id }, ...state]
     case 'ADD':
@@ -108,8 +109,8 @@ function TaskContextProvider({ children }) {
 
   const [taskState, dispatch] = useReducer(taskReducer, []);
   const [userId, setUserId] = useState(null);
-  //const userId = auth.currentUser.uid;
-
+  //this first useEffect is responsible for resetting 
+  //the display of the task list whenever the user logs out. 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -125,6 +126,7 @@ function TaskContextProvider({ children }) {
     };
   }, []);
 
+  //this second useEffect fetches the data from the database 
   useEffect(() => {
     if (userId) {
       const fetchData = async () => {
@@ -133,8 +135,6 @@ function TaskContextProvider({ children }) {
           tasks.forEach((task) => {
             addTaskInitial(task); //stop generating a new ID, use the one already in the database! 
           });
-          //dispatch({ type: 'ADD_TASKS', payload: tasks });
-          // Do something with the tasks, such as updating the taskState using dispatch
         } catch (error) {
           console.error('ERROR IN USE EFFECT:', error);
         }
@@ -149,20 +149,18 @@ function TaskContextProvider({ children }) {
     if (taskData && typeof taskData === 'object') {
       // Check if taskData is defined and an object
       const serializedTaskData = taskData.toJSON ? taskData.toJSON() : taskData;
-      //dispatch({ type: 'ADD_TASKS', payload: [serializedTaskData] });
       dispatch({ type: 'ADD', payload: serializedTaskData });
       // Adjust other settings if needed
     }
   }
 
-  //add a task to show on the list, but don't update the firebase
+  //add a task to show on the list, but don't update the firebase.
+  //This is for when users log back in and we want to show the tasks that already exist. 
   function addTaskInitial(taskData) {
     if (taskData && typeof taskData === 'object') {
       // Check if taskData is defined and an object
       const serializedTaskData = taskData.toJSON ? taskData.toJSON() : taskData;
-      //dispatch({ type: 'ADD_TASKS', payload: [serializedTaskData] });
       dispatch({ type: 'ADD_INITIAL', payload: serializedTaskData });
-      // Adjust other settings if needed
     }
   }
 
@@ -172,8 +170,6 @@ function TaskContextProvider({ children }) {
     dispatch({ type: 'DELETE', payload: id });
   }
 
-  //PS if you try to update one of the placeholder tasks,
-  //there could be weird behavior. this is because the placeholder tasks aren't in the database! 
   function updateTask(id, taskData) {
     dispatch({ type: 'UPDATE', payload: { id: id, data: taskData } });
   }
