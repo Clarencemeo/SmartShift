@@ -74,10 +74,10 @@ const getReflections = async (userId) => {
         const reflectionData = doc.data();
         const reflection = {
           id: doc.id,
-          ...reflectionData
-          //dateTime: reflectionData.dateTime.toDate() // Convert the dueDate field to a Date object
-          //date: reflectionData.date.toDate() // Convert the dueDate field to a Date object
+          ...reflectionData,
+          dateTime: reflectionData.time
         };
+        console.log(reflection)
         reflections.push(reflection);
       });
   
