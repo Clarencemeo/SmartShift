@@ -132,10 +132,6 @@ function Reflect({ route, navigation }) {
           <Text style={styles.formText}>DateTime: </Text>
           <Text style={styles.formTextAutoSet}>{currentDateTime}</Text>
         </View>
-        <View style={styles.formTextContainer}>
-          <Text style={styles.formText}>Date: </Text>
-          <Text style={styles.formTextAutoSet}>{currentDate}</Text>
-        </View>
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         <ReflectInput
           label=""
@@ -197,14 +193,6 @@ const styles = StyleSheet.create({
   formTextAutoSet: {
     color: "#540b0e",
     fontSize: 20,
-  },
-  date: {
-    marginTop: 10,
-    marginHorizontal: 10,
-  },
-  dateText: {
-    textAlign: "right",
-    textAlignVertical: "top",
   },
   buttons: {
     flex: 2,
