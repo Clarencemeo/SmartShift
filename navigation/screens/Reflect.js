@@ -23,13 +23,14 @@ function Reflect({ route, navigation }) {
   useEffect(() => {
     var date = new Date().getDate(); //Current Date
     date = date < 10 ? "0" + date : date;
-    var month = new Date().getMonth() + 1; //Current Month
+    var month = new Date().getMonth() + 1; //Current Month 
     month = month < 10 ? "0" + month : month;
     var year = new Date().getFullYear(); //Current Year
     setCurrentDateTime(new Date().toLocaleString());
     setCurrentDate(year + "-" + month + "-" + date);
   }, []);
 
+  //PS working time and break time are saved as strings that represent the minutes
   const [inputs, setInputs] = useState({
     title: {
       value: "",
