@@ -1,8 +1,11 @@
 import * as React from "react";
-import { useContext, useRef, useState, useEffect } from "react";
+import { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  HeaderBackButton,
+} from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import PomodoroTimer from "./screens/PomodoroTimer";
@@ -12,16 +15,23 @@ import StartTimer from "./screens/StartTimer";
 import SettingsPage from "./screens/SettingsPage";
 import AccountSettings from "./screens/AccountSettings";
 import ManageTask from "./screens/ManageTask";
+import Reflect from "./screens/Reflect";
+import ReflectionsAgenda from "./screens/ReflectionsAgenda";
+import ReflectionView from "./screens/ReflectionView";
+
 import IconButton from "../components/IconButton";
+import Icon from "react-native-vector-icons/Ionicons";
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import TaskContextProvider from "../store/tasks-context";
 
 import Register from "./screens/Register";
 import Login from "./screens/Login";
 import { SignInContext } from "../userContexts/Context";
+import { Settings } from "react-native";
+import ReflectContextProvider from "../store/reflect-context";
 
 import { getCalendars } from "expo-localization";
-
 const settingsPage = "Settings";
 
 const Tab = createBottomTabNavigator();
@@ -96,6 +106,7 @@ function Tabs() {
           "Login",
           "StartTimer",
           "AccountSettings",
+          "Reflect",
         ].includes(route.name)
           ? () => {
               return null;
@@ -152,7 +163,10 @@ function Tabs() {
           ),
         }}
       />
-      <Tab.Screen name={"Productivity Scope"} component={Productivity} />
+      <Tab.Screen
+        name={"Productivity Scope"}
+        component={ProductivityPageStack}
+      />
       <Tab.Screen name={"Settings"} component={SettingsStack} />
     </Tab.Navigator>
   );
@@ -179,6 +193,11 @@ function TimerStack() {
         component={StartTimer}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Reflect"
+        component={Reflect}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -196,6 +215,52 @@ function SettingsStack() {
         name="AccountSettings"
         component={AccountSettings}
         options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+const ProductivityStack = createStackNavigator();
+function ProductivityPageStack() {
+  const navigation = useNavigation();
+  return (
+    <Stack.Navigator initialRouteName="Productivity Page">
+      <Stack.Screen
+        name="Productivity Page"
+        component={Productivity}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Reflections Agenda"
+        component={ReflectionsAgenda}
+        options={{
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-back"
+              size={24}
+              color={"black"}
+              onPress={() => {
+                navigation.navigate("Productivity Page");
+              }}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Reflection View"
+        component={ReflectionView}
+        options={{
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-back"
+              size={24}
+              color={"black"}
+              onPress={() => {
+                navigation.navigate("Reflections Agenda");
+              }}
+            />
+          ),
+        }}
       />
     </Stack.Navigator>
   );
@@ -237,12 +302,6 @@ function TaskStack() {
         component={ManageTask}
         options={{
           presentation: "transparentModal",
-          // presentation: "modal",
-          // headerShown: false,
-          // title: 'Manage Task'
-          // headerStyle: {
-          //     marginTop: 150,
-          // },
           headerShown: false,
           headerBackVisible: false,
           headerBackTitleVisible: false,
@@ -255,15 +314,17 @@ function TaskStack() {
 const MainScreen = createStackNavigator();
 function MainStack() {
   return (
-    <MainScreen.Navigator>
-      <MainScreen.Screen
-        name="Main"
-        component={Tabs}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </MainScreen.Navigator>
+    <ReflectContextProvider>
+      <MainScreen.Navigator>
+        <MainScreen.Screen
+          name="Main"
+          component={Tabs}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </MainScreen.Navigator>
+    </ReflectContextProvider>
   );
 }
 

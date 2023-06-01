@@ -206,7 +206,7 @@ export default function SettingsPage() {
             <Text style={styles.timerText}>{defaultBreakTimer} Minutes</Text>
           </View>
         </Pressable>
-        {/* The custom modal to allow user to change Break Timer value  */}
+        {/* The custom modal to allow user to change Break Timer value    */}
         <BreakTimerInput
           // passes value to make modal visible
           visible={breakModalIsVisible}

@@ -55,97 +55,10 @@ function TaskForm({
     });
   }
 
-  //   const [expoPushToken, setExpoPushToken] = useState("");
-  //   const [notification, setNotification] = useState(false);
-  //   const notificationListener = useRef();
-  //   const responseListener = useRef();
-
-  //   Notifications.setNotificationHandler({
-  //     handleNotification: async () => ({
-  //       shouldShowAlert: true,
-  //       shouldPlaySound: false,
-  //       shouldSetBadge: false,
-  //     }),
-  //   });
-
-  //   async function registerForPushNotificationAsync() {
-  //     let token;
-
-  //     const { status: existingStatus } =
-  //       await Notifications.getPermissionsAsync();
-  //     let finalStatus = existingStatus;
-  //     if (existingStatus !== "granted") {
-  //       const { status } = await Notifications.requestPermissionsAsync();
-  //       finalStatus = status;
-  //     }
-  //     if (finalStatus !== "granted") {
-  //       alert("Failed to get push token for push notification!");
-  //       return;
-  //     }
-  //     token = (
-  //       await Notifications.getExpoPushTokenAsync({
-  //         projectId: "06e29322-27aa-48d1-b4d8-10d0f1c5fa44",
-  //       })
-  //     ).data;
-  //   }
-
-  //   useEffect(() => {
-  //     registerForPushNotificationAsync().then((token) => setExpoPushToken(token));
-
-  //     notificationListener.current =
-  //       Notifications.addNotificationReceivedListener((notification) => {
-  //         setNotification(notification);
-  //       });
-
-  //     responseListener.current = Notifications.addNotificationReceivedListener(
-  //       (response) => {
-  //         console.log(response);
-  //       }
-  //     );
-  //     return () => {
-  //       Notifications.removeNotificationSubscription(
-  //         notificationListener.current
-  //       );
-  //       Notifications.removeNotificationSubscription(responseListener.current);
-  //     };
-  //   }, []);
-
-  //   function createNotificationId(dueDate, description) {
-  //     const sec = secFromToday(dueDate);
-  //     if (sec != -1) {
-  //       const identifier = Notifications.scheduleNotificationAsync({
-  //         content: {
-  //           title: description + " is due Tomorrow",
-  //         },
-  //         trigger: { seconds: sec },
-  //       });
-  //       identifier.then((value) => {
-  //         setnId(value);
-  //         // Notifications.cancelScheduledNotificationAsync(value);
-  //         return;
-  //       });
-  //     } else {
-  //       setnId(-1);
-  //       return;
-  //     }
-  //     setnId(-1);
-  //     return;
-  //   }
-
   const tasksCtx = useContext(TaskContext);
   const [nId, setnId] = useState("");
 
   function submitHandler() {
-    // createNotificationId(inputs.dueDate.value, inputs.description.value);
-    // console.log(
-    //   "here: ",
-    //   tasksCtx.scheduleNotification(
-    //     inputs.dueDate.value,
-    //     inputs.description.value
-    //   )
-    // );
-    // console.log("nId: ", nId);
-
     const taskData = {
       description: inputs.description.value,
       dueDate: new Date(inputs.dueDate.value),

@@ -47,7 +47,6 @@ export default function Register() {
         email: email,
         firstName: name,
         phoneNumber: phone,
-        deadlineNotif: true,
         workDuration: "25",
         breakDuration: "5",
       },
