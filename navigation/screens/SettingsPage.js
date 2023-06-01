@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -14,16 +14,12 @@ import WorkTimerInput from "../../components/WorkTimerInput";
 import BreakTimerInput from "../../components/BreakTimerInput";
 import { auth } from "../../firebase/firebase-config";
 import { db } from "../../firebase/firebase-config";
-import {
-  collection,
-  onSnapshot,
-  getDoc,
-  doc,
-  setDoc,
-  addDoc,
-} from "firebase/firestore/lite";
+import { getDoc, doc, setDoc } from "firebase/firestore/lite";
+import { TaskContext } from "../../store/tasks-context";
 
 export default function SettingsPage() {
+  const tasksCtx = useContext(TaskContext);
+
   //Handles notifications for alarm.
   const [enableAlarmNotif, setAlarmNotif] = useState(true);
   //Handles notifications for deadlines.
@@ -45,6 +41,7 @@ export default function SettingsPage() {
       await setDoc(
         doc(db, "users", auth.currentUser.uid),
         {
+          deadlineNotif: enableDeadlineNotif,
           workDuration: defaultWorkTimer,
           breakDuration: defaultBreakTimer, // add breakDuration field
         },
@@ -61,6 +58,7 @@ export default function SettingsPage() {
       await setDoc(
         doc(db, "users", auth.currentUser.uid),
         {
+          deadlineNotif: true,
           workDuration: "25",
           breakDuration: "5", // add breakDuration field
         },
@@ -72,7 +70,8 @@ export default function SettingsPage() {
     }
   };
 
-  const docRef = doc(db, "users", auth.currentUser.uid);
+  const [initDeadlineNotif, setInitDeadlineNotif] = useState(false);
+
   useFocusEffect(
     React.useCallback(() => {
       const docRef = doc(db, "users", auth.currentUser.uid);
@@ -80,8 +79,13 @@ export default function SettingsPage() {
         .then((docSnap) => {
           if (docSnap.exists()) {
             const userData = docSnap.data();
+            const deadlineNotif = userData.deadlineNotif;
             const workDuration = userData.workDuration;
             const breakDuration = userData.breakDuration;
+            if (initDeadlineNotif == false) {
+              setDeadlineNotif(deadlineNotif);
+              setInitDeadlineNotif(true);
+            }
             setWorkTimer(workDuration);
             setBreakTimer(breakDuration);
           } else {
@@ -91,7 +95,7 @@ export default function SettingsPage() {
         .catch((error) => {
           console.log("Error getting document:", error);
         });
-    }, [defaultWorkTimer, defaultBreakTimer]) // Add workTimer and breakTimer as dependencies
+    }, [enableDeadlineNotif, defaultWorkTimer, defaultBreakTimer]) // Add workTimer and breakTimer as dependencies
   );
 
   // changes work timer value according to user input and then closes the work modal
@@ -154,7 +158,9 @@ export default function SettingsPage() {
         <Checkbox
           style={styles.checkbox}
           value={enableDeadlineNotif}
-          onValueChange={setDeadlineNotif}
+          onValueChange={() => {
+            setDeadlineNotif(!enableDeadlineNotif);
+          }}
         />
         <TouchableOpacity
           style={styles.button}
@@ -238,6 +244,11 @@ export default function SettingsPage() {
           style={styles.buttonConfirm}
           onPress={() => {
             adjustSettings();
+            if (enableDeadlineNotif == false) {
+              tasksCtx.cancelAllNotif();
+            } else {
+              tasksCtx.enableAllNotif();
+            }
           }}
         >
           <Text style={styles.optionsText}>Confirm</Text>

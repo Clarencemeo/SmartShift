@@ -30,9 +30,62 @@ import Login from "./screens/Login";
 import { SignInContext } from "../userContexts/Context";
 import { Settings } from "react-native";
 import ReflectContextProvider from "../store/reflect-context";
+
+import { getCalendars } from "expo-localization";
 const settingsPage = "Settings";
 
 const Tab = createBottomTabNavigator();
+
+function localDateToUTCDate(d) {
+  const { timeZone } = getCalendars()[0];
+  const testD = d.toLocaleString("en-US", {
+    timeZone: timeZone,
+    hour12: false, // so it's in 24 hours format
+  });
+  var array = testD.split("/");
+  const m = array[0].length == 1 ? "0" + array[0] : array[0];
+  const day = array[1];
+  const year = array[2].substring(0, 4);
+  array = testD.split(":");
+  const hours = array[0].substring(array[0].length - 2);
+  const minutes = array[1];
+  const second = array[2].split(" ")[0];
+  const str =
+    year +
+    "-" +
+    m +
+    "-" +
+    day +
+    "T" +
+    hours +
+    ":" +
+    minutes +
+    ":" +
+    second +
+    "Z";
+  const currentD = new Date(str);
+  return currentD;
+}
+
+export function secFromToday(dueDate) {
+  var todayD = new Date();
+  todayD = localDateToUTCDate(todayD);
+  var notifyDate = new Date(
+    dueDate.getTime() + dueDate.getTimezoneOffset() * 60000
+  );
+  notifyDate.setDate(notifyDate.getDate() - 1);
+  const tomorrow =
+    notifyDate.getFullYear() == todayD.getFullYear() &&
+    notifyDate.getDate() == todayD.getDate() &&
+    notifyDate.getMonth() == todayD.getMonth();
+  if (tomorrow) {
+    return 2;
+  } else if (notifyDate / 1000 - todayD / 1000 <= 0) {
+    return -1;
+  } else {
+    return notifyDate / 1000 - todayD / 1000;
+  }
+}
 
 //below handles the taskbar
 function Tabs() {
