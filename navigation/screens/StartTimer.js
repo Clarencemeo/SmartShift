@@ -152,8 +152,8 @@ export default function TimerApp({ route }) {
   function reflectHandler() {
     navigation.navigate("Reflect", {
       numOfSlices: slices,
-      workDuration: route.params.workTimerDuration,
-      breakDuration: route.params.breakTimerDuration,
+      workDuration: workDuration,
+      breakDuration: breakDuration,
     });
   }
 
