@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     urgentContainer: {
-        flex: "column", 
+        flex: 1, 
     },
     importantContainer: {
-        flex: "column"
+        flex: 1
     },
     importantBubble: {
         marginTop: 3,  

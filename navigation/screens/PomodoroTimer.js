@@ -1,46 +1,50 @@
 import * as React from 'react';
-import {useState, useContext} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Pressable} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useState, useContext, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Pressable } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import WorkTimerInput from '../../components/WorkTimerInput';
 import BreakTimerInput from '../../components/BreakTimerInput';
-import {auth} from '../../firebase/firebase-config'
-import {db} from '../../firebase/firebase-config'
-import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
+import { auth } from '../../firebase/firebase-config'
+import { db } from '../../firebase/firebase-config'
+import { collection, onSnapshot, getDoc, doc, setDoc, addDoc } from 'firebase/firestore/lite'
 import { SignInContext } from '../../userContexts/Context';
 
 export default function PomodoroTimer(props) {
-    const {dispatchSignedIn} = useContext(SignInContext)
+    const { dispatchSignedIn } = useContext(SignInContext)
     const navigation = useNavigation();
-    const docRef = doc(db, "users", auth.currentUser.uid);
-    getDoc(docRef)
-      .then((docSnap) => {
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          const workDuration = userData.workDuration;
-          const breakDuration = userData.breakDuration;
-          setWorkTimer(workDuration);
-          setBreakTimer(breakDuration);
-          console.log(workDuration); // prints the value of the workDuration field
-        } else {
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
-
-
-
-    async function signOut(){
-        try{
-            auth.signOut()
-            .then(
-                ()=>{console.log("USER SUCCESSFULLY SIGNED OUT")
-                dispatchSignedIn({type:"UPDATE_SIGN_IN",payload:{userToken:null}})
+    useFocusEffect(
+        React.useCallback(() => {
+          const docRef = doc(db, 'users', auth.currentUser.uid);
+          getDoc(docRef)
+            .then((docSnap) => {
+              if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const workDuration = userData.workDuration;
+                const breakDuration = userData.breakDuration;
+                setWorkTimer(workDuration);
+                setBreakTimer(breakDuration);
+              } else {
+                console.log('No such document!');
+              }
             })
-    
-        }catch(error){
+            .catch((error) => {
+              console.log('Error getting document:', error);
+            });
+        })
+      );
+
+
+
+    async function signOut() {
+        try {
+            auth.signOut()
+                .then(
+                    () => {
+                        console.log("USER SUCCESSFULLY SIGNED OUT")
+                        dispatchSignedIn({ type: "UPDATE_SIGN_IN", payload: { userToken: null } })
+                    })
+
+        } catch (error) {
             alert(error.code)
         }
     }
@@ -61,7 +65,7 @@ export default function PomodoroTimer(props) {
         setBreakTimer(Number(enteredValue));
         endBreakTimerModalHandler();
     }
-    
+
     // extra function 
     function timerWorkHandler() {
         console.log('hi');
@@ -106,50 +110,50 @@ export default function PomodoroTimer(props) {
     //navigation.navigate tells us which screen to go to next,
     //but the screen MUST be defined in the TabNavigation first in MainContainer.js
     return (
-        <View style = {styles.timerContainer}> 
-            <Text style = {styles.userProfile} onPress={() => {signOut()}}>Click here to logout: {auth.currentUser?.email}</Text>
-            <Text style = {styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
-            <View style = {styles.midcontainer}>   
-              
+        <View style={styles.timerContainer}>
+            <Text style={styles.userProfile} onPress={() => { signOut() }}>Click here to logout: {auth.currentUser?.email}</Text>
+            <Text style={styles.timerTitle} onPress={() => alert('Start your flow!')}>Start your flow!</Text>
+            <View style={styles.midcontainer}>
+
                 {/* Creates a custom button that activates modal for user to use to set custom work timer*/}
-                <Pressable visible = {workModalIsVisible} onPress = {startWorkTimerModalHandler}>
+                <Pressable visible={workModalIsVisible} onPress={startWorkTimerModalHandler}>
                     <View>
-                        <Text style= {styles.timerText}>{workTimer} Minute Work Time</Text>
+                        <Text style={styles.timerText}>{workTimer} Minute Work Time</Text>
                     </View>
                 </Pressable>
                 {/* The custom modal to allow user to change Work Timer value */}
-                <WorkTimerInput 
+                <WorkTimerInput
                     // passes value to make modal visible 
-                    visible = {workModalIsVisible} 
+                    visible={workModalIsVisible}
                     // passes function that closes modal
                     onCancel={endWorkTimerModalHandler}
                     // passes function that handles user input, then closes modal
-                    onSubmit = {userInputWorkTimer}
+                    onSubmit={userInputWorkTimer}
                     // passes default value of Work Timer (whatever was previously entered, default starting at 25)
-                    defaultValues = {workTimer}
+                    defaultValues={workTimer}
                 />
 
                 {/* Creates a custom button thatr activate modal for user to use to set custom break timer */}
-                <Pressable visible = {breakModalIsVisible} onPress={startBreakTimerModalHandler}>
+                <Pressable visible={breakModalIsVisible} onPress={startBreakTimerModalHandler}>
                     <View>
-                        <Text style= {styles.timerText}>{breakTimer} Minute Break Time</Text>
+                        <Text style={styles.timerText}>{breakTimer} Minute Break Time</Text>
                     </View>
                 </Pressable>
                 {/* The custom modal to allow user to change Break Timer value  */}
                 <BreakTimerInput
                     // passes value to make modal visible 
-                    visible = {breakModalIsVisible}
+                    visible={breakModalIsVisible}
                     // passes function to close modal 
-                    onCancel = {endBreakTimerModalHandler}
+                    onCancel={endBreakTimerModalHandler}
                     // passes function that handles user input, then closes modal 
-                    onSubmit = {userInputBreakTimer}
+                    onSubmit={userInputBreakTimer}
                     // passes default value of Break Timer (whatever was previously entered, default starting at 5)
-                    defaultValues = {breakTimer}
+                    defaultValues={breakTimer}
                 />
                 {/* The navigation button that upon pressing "Start" button, starts the startTimerHandler function which passes 
                 appropriate workTimerDuration and breakTimerDuration values to the timer and navigates the user to that page 
                 where the timer promptly starts (set to the passed values) */}
-                <TouchableOpacity style = {styles.buttonStyle} onPress = {startTimerHandler}>
+                <TouchableOpacity style={styles.buttonStyle} onPress={startTimerHandler}>
                     <Text style={styles.buttonText}>Start</Text>
                 </TouchableOpacity>
             </View>
@@ -171,7 +175,7 @@ const styles = StyleSheet.create({
     },
     midcontainer: {
         height: '50%',
-        justifyContent: 'space-between', 
+        justifyContent: 'space-between',
     },
     timerText: {
         alignItems: 'center',
@@ -210,14 +214,14 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 30,
         padding: 30,
-    }, 
+    },
     inputContainer: {
-        flex: 1, 
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 24,
-        marginBottomWidth: 1, 
+        marginBottomWidth: 1,
         // borderBottomColor: 
     },
 });

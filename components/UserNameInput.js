@@ -4,23 +4,22 @@ import {auth} from '../firebase/firebase-config'
 import {db} from '../firebase/firebase-config'
 import {collection, onSnapshot, getDoc, doc, setDoc, addDoc} from 'firebase/firestore/lite'
 
-// Component that handles the Work Timer Modal that allows user to change the length of the Work Timer 
+// Component that handles the Break Timer Modal that allows user to change the length of the Break Timer 
 
-function WorkTimerInput(props) {
-    // work timer text / number input handling 
-    // sets the workTime value to the default previously selected/entered (25 if user hasn't changed it once already)
-
-    const [workTime, setWorkTime] = useState(props.defaultValues ? props.defaultValues.toString() : "25",);
-    const docRef = doc(db, "users", auth.currentUser.uid);
+function UserNameInput(props) {
+    // sets the userName value to the default previously selected/entered, default is the name attatched to email.
+    const [userName, setUserName] = useState(props.defaultValues);
+    
     useEffect(() => {
+        
         const fetchData = async () => {
           try {
             const docRef = doc(db, "users", auth.currentUser.uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               const userData = docSnap.data();
-              const workDuration = userData.workDuration;
-              setWorkTime(workDuration);
+              const userName = userData.firstName;
+              setUserName(userName);
             } else {
               console.log("No such document!");
             }
@@ -30,44 +29,48 @@ function WorkTimerInput(props) {
         };
     
         fetchData();
+        
+        //console.log("i dunno firebase, sorry.");
       }, []);
+    
+
+    // sets the userName to the value entered by user 
+    function inputValueHandler(enteredText) { 
+        setUserName(enteredText)
+    }
+
+    // saves the change that the user made to userName and then closes the modal 
+    function changeUserName() {
+        props.onSubmit(userName);
+    }
+
+    
     const adjustSettings = async () => {
+        
         setDoc(
             doc(db, 'users', auth.currentUser.uid), 
-            { workDuration: workTime},
+            { firstName: userName},
             { merge: true}
           );
+        
+        //console.log("i dunno firebase, sorry.");
     }
     
-
-    
-    // sets the WorkTime to the value entered by user 
-    function inputValueHandler(enteredText) {
-        setWorkTime(enteredText);
-    }
-
-    // saves the change that the user made to workTime and then closes the modal 
-    function changeWorkTime() {
-        props.onSubmit(workTime);
-    } 
 
     return (
         // returns a modal that is visible depending on props.visisble and slides up 
         <Modal visible = {props.visible} animationType = "slide" >
             <View style={styles.inputContainer}>
                 <View style={styles.inputTop}>
-                    <Text style= {styles.changeTitle}>Change Work Time</Text>
+                    <Text style= {styles.changeTitle}>Change Username</Text>
                     <TextInput
-                        inputMode = 'numeric'
-                        keyboardType = "number-pad" 
-                        maxLength = {4}
                         onChangeText = {inputValueHandler}
-                        value = {workTime}
+                        value = {userName}
                         style = {styles.numberInput}
                     />
                 </View>
                 <View style = {styles.buttonStyle}>
-                    <Pressable onPress ={() => {changeWorkTime(); adjustSettings()}}>
+                    <Pressable onPress ={() => {changeUserName(); adjustSettings()}}>
                         <View>
                             <Text style= {styles.timerText}>Change</Text>
                         </View>
@@ -81,9 +84,10 @@ function WorkTimerInput(props) {
             </View>
         </Modal>
     )
-}; 
 
-export default WorkTimerInput;
+};
+
+export default UserNameInput; 
 
 const styles = StyleSheet.create({
     inputContainer: {
