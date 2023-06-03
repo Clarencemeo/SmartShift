@@ -1,13 +1,11 @@
 import * as React from "react";
 //import { Component } from 'react';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
   Text,
-  Fragment,
   TouchableOpacity,
-  TouchableHighlight,
   Vibration,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -18,11 +16,13 @@ import { SelectList } from "react-native-dropdown-select-list";
 
 import { Audio } from "expo-av";
 
+import { TaskContext } from "../../store/tasks-context";
+
 export default function TimerApp({ route }) {
   const navigation = useNavigation();
   //The timer takes time in seconds, so convert to that.
-  const workDuration = route.params.workTimerDuration * 60;
-  const breakDuration = route.params.breakTimerDuration * 60;
+  const workDuration = route.params.workTimerDuration * 2;
+  const breakDuration = route.params.breakTimerDuration * 2;
 
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
@@ -50,6 +50,7 @@ export default function TimerApp({ route }) {
     { key: "9", value: "None" },
   ];
   const [alarm, setAlarm] = useState();
+  const tasksCtx = useContext(TaskContext);
 
   async function playSound(val) {
     if (alarm != undefined) {
@@ -149,6 +150,18 @@ export default function TimerApp({ route }) {
     }
   }, [alarm, selected, play]);
 
+  const [notifSent, setNotifSent] = useState(false);
+
+  useEffect(() => {
+    if (timerEnd && !notifSent) {
+      tasksCtx.sendAlarmNotif();
+      setNotifSent(true);
+    }
+    if (!timerEnd) {
+      setNotifSent(false);
+    }
+  }, [timerEnd]);
+
   function reflectHandler() {
     navigation.navigate("Reflect", {
       numOfSlices: slices,
@@ -164,7 +177,12 @@ export default function TimerApp({ route }) {
           {timerWorking ? "Work Cycle" : "Break Time!"}
         </Text>
       </View>
-      <View height="20%" justifyContent="center" alignItems="center">
+      <View
+        height="20%"
+        justifyContent="center"
+        alignItems="center"
+        style={styles.countdownTimer}
+      >
         <CountdownCircleTimer
           size={225}
           key={key}
@@ -334,6 +352,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     justifyContent: "space-between",
     marginHorizontal: "10%",
+    marginTop: "5%",
   },
   roundButton: {
     width: 90,
@@ -358,6 +377,10 @@ const styles = StyleSheet.create({
     borderColor: "#C05050",
     borderWidth: 1,
     borderRadius: 15,
+  },
+
+  countdownTimer: {
+    marginTop: "5%",
   },
 });
 

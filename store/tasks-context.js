@@ -166,7 +166,9 @@ function taskReducer(state, action) {
       return state;
     case "ENABLENOTIF":
       for (let i = 0; i < state.length; i++) {
-        adjustSettings5(state[i]);
+        if (state[i].notificationId == -1) {
+          adjustSettings5(state[i]);
+        }
       }
       return state;
     case "RESET":
@@ -274,6 +276,7 @@ function TaskContextProvider({ children }) {
   }, []);
 
   const [deadlineNotif, setDeadlineNotif] = useState(false);
+  const [alarmNotif, setAlarmNotif] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -290,6 +293,7 @@ function TaskContextProvider({ children }) {
             if (docSnap.exists()) {
               const userData = docSnap.data();
               setDeadlineNotif(userData.deadlineNotif);
+              setAlarmNotif(userData.alarmNotif);
             } else {
               console.log("No such document!");
             }
@@ -386,6 +390,31 @@ function TaskContextProvider({ children }) {
     dispatch({ type: "ENABLENOTIF" });
   }
 
+  function sendAlarmNotif() {
+    try {
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      getDoc(docRef).then((docSnap) => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setAlarmNotif(userData.alarmNotif);
+          console.log("alarmNotif? ", alarmNotif);
+          if (alarmNotif) {
+            Notifications.scheduleNotificationAsync({
+              content: {
+                title: "Your timer just ended!",
+              },
+              trigger: { seconds: 1 },
+            });
+          }
+        } else {
+          console.log("No such document!");
+        }
+      });
+    } catch (error) {
+      console.error("ERROR IN sendAlarmNotif");
+    }
+  }
+
   const value = {
     tasks: taskState,
     addTask: addTask,
@@ -393,6 +422,7 @@ function TaskContextProvider({ children }) {
     updateTask: updateTask,
     cancelAllNotif: cancelAllNotif,
     enableAllNotif: enableAllNotif,
+    sendAlarmNotif: sendAlarmNotif,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

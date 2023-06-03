@@ -41,6 +41,7 @@ export default function SettingsPage() {
       await setDoc(
         doc(db, "users", auth.currentUser.uid),
         {
+          alarmNotif: enableAlarmNotif,
           deadlineNotif: enableDeadlineNotif,
           workDuration: defaultWorkTimer,
           breakDuration: defaultBreakTimer, // add breakDuration field
@@ -58,6 +59,7 @@ export default function SettingsPage() {
       await setDoc(
         doc(db, "users", auth.currentUser.uid),
         {
+          alarmNotif: true,
           deadlineNotif: true,
           workDuration: "25",
           breakDuration: "5", // add breakDuration field
@@ -71,6 +73,7 @@ export default function SettingsPage() {
   };
 
   const [initDeadlineNotif, setInitDeadlineNotif] = useState(false);
+  const [initAlarmNotif, setInitAlarmNotif] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -79,12 +82,23 @@ export default function SettingsPage() {
         .then((docSnap) => {
           if (docSnap.exists()) {
             const userData = docSnap.data();
+            const alarmNotif = userData.alarmNotif;
             const deadlineNotif = userData.deadlineNotif;
+            // console.log("deadlineNotif: ", deadlineNotif);
             const workDuration = userData.workDuration;
+            // console.log("workDuration: ", workDuration);
             const breakDuration = userData.breakDuration;
             if (initDeadlineNotif == false) {
               setDeadlineNotif(deadlineNotif);
               setInitDeadlineNotif(true);
+            } else if (deadlineNotif != enableDeadlineNotif) {
+              setDeadlineNotif(enableDeadlineNotif);
+            }
+            if (initAlarmNotif == false) {
+              setAlarmNotif(alarmNotif);
+              setInitAlarmNotif(true);
+            } else if (alarmNotif != enableAlarmNotif) {
+              setAlarmNotif(enableAlarmNotif);
             }
             setWorkTimer(workDuration);
             setBreakTimer(breakDuration);
@@ -95,7 +109,12 @@ export default function SettingsPage() {
         .catch((error) => {
           console.log("Error getting document:", error);
         });
-    }, [enableDeadlineNotif, defaultWorkTimer, defaultBreakTimer]) // Add workTimer and breakTimer as dependencies
+    }, [
+      enableAlarmNotif,
+      enableDeadlineNotif,
+      defaultWorkTimer,
+      defaultBreakTimer,
+    ]) // Add workTimer and breakTimer as dependencies
   );
 
   // changes work timer value according to user input and then closes the work modal
@@ -142,7 +161,9 @@ export default function SettingsPage() {
         <Checkbox
           style={styles.checkbox}
           value={enableAlarmNotif}
-          onValueChange={setAlarmNotif}
+          onValueChange={() => {
+            setAlarmNotif(!enableAlarmNotif);
+          }}
         />
         <TouchableOpacity
           style={styles.button}
