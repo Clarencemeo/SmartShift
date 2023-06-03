@@ -1,5 +1,4 @@
 import * as React from "react";
-//import { Component } from 'react';
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -27,6 +26,8 @@ export default function TimerApp({ route }) {
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
   const [timerEnd, setTimerEnd] = useState(false);
+
+  //
   const [timerWorking, setTimerWorking] = useState(true);
   const [selected, setSelected] = useState("");
   const [slices, setSlices] = useState(0);
@@ -159,29 +160,33 @@ export default function TimerApp({ route }) {
 
   return (
     <View justifyContent="center" backgroundColor="#F4978E" height="100%">
-      <View height="15%">
-        <Text marginTop="5%" style={styles.titleText}>
+      <View height="10%">
+        <Text marginTop="2%" style={textStyles.title}>
           {timerWorking ? "Work Cycle" : "Break Time!"}
         </Text>
       </View>
-      <View height="20%" justifyContent="center" alignItems="center">
+      <View height="35%" justifyContent="center" alignItems="center">
         <CountdownCircleTimer
           size={225}
           key={key}
           isPlaying={isPlaying}
           duration={timerWorking ? workDuration : breakDuration}
-          colors="#A30000"
+          colors="#C30000"
+          strokeWidth={6}
+          strokeLinecap="round"
           onComplete={() => {
             setTimerStart(false);
             setTimerEnd(true);
             setPlay(true);
             setIsPlaying((prev) => !prev);
-            setSlices((slices) => slices + 1);
+            if (!timerWorking) {
+              setSlices((slices) => slices + 1);
+            }
             return { shouldRepeat: false };
           }}
         >
           {({ remainingTime }) => (
-            <Text style={styles.timerText}>
+            <Text style={textStyles.timer}>
               {String(Math.floor(remainingTime / 60)).padStart(2, "0")}:
               {String(remainingTime % 60).padStart(2, "0")}
             </Text>
@@ -189,7 +194,7 @@ export default function TimerApp({ route }) {
         </CountdownCircleTimer>
       </View>
 
-      <View height="15%" style={styles.buttonsRow}>
+      <View height="15%" style={containerStyles.buttonsRow}>
         {/* Reset Button */}
         <TouchableOpacity
           onPress={() => {
@@ -200,11 +205,11 @@ export default function TimerApp({ route }) {
             setTimerReset(true);
             setTimerWorking(timerEnd ? !timerWorking : timerWorking);
           }}
-          style={[styles.roundButton, { backgroundColor: "#FFDAB9" }]}
+          style={[containerStyles.roundButton, { backgroundColor: "#FFDAB9" }]}
         >
-          <View style={styles.buttonBorder}>
-            <Text style={[styles.buttonTitle]} color="#ffffff">
-              {timerEnd ? "Move On" : "Reset"}
+          <View style={containerStyles.buttonBorder}>
+            <Text style={[textStyles.buttonTitle]}>
+              {timerEnd ? "Continue" : "Reset"}
             </Text>
           </View>
         </TouchableOpacity>
@@ -218,12 +223,12 @@ export default function TimerApp({ route }) {
             setTimerReset(false);
           }}
           style={[
-            styles.roundButton,
+            containerStyles.roundButton,
             { backgroundColor: timerStart ? "#FFFFFF" : "#FFDAB9" },
           ]}
         >
-          <View style={styles.buttonBorder}>
-            <Text style={[styles.buttonTitle]}>
+          <View style={containerStyles.buttonBorder}>
+            <Text style={[textStyles.buttonTitle]}>
               {timerStart ? "Pause" : "Resume"}
             </Text>
           </View>
@@ -231,7 +236,7 @@ export default function TimerApp({ route }) {
       </View>
 
       <View height="10%">
-        {!timerWorking && (
+        {!timerWorking && !timerEnd && (
           <View
             alignItems="center"
             alignSelf="stretch"
@@ -251,11 +256,11 @@ export default function TimerApp({ route }) {
                 setTimerWorking(!timerWorking);
               }}
             >
-              <Text style={styles.skipBreakTitle}>Skip Break</Text>
+              <Text style={textStyles.skipBreakTitle}>Skip Break</Text>
             </TouchableOpacity>
           </View>
         )}
-        {timerWorking && (
+        {!timerWorking && timerEnd && (
           <View
             alignItems="center"
             alignSelf="stretch"
@@ -267,13 +272,13 @@ export default function TimerApp({ route }) {
             marginTop="2%"
           >
             <TouchableOpacity onPress={reflectHandler}>
-              <Text style={styles.skipBreakTitle}>End Work</Text>
+              <Text style={textStyles.skipBreakTitle}>End Work</Text>
             </TouchableOpacity>
           </View>
         )}
       </View>
 
-      <View height="40%" width="50%" alignSelf="center">
+      <View height="30%" width="50%" alignSelf="center">
         <SelectList
           setSelected={(val) => {
             setSelected(val);
@@ -282,36 +287,50 @@ export default function TimerApp({ route }) {
           data={notificationSounds}
           save="value"
           search={false}
-          boxStyles={styles.listBox}
-          maxHeight="150"
+          boxStyles={containerStyles.listBox}
         />
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  titleText: {
+const textStyles = StyleSheet.create({
+  title: {
     fontWeight: "bold",
     fontSize: 50,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
+    color: "#300000",
   },
-  timerText: {
+  timer: {
     fontWeight: "bold",
     fontSize: 40,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
+    color: "#500000",
   },
-  container: {
-    flex: 1,
-    backgroundColor: "#FF0000",
-    alignItems: "center",
+
+  skipBreakTitle: {
+    fontSize: 25,
+    fontWeight: "bold",
     justifyContent: "center",
-    marginTop: 30,
+    alignItems: "center",
+    color: "#900000",
+    textAlign: "center",
   },
+
+  buttonTitle: {
+    fontSize: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#A00000",
+    textAlign: "center",
+  },
+});
+
+const containerStyles = StyleSheet.create({
   buttonBorder: {
     width: 76,
     height: 76,
@@ -321,13 +340,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "#C05050",
   },
-  buttonTitle: {
-    fontSize: 18,
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#A00000",
-    textAlign: "center",
-  },
+
   //the row with two buttons
   buttonsRow: {
     flexDirection: "row",
@@ -335,6 +348,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: "10%",
   },
+
   roundButton: {
     width: 90,
     height: 90,
@@ -345,38 +359,11 @@ const styles = StyleSheet.create({
     borderColor: "#C05050",
     borderWidth: 1,
   },
-  skipBreakTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#900000",
-    textAlign: "center",
-  },
 
   listBox: {
     borderColor: "#C05050",
     borderWidth: 1,
     borderRadius: 15,
+    maxHeight: 125,
   },
 });
-
-const timerDesign = {
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 5,
-    borderRadius: 1000,
-    backgroundColor: "#FBC4AB",
-    borderColor: "#FFFFFF",
-    width: "90%",
-    alignSelf: "center",
-  },
-  text: {
-    textAlign: "center",
-    fontSize: 70,
-    color: "black",
-    fontWeight: "300",
-  },
-};

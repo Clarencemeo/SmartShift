@@ -214,7 +214,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#f4978e",
     borderWidth: 5,
     borderColor: "#f08080",
-    //backgroundColor: 'red',
     fontWeight: "bold",
     opacity: 0.8,
     overflow: "hidden",
@@ -249,6 +248,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
     marginBottomWidth: 1,
-    // borderBottomColor:
   },
 });
