@@ -21,8 +21,8 @@ import { TaskContext } from "../../store/tasks-context";
 export default function TimerApp({ route }) {
   const navigation = useNavigation();
   //The timer takes time in seconds, so convert to that.
-  const workDuration = route.params.workTimerDuration * 2;
-  const breakDuration = route.params.breakTimerDuration * 2;
+  const workDuration = route.params.workTimerDuration * 60;
+  const breakDuration = route.params.breakTimerDuration * 60;
 
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
