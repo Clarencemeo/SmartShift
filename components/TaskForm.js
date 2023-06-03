@@ -8,10 +8,13 @@ import {
   Alert,
 } from "react-native";
 import TaskInput from "./TaskInput";
-import { useState } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import Button from "./Button";
 import { getFormattedDate } from "../util/date";
 import Checkbox from "./Checkbox";
+import * as Notifications from "expo-notifications";
+import { secFromToday } from "../navigation/MainContainer";
+import { TaskContext } from "../store/tasks-context";
 
 function TaskForm({
   submitButtonLabel,
@@ -62,7 +65,7 @@ function TaskForm({
       complete: inputs.complete.value,
       urgent: inputs.urgent.value,
       important: inputs.important.value,
-      completedDate: new Date().toISOString(),
+      notificationId: "hi",
     };
 
     const descriptionIsValid = taskData.description.trim().length > 0;

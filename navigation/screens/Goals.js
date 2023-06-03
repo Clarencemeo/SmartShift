@@ -14,6 +14,7 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore/lite";
+import GoalsTask from "../../components/GoalsTask";
 import * as Progress from "react-native-progress";
 
 // documentation on Switches: https://reactnative.dev/docs/switch
@@ -21,7 +22,59 @@ function Goals({}) {
   const navigation = useNavigation();
   const [progress, setProgress] = useState(0.5);
   const [numberOfTasksCompleted, setNumberOfTasksCompleted] = useState(0);
-  const [desiredTaskGoals, setTaskGoals] = useState(3);
+  const [desiredTaskGoals, setTaskGoals] = useState("3");
+
+  // work timer modal useState, initially set to invisible (false)
+  const [goalTaskModalIsVisible, setGoalTaskModalIsVisible] = useState(false);
+
+  // updating function to update whether Work Timer Modal is visible
+  function startGoalTaskModalHandler() {
+    setGoalTaskModalIsVisible(true);
+  }
+
+  // function to close the Work Timer Modal (make it invisible)
+  function endGoalTaskModalHandler() {
+    setGoalTaskModalIsVisible(false);
+  }
+
+  // break timer modal useState, initially set to invisible (false)
+  const [breakModalIsVisible, setBreakTimerModalIsVisible] = useState(false);
+
+  // updating function to update whether Work Timer Modal is visible
+  function startBreakTimerModalHandler() {
+    setBreakTimerModalIsVisible(true);
+  }
+
+  // function to close the Work Timer Modal (make it invisible)
+  function endBreakTimerModalHandler() {
+    setBreakTimerModalIsVisible(false);
+  }
+
+  function userInputGoalTimer(enteredValue) {
+    //setWorkTimer(Number(enteredValue));
+    endGoalTaskModalHandler();
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      getDoc(docRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const myGoals = userData.dailyTaskGoal;
+            //const breakDuration = userData.breakDuration;
+            setTaskGoals(myGoals);
+            //setBreakTimer(breakDuration);
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    })
+  );
 
   const backColorInProgress = "#fdf0d5";
   const backColorComplete = "#ffcdb2";
@@ -71,30 +124,24 @@ function Goals({}) {
 
   return (
     <View style={styles.mainContainer}>
-      <Pressable>
+      <Pressable onPress={startGoalTaskModalHandler}>
         <View style={styles.taskItem1}>
           <View style={styles.subcontainer1}>
             <Text style={[styles.textBase, styles.description]}>
               {numberOfTasksCompleted} Tasks Completed Today!
             </Text>
             <Text style={styles.textBase}>Daily Goal: </Text>
-            <View style={styles.importantBubble} backgroundColor={"white"}>
-              <Pressable
-                onPress={() =>
-                  setTaskGoals((prevValue) => Math.max(prevValue - 1, 1))
-                }
-              >
-                <Text>-</Text>
-              </Pressable>
-            </View>
             <Text>{desiredTaskGoals}</Text>
-            <View style={styles.importantBubble} backgroundColor={"white"}>
-              <Pressable
-                onPress={() => setTaskGoals((prevValue) => prevValue + 1)}
-              >
-                <Text>+</Text>
-              </Pressable>
-            </View>
+            <GoalsTask
+              // passes value to make modal visible
+              visible={goalTaskModalIsVisible}
+              // passes function that closes modal
+              onCancel={endGoalTaskModalHandler}
+              // passes function that handles user input, then closes modal
+              onSubmit={userInputGoalTimer}
+              // passes default value of Work Timer (whatever was previously entered, default starting at 25)
+              defaultValues={"3"}
+            />
           </View>
 
           {/* <View style={styles.amountContainer}>
