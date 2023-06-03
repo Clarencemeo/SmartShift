@@ -19,47 +19,57 @@ import {
   addDoc,
 } from "firebase/firestore/lite";
 
-function GoalsTask(props) {
+function GoalsModals(props) {
   const [goalDesired, setGoals] = useState("3");
-
-  const docRef = doc(db, "users", auth.currentUser.uid);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const docRef = doc(db, "users", auth.currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          const myGoals = userData.dailyTaskGoal;
-          setGoals(myGoals);
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.log("Error getting document:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [taskVisible, setTaskVisible] = useState(false);
+  const [sliceVisible, setSliceVisible] = useState(false);
 
   function inputValueHandler(enteredText) {
     setGoals(enteredText);
   }
+
   function changeGoals() {
     props.onSubmit(goalDesired);
   }
 
-  const adjustSettings = async () => {
+  const adjustSettings = async (goalCategory) => {
     setDoc(
       doc(db, "users", auth.currentUser.uid),
-      { dailyTaskGoal: goalDesired },
+      { [goalCategory]: goalDesired },
       { merge: true }
     );
   };
 
   return (
-    // returns a modal that is visible depending on props.visisble and slides up
+    <View>
+      {props.taskVisible && (
+        <GoalsTask
+          visible={true}
+          onCancel={props.onCancel}
+          onSubmit={props.onSubmit}
+          defaultValues={goalDesired}
+          inputValueHandler={inputValueHandler}
+          changeGoals={changeGoals}
+          adjustSettings={() => adjustSettings("dailyTaskGoal")}
+        />
+      )}
+      {props.sliceVisible && (
+        <GoalsSlice
+          visible={true}
+          onCancel={props.onCancel}
+          onSubmit={props.onSubmit}
+          defaultValues={goalDesired}
+          inputValueHandler={inputValueHandler}
+          changeGoals={changeGoals}
+          adjustSettings={() => adjustSettings("dailySliceGoal")}
+        />
+      )}
+    </View>
+  );
+}
+
+function GoalsTask(props) {
+  return (
     <Modal visible={props.visible} animationType="slide">
       <View style={styles.inputContainer}>
         <View style={styles.inputTop}>
@@ -70,16 +80,16 @@ function GoalsTask(props) {
             inputMode="numeric"
             keyboardType="number-pad"
             maxLength={3}
-            onChangeText={inputValueHandler}
-            value={goalDesired}
+            onChangeText={props.inputValueHandler}
+            value={props.defaultValues}
             style={styles.numberInput}
           />
         </View>
         <View style={styles.buttonStyle}>
           <Pressable
             onPress={() => {
-              changeGoals();
-              adjustSettings();
+              props.changeGoals();
+              props.adjustSettings();
             }}
           >
             <View>
@@ -97,7 +107,44 @@ function GoalsTask(props) {
   );
 }
 
-export default GoalsTask;
+function GoalsSlice(props) {
+  return (
+    <Modal visible={props.visible} animationType="slide">
+      <View style={styles.inputContainer}>
+        <View style={styles.inputTop}>
+          <Text style={styles.changeTitle}>Set Daily Goal for Slices</Text>
+          <TextInput
+            inputMode="numeric"
+            keyboardType="number-pad"
+            maxLength={3}
+            onChangeText={props.inputValueHandler}
+            value={props.defaultValues}
+            style={styles.numberInput}
+          />
+        </View>
+        <View style={styles.buttonStyle}>
+          <Pressable
+            onPress={() => {
+              props.changeGoals();
+              props.adjustSettings();
+            }}
+          >
+            <View>
+              <Text style={styles.timerText}>Change</Text>
+            </View>
+          </Pressable>
+          <Pressable onPress={props.onCancel}>
+            <View>
+              <Text style={styles.timerText}>Cancel</Text>
+            </View>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+export default GoalsModals;
 
 const styles = StyleSheet.create({
   inputContainer: {

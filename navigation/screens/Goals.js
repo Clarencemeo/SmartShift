@@ -1,9 +1,16 @@
 import * as React from "react";
-import { Pressable, StyleSheet, View, Text } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { auth } from "../../firebase/firebase-config";
 import { db } from "../../firebase/firebase-config";
+import { Button } from "react-native-elements";
 import {
   collection,
   getDoc,
@@ -14,40 +21,49 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore/lite";
-import GoalsTask from "../../components/GoalsTask";
+import GoalsModals from "../../components/GoalsModals";
 import * as Progress from "react-native-progress";
+import moment from "moment";
 
 // documentation on Switches: https://reactnative.dev/docs/switch
 function Goals({}) {
   const navigation = useNavigation();
   const [progress, setProgress] = useState(0.5);
   const [numberOfTasksCompleted, setNumberOfTasksCompleted] = useState(0);
+  const [numberOfSlicesCompleted, setNumberOfSlicesCompleted] = useState(0);
   const [desiredTaskGoals, setTaskGoals] = useState("3");
+  const [desiredSliceGoals, setSliceGoals] = useState("3");
 
-  // work timer modal useState, initially set to invisible (false)
+  const resetSliceCountIfNeeded = async (userId) => {
+    const currentDate = moment().format("YYYY-MM-DD");
+
+    const userRef = doc(db, "users", userId);
+
+    const userSnapshot = await getDoc(userRef);
+    const userData = userSnapshot.data();
+
+    if (userData.lastReset !== currentDate) {
+      // Reset count for a new day
+      await setDoc(
+        userRef,
+        {
+          slices: 0,
+          lastReset: currentDate,
+        },
+        { merge: true }
+      );
+    }
+  };
+
   const [goalTaskModalIsVisible, setGoalTaskModalIsVisible] = useState(false);
+  const [goalSliceModalIsVisible, setGoalSliceModalIsVisible] = useState(false);
 
-  // updating function to update whether Work Timer Modal is visible
   function startGoalTaskModalHandler() {
     setGoalTaskModalIsVisible(true);
   }
 
-  // function to close the Work Timer Modal (make it invisible)
   function endGoalTaskModalHandler() {
     setGoalTaskModalIsVisible(false);
-  }
-
-  // break timer modal useState, initially set to invisible (false)
-  const [breakModalIsVisible, setBreakTimerModalIsVisible] = useState(false);
-
-  // updating function to update whether Work Timer Modal is visible
-  function startBreakTimerModalHandler() {
-    setBreakTimerModalIsVisible(true);
-  }
-
-  // function to close the Work Timer Modal (make it invisible)
-  function endBreakTimerModalHandler() {
-    setBreakTimerModalIsVisible(false);
   }
 
   function userInputGoalTimer(enteredValue) {
@@ -55,32 +71,20 @@ function Goals({}) {
     endGoalTaskModalHandler();
   }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const docRef = doc(db, "users", auth.currentUser.uid);
-      getDoc(docRef)
-        .then((docSnap) => {
-          if (docSnap.exists()) {
-            const userData = docSnap.data();
-            const myGoals = userData.dailyTaskGoal;
-            //const breakDuration = userData.breakDuration;
-            setTaskGoals(myGoals);
-            //setBreakTimer(breakDuration);
-          } else {
-            console.log("No such document!");
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
-    })
-  );
+  function startGoalSliceModalHandler() {
+    setGoalSliceModalIsVisible(true);
+  }
+  function endGoalSliceModalHandler() {
+    setGoalSliceModalIsVisible(false);
+  }
+
+  function userInputGoalSlice(enteredValue) {
+    //setWorkTimer(Number(enteredValue));
+    endGoalSliceModalHandler();
+  }
 
   const backColorInProgress = "#fdf0d5";
   const backColorComplete = "#ffcdb2";
-
-  const backColorUrgent = "#ff0a54";
-  const backColorNotUrgent = "white";
 
   const backColorImportant = "#c9184a";
   const backColorNotImportant = "white";
@@ -112,19 +116,39 @@ function Goals({}) {
     setNumberOfTasksCompleted(tasksCompleted);
   };
 
-  useEffect(() => {
-    fetchTasksCompleted();
-  }, []);
+  //useEffect(() => {
+  //  fetchTasksCompleted();
+  //}, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchTasksCompleted();
-    }, [])
+      resetSliceCountIfNeeded(auth.currentUser.uid);
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      getDoc(docRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const myGoals = userData.dailyTaskGoal;
+            const mySliceGoals = userData.dailySliceGoal;
+            //const breakDuration = userData.breakDuration;
+            setTaskGoals(myGoals);
+            setSliceGoals(mySliceGoals);
+            setNumberOfSlicesCompleted(userData.slices);
+            fetchTasksCompleted();
+            //setBreakTimer(breakDuration);
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    })
   );
 
   return (
     <View style={styles.mainContainer}>
-      <Pressable onPress={startGoalTaskModalHandler}>
+      <Pressable>
         <View style={styles.taskItem1}>
           <View style={styles.subcontainer1}>
             <Text style={[styles.textBase, styles.description]}>
@@ -132,14 +156,22 @@ function Goals({}) {
             </Text>
             <Text style={styles.textBase}>Daily Goal: </Text>
             <Text>{desiredTaskGoals}</Text>
-            <GoalsTask
+            <Button
+              title="Set Goal"
+              onPress={startGoalTaskModalHandler}
+              buttonStyle={{
+                backgroundColor: "#ff4d6d",
+                marginTop: 30,
+                width: "100%",
+              }}
+            />
+            <GoalsModals
               // passes value to make modal visible
-              visible={goalTaskModalIsVisible}
+              taskVisible={goalTaskModalIsVisible}
               // passes function that closes modal
               onCancel={endGoalTaskModalHandler}
               // passes function that handles user input, then closes modal
               onSubmit={userInputGoalTimer}
-              // passes default value of Work Timer (whatever was previously entered, default starting at 25)
               defaultValues={"3"}
             />
           </View>
@@ -164,25 +196,39 @@ function Goals({}) {
       <Pressable>
         <View style={styles.taskItem2}>
           <View style={styles.subcontainer1}>
-            <Text style={[styles.textBase, styles.description]}>hi</Text>
-            <Text style={styles.textBase}>dater</Text>
+            <Text style={[styles.textBase, styles.description]}>
+              {numberOfSlicesCompleted} Slices Completed Today!
+            </Text>
+            <Text style={styles.textBase}>Daily Goal: </Text>
+            <Text>{desiredSliceGoals}</Text>
+            <Button
+              title="Set Goal"
+              onPress={startGoalSliceModalHandler}
+              buttonStyle={{ backgroundColor: "#ff4d6d", marginTop: 30 }}
+            />
+            <GoalsModals
+              // passes value to make modal visible
+              sliceVisible={goalSliceModalIsVisible}
+              // passes function that closes modal
+              onCancel={endGoalSliceModalHandler}
+              // passes function that handles user input, then closes modal
+              onSubmit={userInputGoalSlice}
+              defaultValues={"3"}
+            />
           </View>
+
           {/* <View style={styles.amountContainer}>
                 <Text style={styles.amount}>{amount.toFixed(2)}</Text>
                 </View> */}
           <View style={styles.subcontainer2}>
             <View>
-              <Progress.Bar
-                progress={progress}
-                width={100} // Set the width of the progress bar
-                height={10} // Set the height of the progress bar
-                color="#6d6875" // Set the color of the progress bar
-                borderRadius={5} // Set the border radius of the progress bar
-                // You can customize more properties as needed
+              <Progress.Pie
+                borderWidth={2}
+                borderColor="#bc3908"
+                progress={numberOfSlicesCompleted / desiredSliceGoals}
+                size={100}
+                color="#f25c54"
               />
-              <View style={styles.importantBubble}>
-                <Text>Progress: {progress}</Text>
-              </View>
             </View>
           </View>
         </View>
@@ -206,7 +252,7 @@ function Goals({}) {
                 borderRadius={5} // Set the border radius of the progress bar
                 // You can customize more properties as needed
               />
-              <View style={styles.importantBubble}>
+              <View>
                 <Text>Progress: {progress}</Text>
               </View>
             </View>
@@ -289,25 +335,5 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginBottom: 4,
     fontWeight: "bold",
-  },
-  urgentBubble: {
-    marginTop: 3,
-    marginLeft: 10,
-    width: 20,
-    height: 20,
-    borderColor: "white",
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  importantBubble: {
-    marginTop: 3,
-    marginLeft: 20,
-    width: 30,
-    height: 30,
-    borderColor: "white",
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
