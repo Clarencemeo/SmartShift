@@ -194,6 +194,21 @@ export default function SettingsPage() {
           </Text>
         </TouchableOpacity>
       </View>
+      <View>
+        <TouchableOpacity
+          style={styles.buttonConfirm}
+          onPress={() => {
+            adjustSettings();
+            if (enableDeadlineNotif == false) {
+              tasksCtx.cancelAllNotif();
+            } else {
+              tasksCtx.enableAllNotif();
+            }
+          }}
+        >
+          <Text style={styles.confirmText}>Confirm</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.midcontainer}>
         <Text style={styles.titleText}>Set Default Work Time</Text>
@@ -239,14 +254,14 @@ export default function SettingsPage() {
           defaultValues={defaultBreakTimer}
         />
         {/*Navigation to Account Settings*/}
+      </View>
+      <View style={styles.section}>
         <TouchableOpacity
           style={styles.buttonConfirm}
           onPress={accountSettingsHandler}
         >
           <Text style={styles.optionsText}>Account Settings</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.section}>
         {/*Button to Restore Defaults*/}
         <TouchableOpacity
           style={styles.buttonRestore}
@@ -260,20 +275,6 @@ export default function SettingsPage() {
         >
           <Text style={styles.optionsText}>Restore Defaults</Text>
         </TouchableOpacity>
-        {/*Button to Confirm Choices*/}
-        <TouchableOpacity
-          style={styles.buttonConfirm}
-          onPress={() => {
-            adjustSettings();
-            if (enableDeadlineNotif == false) {
-              tasksCtx.cancelAllNotif();
-            } else {
-              tasksCtx.enableAllNotif();
-            }
-          }}
-        >
-          <Text style={styles.optionsText}>Confirm</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -286,11 +287,12 @@ export default function SettingsPage() {
 const styles = StyleSheet.create({
   titleText: {
     fontWeight: "bold",
-    fontSize: 35,
+    fontSize: 30,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
     marginTop: 20,
+    marginBottom: 5,
   },
 
   timerContainer: {
@@ -304,13 +306,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
-    fontSize: 26,
+    fontSize: 25,
     borderRadius: 30,
     padding: 10,
     backgroundColor: "#f4978e",
     borderWidth: 5,
     borderColor: "#f08080",
-    //backgroundColor: 'red',
     fontWeight: "bold",
     opacity: 0.8,
     overflow: "hidden",
@@ -319,17 +320,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FBC4AB",
-    //alignItems: 'center',
-    //justifyContent: 'center',
-    //marginTop: 40
   },
 
   midcontainer: {
     flex: 1,
     backgroundColor: "#FBC4AB",
     alignItems: "center",
-    //justifyContent: 'center',
-    //marginTop: 40
   },
 
   section: {
@@ -342,17 +338,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  optionsText: {
+  confirmText: {
     alignItems: "center",
     justifyContent: "center",
     margin: 20,
     fontSize: 20,
-    borderRadius: 30,
+    borderRadius: 25,
     padding: 10,
     backgroundColor: "#f4978e",
     borderWidth: 5,
     borderColor: "#f08080",
-    //backgroundColor: 'red',
+    fontWeight: "bold",
+    opacity: 0.8,
+    overflow: "hidden",
+  },
+
+  optionsText: {
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 10,
+    fontSize: 18,
+    borderRadius: 25,
+    padding: 10,
+    backgroundColor: "#f4978e",
+    borderWidth: 5,
+    borderColor: "#f08080",
     fontWeight: "bold",
     opacity: 0.8,
     overflow: "hidden",
@@ -367,13 +377,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FBC4AB",
-    padding: 10,
   },
 
   buttonConfirm: {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FBC4AB",
-    padding: 10,
   },
 });
