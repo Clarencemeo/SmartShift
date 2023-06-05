@@ -39,7 +39,6 @@ function ManageTask({ route, navigation }) {
   }, [navigation, isEditing]);
 
   function deleteTaskHandler() {
-    // Notifications.cancelScheduledNotificationAsync(selectedTask.notificationId);
     tasksCtx.deleteTask(editedTaskId, selectedTask);
     navigation.goBack();
   }
@@ -98,13 +97,6 @@ function ManageTask({ route, navigation }) {
             />
           </View>
         )}
-        {/* <Button
-                    title="Done"
-                    color={colors.primary}
-                    style={{ alignSelf: 'flex-end' }}
-                    // onPress={() => {navigation.navigate("taskBites")}}
-                    onPress={navigation.goBack}
-                /> */}
       </Animated.View>
     </View>
   );
@@ -119,6 +111,7 @@ const styles = StyleSheet.create({
     top: "30%",
     backgroundColor: "#F8AD9D",
     padding: 24,
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
@@ -128,7 +121,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     marginBottom: 8,
-    // marginLeft: 25,
   },
   deleteContainer: {
     marginTop: 16,

@@ -171,7 +171,7 @@ export default function TimerApp({ route }) {
   }
 
   return (
-    <View justifyContent="center" backgroundColor="#F4978E" height="100%">
+    <View justifyContent="center" backgroundColor="#F4978E" height="110%">
       <View height="15%">
         <Text marginTop="5%" style={styles.titleText}>
           {timerWorking ? "Work Cycle" : "Break Time!"}
@@ -310,6 +310,7 @@ export default function TimerApp({ route }) {
 
 const styles = StyleSheet.create({
   titleText: {
+    marginTop: 30,
     fontWeight: "bold",
     fontSize: 50,
     alignItems: "center",
@@ -317,8 +318,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   timerText: {
-    fontWeight: "bold",
-    fontSize: 40,
+    // fontWeight: "bold",
+    fontSize: 45,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
@@ -365,8 +366,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   skipBreakTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 27,
+    // fontWeight: "bold",
     justifyContent: "center",
     alignItems: "center",
     color: "#900000",

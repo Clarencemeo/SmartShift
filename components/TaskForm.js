@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   checkText: {
-    fontSize: 12,
+    fontSize: 15,
     color: "#d90429",
     marginBottom: 4,
     marginRight: 10,
