@@ -64,6 +64,17 @@ function GoalsModals(props) {
           adjustSettings={() => adjustSettings("dailySliceGoal")}
         />
       )}
+      {props.minutesVisible && (
+        <GoalsMinutes
+          visible={true}
+          onCancel={props.onCancel}
+          onSubmit={props.onSubmit}
+          defaultValues={goalDesired}
+          inputValueHandler={inputValueHandler}
+          changeGoals={changeGoals}
+          adjustSettings={() => adjustSettings("dailyMinutesGoal")}
+        />
+      )}
     </View>
   );
 }
@@ -113,6 +124,45 @@ function GoalsSlice(props) {
       <View style={styles.inputContainer}>
         <View style={styles.inputTop}>
           <Text style={styles.changeTitle}>Set Daily Goal for Slices</Text>
+          <TextInput
+            inputMode="numeric"
+            keyboardType="number-pad"
+            maxLength={3}
+            onChangeText={props.inputValueHandler}
+            value={props.defaultValues}
+            style={styles.numberInput}
+          />
+        </View>
+        <View style={styles.buttonStyle}>
+          <Pressable
+            onPress={() => {
+              props.changeGoals();
+              props.adjustSettings();
+            }}
+          >
+            <View>
+              <Text style={styles.timerText}>Change</Text>
+            </View>
+          </Pressable>
+          <Pressable onPress={props.onCancel}>
+            <View>
+              <Text style={styles.timerText}>Cancel</Text>
+            </View>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+function GoalsMinutes(props) {
+  return (
+    <Modal visible={props.visible} animationType="slide">
+      <View style={styles.inputContainer}>
+        <View style={styles.inputTop}>
+          <Text style={styles.changeTitle}>
+            Set Daily Goal for Minutes Worked
+          </Text>
           <TextInput
             inputMode="numeric"
             keyboardType="number-pad"

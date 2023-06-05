@@ -66,7 +66,8 @@ export default function TimerApp({ route }) {
   ];
   const [alarm, setAlarm] = useState();
 
-  const resetSliceCountIfNeeded = async (userId) => {
+  //resets the dailySlices and dailyMinutesWorked when it's a new day
+  const resetCountIfNeeded = async (userId) => {
     const currentDate = moment().format("YYYY-MM-DD");
 
     const userRef = doc(db, "users", userId);
@@ -80,6 +81,7 @@ export default function TimerApp({ route }) {
         userRef,
         {
           slices: 0,
+          minutesWorked: 0,
           lastReset: currentDate,
         },
         { merge: true }
@@ -87,20 +89,20 @@ export default function TimerApp({ route }) {
     }
   };
 
-  const updateSliceCount = async (userId, count) => {
+  const updateCount = async (userId, count, field) => {
     const userRef = doc(db, "users", userId);
 
-    await resetSliceCountIfNeeded(userId);
+    await resetCountIfNeeded(userId);
 
     const userSnapshot = await getDoc(userRef);
     const userData = userSnapshot.data();
 
-    const newCount = userData.slices + count;
+    const newCount = parseInt(userData[field]) + parseInt(count);
 
     await setDoc(
       userRef,
       {
-        slices: newCount,
+        [field]: newCount,
       },
       { merge: true }
     );
@@ -232,7 +234,14 @@ export default function TimerApp({ route }) {
             setPlay(true);
             setIsPlaying((prev) => !prev);
             setSlices((slices) => slices + 1);
-            updateSliceCount(auth.currentUser.uid, 1);
+            updateCount(auth.currentUser.uid, 1, "slices");
+            if (timerWorking) {
+              updateCount(
+                auth.currentUser.uid,
+                route.params.workTimerDuration,
+                "minutesWorked"
+              );
+            }
             return { shouldRepeat: false };
           }}
         >

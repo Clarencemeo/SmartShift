@@ -52,6 +52,8 @@ export default function Register() {
         dailyTaskGoal: "3",
         dailySliceGoal: "3",
         dailyMinutesGoal: "20",
+        slices: 0,
+        minutesWorked: 0,
         deadlineNotif: true,
       },
       { merge: true }

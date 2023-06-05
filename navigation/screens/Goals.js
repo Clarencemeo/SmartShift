@@ -31,8 +31,16 @@ function Goals({}) {
   const [progress, setProgress] = useState(0.5);
   const [numberOfTasksCompleted, setNumberOfTasksCompleted] = useState(0);
   const [numberOfSlicesCompleted, setNumberOfSlicesCompleted] = useState(0);
+  const [numberOfMinutesCompleted, setNumberOfMinutesCompleted] = useState(0);
   const [desiredTaskGoals, setTaskGoals] = useState("3");
   const [desiredSliceGoals, setSliceGoals] = useState("3");
+  const [desiredMinutesGoals, setMinutesGoals] = useState("60");
+
+  const [isTasksComplete, setIsTasksComplete] = useState(false);
+  const [isSlicesComplete, setIsSlicesComplete] = useState(false);
+  const [isMinutesComplete, setIsMinutesComplete] = useState(false);
+
+  // Update the state when the progress is full
 
   const resetSliceCountIfNeeded = async (userId) => {
     const currentDate = moment().format("YYYY-MM-DD");
@@ -57,6 +65,8 @@ function Goals({}) {
 
   const [goalTaskModalIsVisible, setGoalTaskModalIsVisible] = useState(false);
   const [goalSliceModalIsVisible, setGoalSliceModalIsVisible] = useState(false);
+  const [goalMinutesModalIsVisible, setGoalMinutesModalIsVisible] =
+    useState(false);
 
   function startGoalTaskModalHandler() {
     setGoalTaskModalIsVisible(true);
@@ -81,6 +91,19 @@ function Goals({}) {
   function userInputGoalSlice(enteredValue) {
     //setWorkTimer(Number(enteredValue));
     endGoalSliceModalHandler();
+  }
+
+  function startGoalMinutesModalHandler() {
+    setGoalMinutesModalIsVisible(true);
+  }
+
+  function endGoalMinutesModalHandler() {
+    setGoalMinutesModalIsVisible(false);
+  }
+
+  function userInputGoalMinutes(enteredValue) {
+    //setWorkTimer(Number(enteredValue));
+    endGoalMinutesModalHandler();
   }
 
   const backColorInProgress = "#fdf0d5";
@@ -122,6 +145,21 @@ function Goals({}) {
 
   useFocusEffect(
     React.useCallback(() => {
+      if (numberOfSlicesCompleted >= desiredSliceGoals) {
+        setIsSlicesComplete(true);
+      } else {
+        setIsSlicesComplete(false);
+      }
+      if (numberOfMinutesCompleted >= desiredMinutesGoals) {
+        setIsMinutesComplete(true);
+      } else {
+        setIsMinutesComplete(false);
+      }
+      if (numberOfTasksCompleted >= desiredTaskGoals) {
+        setIsTasksComplete(true);
+      } else {
+        setIsTasksComplete(false);
+      }
       resetSliceCountIfNeeded(auth.currentUser.uid);
       const docRef = doc(db, "users", auth.currentUser.uid);
       getDoc(docRef)
@@ -130,10 +168,13 @@ function Goals({}) {
             const userData = docSnap.data();
             const myGoals = userData.dailyTaskGoal;
             const mySliceGoals = userData.dailySliceGoal;
+            const myMinuteGoals = userData.dailyMinutesGoal;
             //const breakDuration = userData.breakDuration;
             setTaskGoals(myGoals);
             setSliceGoals(mySliceGoals);
+            setMinutesGoals(myMinuteGoals);
             setNumberOfSlicesCompleted(userData.slices);
+            setNumberOfMinutesCompleted(userData.minutesWorked);
             fetchTasksCompleted();
             //setBreakTimer(breakDuration);
           } else {
@@ -188,6 +229,11 @@ function Goals({}) {
                 size={100}
                 color="#f25c54"
               />
+              {isTasksComplete && (
+                <Text style={[styles.textBase, styles.goalReached]}>
+                  Goal Complete!
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -229,32 +275,56 @@ function Goals({}) {
                 size={100}
                 color="#f25c54"
               />
+              {isSlicesComplete && (
+                <Text style={[styles.textBase, styles.goalReached]}>
+                  Goal Complete!
+                </Text>
+              )}
             </View>
           </View>
         </View>
       </Pressable>
       <Pressable>
-        <View style={styles.taskItem3}>
+        <View style={styles.taskItem2}>
           <View style={styles.subcontainer1}>
-            <Text style={[styles.textBase, styles.description]}>hi</Text>
-            <Text style={styles.textBase}>dater</Text>
+            <Text style={[styles.textBase, styles.description]}>
+              {numberOfMinutesCompleted} Minutes Worked Today!
+            </Text>
+            <Text style={styles.textBase}>Daily Goal: </Text>
+            <Text>{desiredMinutesGoals}</Text>
+            <Button
+              title="Set Goal"
+              onPress={startGoalMinutesModalHandler}
+              buttonStyle={{ backgroundColor: "#ff4d6d", marginTop: 30 }}
+            />
+            <GoalsModals
+              // passes value to make modal visible
+              sliceVisible={goalMinutesModalIsVisible}
+              // passes function that closes modal
+              onCancel={endGoalMinutesModalHandler}
+              // passes function that handles user input, then closes modal
+              onSubmit={userInputGoalMinutes}
+              defaultValues={"3"}
+            />
           </View>
+
           {/* <View style={styles.amountContainer}>
                 <Text style={styles.amount}>{amount.toFixed(2)}</Text>
                 </View> */}
           <View style={styles.subcontainer2}>
             <View>
-              <Progress.Bar
-                progress={progress}
-                width={100} // Set the width of the progress bar
-                height={10} // Set the height of the progress bar
-                color="#6d6875" // Set the color of the progress bar
-                borderRadius={5} // Set the border radius of the progress bar
-                // You can customize more properties as needed
+              <Progress.Pie
+                borderWidth={2}
+                borderColor="#bc3908"
+                progress={numberOfMinutesCompleted / desiredMinutesGoals}
+                size={100}
+                color="#f25c54"
               />
-              <View>
-                <Text>Progress: {progress}</Text>
-              </View>
+              {isMinutesComplete && (
+                <Text style={[styles.textBase, styles.goalReached]}>
+                  Goal Complete!
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -327,6 +397,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.4,
+  },
+  goalReached: {
+    marginTop: 10,
+    fontWeight: "bold",
   },
   textBase: {
     color: "#6d6875",
