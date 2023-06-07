@@ -53,6 +53,7 @@ export default function Register() {
         dailySliceGoal: "3",
         dailyMinutesGoal: "20",
         slices: 0,
+        lastReset: "placeholder",
         minutesWorked: 0,
         lastReset: "placeholder",
         deadlineNotif: true,
