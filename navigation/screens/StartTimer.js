@@ -238,11 +238,9 @@ export default function TimerApp({ route }) {
             setTimerEnd(true);
             setPlay(true);
             setIsPlaying((prev) => !prev);
-            if (!timerWorking) {
+            if (timerWorking) {
               setSlices((slices) => slices + 1);
               updateCount(auth.currentUser.uid, 1, "slices");
-            }
-            if (timerWorking) {
               updateCount(
                 auth.currentUser.uid,
                 route.params.workTimerDuration,
