@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
   taskItem: {
     padding: 12,
     marginVertical: 8,
-    // backgroundColor: "#F4978E",
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 6,

@@ -138,6 +138,7 @@ export default function PomodoroTimer(props) {
         <Pressable
           visible={workModalIsVisible}
           onPress={startWorkTimerModalHandler}
+          style={styles.buttonCenter}
         >
           <View>
             <Text style={styles.timerText}>{workTimer} Minute Work Time</Text>
@@ -159,6 +160,7 @@ export default function PomodoroTimer(props) {
         <Pressable
           visible={breakModalIsVisible}
           onPress={startBreakTimerModalHandler}
+          style={styles.buttonCenter}
         >
           <View>
             <Text style={styles.timerText}>{breakTimer} Minute Break Time</Text>
@@ -200,6 +202,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fbc4ab",
   },
+  buttonCenter: {
+    alignItems: "center",
+  },
   midcontainer: {
     height: "50%",
     justifyContent: "space-between",
@@ -214,7 +219,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#f4978e",
     borderWidth: 5,
     borderColor: "#f08080",
-    //backgroundColor: 'red',
     fontWeight: "bold",
     opacity: 0.8,
     overflow: "hidden",
@@ -239,7 +243,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   buttonText: {
-    fontSize: 30,
+    fontSize: 35,
     padding: 30,
   },
   inputContainer: {
@@ -249,6 +253,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
     marginBottomWidth: 1,
-    // borderBottomColor:
   },
 });

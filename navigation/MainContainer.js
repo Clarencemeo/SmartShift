@@ -16,6 +16,7 @@ import SettingsPage from "./screens/SettingsPage";
 import AccountSettings from "./screens/AccountSettings";
 import ManageTask from "./screens/ManageTask";
 import Reflect from "./screens/Reflect";
+import Goals from "./screens/Goals";
 import ReflectionsAgenda from "./screens/ReflectionsAgenda";
 import ReflectionView from "./screens/ReflectionView";
 
@@ -107,6 +108,7 @@ function Tabs() {
           "StartTimer",
           "AccountSettings",
           "Reflect",
+          "Goals"
         ].includes(route.name)
           ? () => {
               return null;
@@ -257,6 +259,22 @@ function ProductivityPageStack() {
               color={"black"}
               onPress={() => {
                 navigation.navigate("Reflections Agenda");
+              }}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Goals"
+        component={Goals}
+        options={{
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-back"
+              size={24}
+              color={"black"}
+              onPress={() => {
+                navigation.navigate("Productivity Page");
               }}
             />
           ),

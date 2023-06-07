@@ -49,6 +49,14 @@ export default function Register() {
         phoneNumber: phone,
         workDuration: "25",
         breakDuration: "5",
+        dailyTaskGoal: "3",
+        dailySliceGoal: "3",
+        dailyMinutesGoal: "20",
+        slices: 0,
+        lastReset: "placeholder",
+        minutesWorked: 0,
+        lastReset: "placeholder",
+        deadlineNotif: true,
       },
       { merge: true }
     );

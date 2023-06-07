@@ -1,5 +1,4 @@
 import * as React from "react";
-//import { Component } from 'react';
 import { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
@@ -9,13 +8,16 @@ import {
   Vibration,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import moment from "moment";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 import { SelectList } from "react-native-dropdown-select-list";
 
 import { Audio } from "expo-av";
 
+import { auth } from "../../firebase/firebase-config";
+import { db } from "../../firebase/firebase-config";
+import { getDoc, doc, setDoc } from "firebase/firestore/lite";
 import { TaskContext } from "../../store/tasks-context";
 
 export default function TimerApp({ route }) {
@@ -51,6 +53,48 @@ export default function TimerApp({ route }) {
   ];
   const [alarm, setAlarm] = useState();
   const tasksCtx = useContext(TaskContext);
+
+  //resets the dailySlices and dailyMinutesWorked when it's a new day
+  const resetCountIfNeeded = async (userId) => {
+    const currentDate = moment().format("YYYY-MM-DD");
+
+    const userRef = doc(db, "users", userId);
+
+    const userSnapshot = await getDoc(userRef);
+    const userData = userSnapshot.data();
+
+    if (userData.lastReset !== currentDate) {
+      // Reset count for a new day
+      await setDoc(
+        userRef,
+        {
+          slices: 0,
+          minutesWorked: 0,
+          lastReset: currentDate,
+        },
+        { merge: true }
+      );
+    }
+  };
+
+  const updateCount = async (userId, count, field) => {
+    const userRef = doc(db, "users", userId);
+
+    await resetCountIfNeeded(userId);
+
+    const userSnapshot = await getDoc(userRef);
+    const userData = userSnapshot.data();
+
+    const newCount = parseInt(userData[field]) + parseInt(count);
+
+    await setDoc(
+      userRef,
+      {
+        [field]: newCount,
+      },
+      { merge: true }
+    );
+  };
 
   async function playSound(val) {
     if (alarm != undefined) {
@@ -171,7 +215,7 @@ export default function TimerApp({ route }) {
   }
 
   return (
-    <View justifyContent="center" backgroundColor="#F4978E" height="100%">
+    <View justifyContent="center" backgroundColor="#F4978E" height="110%">
       <View height="15%">
         <Text marginTop="5%" style={styles.titleText}>
           {timerWorking ? "Work Cycle" : "Break Time!"}
@@ -194,7 +238,17 @@ export default function TimerApp({ route }) {
             setTimerEnd(true);
             setPlay(true);
             setIsPlaying((prev) => !prev);
-            setSlices((slices) => slices + 1);
+            if (!timerWorking) {
+              setSlices((slices) => slices + 1);
+              updateCount(auth.currentUser.uid, 1, "slices");
+            }
+            if (timerWorking) {
+              updateCount(
+                auth.currentUser.uid,
+                route.params.workTimerDuration,
+                "minutesWorked"
+              );
+            }
             return { shouldRepeat: false };
           }}
         >
@@ -273,7 +327,7 @@ export default function TimerApp({ route }) {
             </TouchableOpacity>
           </View>
         )}
-        {timerWorking && (
+        {timerWorking && timerEnd && (
           <View
             alignItems="center"
             alignSelf="stretch"
@@ -310,6 +364,7 @@ export default function TimerApp({ route }) {
 
 const styles = StyleSheet.create({
   titleText: {
+    marginTop: 30,
     fontWeight: "bold",
     fontSize: 50,
     alignItems: "center",
@@ -317,8 +372,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   timerText: {
-    fontWeight: "bold",
-    fontSize: 40,
+    fontSize: 45,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
@@ -365,8 +419,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   skipBreakTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 27,
     justifyContent: "center",
     alignItems: "center",
     color: "#900000",
