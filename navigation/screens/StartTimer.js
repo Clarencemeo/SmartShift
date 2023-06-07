@@ -28,6 +28,7 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore/lite";
+import { TaskContext } from "../../store/tasks-context";
 
 export default function TimerApp({ route }) {
   const navigation = useNavigation();
