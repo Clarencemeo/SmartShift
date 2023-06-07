@@ -181,11 +181,12 @@ function Goals({}) {
               }}
               buttonStyle={{
                 backgroundColor: "#f4978e",
-                marginTop: 20,
+                marginTop: 10,
                 borderWidth: 2,
                 borderRadius: 20,
                 borderColor: "#f08080",
                 fontWeight: "bold",
+                height: "70%",
               }}
             />
             <GoalsModals
@@ -233,10 +234,11 @@ function Goals({}) {
               }}
               buttonStyle={{
                 backgroundColor: "#f4978e",
-                marginTop: 20,
+                marginTop: 10,
                 borderWidth: 2,
                 borderRadius: 20,
                 borderColor: "#f08080",
+                height: "70%",
               }}
             />
             <GoalsModals
@@ -285,10 +287,11 @@ function Goals({}) {
               }}
               buttonStyle={{
                 backgroundColor: "#f4978e",
-                marginTop: 20,
+                marginTop: 10,
                 borderWidth: 2,
                 borderRadius: 20,
                 borderColor: "#f08080",
+                height: "70%",
               }}
             />
             <GoalsModals
@@ -381,12 +384,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
   },
   goalReached: {
-    marginTop: 10,
     fontWeight: "bold",
   },
   textBase: {
     color: "#6d6875",
     fontSize: 17,
+    marginBottom: "1%",
   },
   description: {
     marginBottom: 10,
