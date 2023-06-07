@@ -54,6 +54,7 @@ export default function Register() {
         dailyMinutesGoal: "20",
         slices: 0,
         minutesWorked: 0,
+        lastReset: "placeholder",
         deadlineNotif: true,
       },
       { merge: true }

@@ -4,20 +4,12 @@ import {
   View,
   Modal,
   TextInput,
-  Button,
   Text,
   Pressable,
 } from "react-native";
 import { auth } from "../firebase/firebase-config";
 import { db } from "../firebase/firebase-config";
-import {
-  collection,
-  onSnapshot,
-  getDoc,
-  doc,
-  setDoc,
-  addDoc,
-} from "firebase/firestore/lite";
+import { doc, setDoc } from "firebase/firestore/lite";
 
 function GoalsModals(props) {
   const [goalDesired, setGoals] = useState("3");
@@ -240,7 +232,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
-    fontSize: 26,
+    fontSize: 24,
     borderRadius: 30,
     padding: 10,
     backgroundColor: "#f4978e",

@@ -1,13 +1,7 @@
 import * as React from "react";
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  Text,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useState, useEffect } from "react";
+import { Pressable, StyleSheet, View, Text } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useState } from "react";
 import { auth } from "../../firebase/firebase-config";
 import { db } from "../../firebase/firebase-config";
 import { Button } from "react-native-elements";
@@ -19,7 +13,6 @@ import {
   where,
   doc,
   setDoc,
-  deleteDoc,
 } from "firebase/firestore/lite";
 import GoalsModals from "../../components/GoalsModals";
 import * as Progress from "react-native-progress";
@@ -27,8 +20,6 @@ import moment from "moment";
 
 // documentation on Switches: https://reactnative.dev/docs/switch
 function Goals({}) {
-  const navigation = useNavigation();
-  const [progress, setProgress] = useState(0.5);
   const [numberOfTasksCompleted, setNumberOfTasksCompleted] = useState(0);
   const [numberOfSlicesCompleted, setNumberOfSlicesCompleted] = useState(0);
   const [numberOfMinutesCompleted, setNumberOfMinutesCompleted] = useState(0);
@@ -77,7 +68,6 @@ function Goals({}) {
   }
 
   function userInputGoalTimer(enteredValue) {
-    //setWorkTimer(Number(enteredValue));
     endGoalTaskModalHandler();
   }
 
@@ -89,7 +79,6 @@ function Goals({}) {
   }
 
   function userInputGoalSlice(enteredValue) {
-    //setWorkTimer(Number(enteredValue));
     endGoalSliceModalHandler();
   }
 
@@ -102,15 +91,8 @@ function Goals({}) {
   }
 
   function userInputGoalMinutes(enteredValue) {
-    //setWorkTimer(Number(enteredValue));
     endGoalMinutesModalHandler();
   }
-
-  const backColorInProgress = "#fdf0d5";
-  const backColorComplete = "#ffcdb2";
-
-  const backColorImportant = "#c9184a";
-  const backColorNotImportant = "white";
 
   async function getNumberOfTasksCompletedToday() {
     // Get the current date
@@ -139,10 +121,6 @@ function Goals({}) {
     setNumberOfTasksCompleted(tasksCompleted);
   };
 
-  //useEffect(() => {
-  //  fetchTasksCompleted();
-  //}, []);
-
   useFocusEffect(
     React.useCallback(() => {
       if (numberOfSlicesCompleted >= desiredSliceGoals) {
@@ -169,14 +147,12 @@ function Goals({}) {
             const myGoals = userData.dailyTaskGoal;
             const mySliceGoals = userData.dailySliceGoal;
             const myMinuteGoals = userData.dailyMinutesGoal;
-            //const breakDuration = userData.breakDuration;
             setTaskGoals(myGoals);
             setSliceGoals(mySliceGoals);
             setMinutesGoals(myMinuteGoals);
             setNumberOfSlicesCompleted(userData.slices);
             setNumberOfMinutesCompleted(userData.minutesWorked);
             fetchTasksCompleted();
-            //setBreakTimer(breakDuration);
           } else {
             console.log("No such document!");
           }
@@ -189,21 +165,27 @@ function Goals({}) {
 
   return (
     <View style={styles.mainContainer}>
+      <View style={{ height: "45%" }} />
       <Pressable>
         <View style={styles.taskItem1}>
-          <View style={styles.subcontainer1}>
+          <View>
             <Text style={[styles.textBase, styles.description]}>
               {numberOfTasksCompleted} Tasks Completed Today!
             </Text>
-            <Text style={styles.textBase}>Daily Goal: </Text>
-            <Text>{desiredTaskGoals}</Text>
+            <Text style={styles.textBase}>Daily Goal: {desiredTaskGoals}</Text>
             <Button
               title="Set Goal"
               onPress={startGoalTaskModalHandler}
+              titleStyle={{
+                fontSize: 20,
+              }}
               buttonStyle={{
-                backgroundColor: "#ff4d6d",
-                marginTop: 30,
-                width: "100%",
+                backgroundColor: "#f4978e",
+                marginTop: 20,
+                borderWidth: 2,
+                borderRadius: 20,
+                borderColor: "#f08080",
+                fontWeight: "bold",
               }}
             />
             <GoalsModals
@@ -217,17 +199,14 @@ function Goals({}) {
             />
           </View>
 
-          {/* <View style={styles.amountContainer}>
-                <Text style={styles.amount}>{amount.toFixed(2)}</Text>
-                </View> */}
           <View style={styles.subcontainer2}>
             <View>
               <Progress.Pie
                 borderWidth={2}
-                borderColor="#bc3908"
+                borderColor="#f08080"
                 progress={numberOfTasksCompleted / desiredTaskGoals}
                 size={100}
-                color="#f25c54"
+                color="#f08080"
               />
               {isTasksComplete && (
                 <Text style={[styles.textBase, styles.goalReached]}>
@@ -238,19 +217,27 @@ function Goals({}) {
           </View>
         </View>
       </Pressable>
-
       <Pressable>
         <View style={styles.taskItem2}>
-          <View style={styles.subcontainer1}>
+          <View>
             <Text style={[styles.textBase, styles.description]}>
               {numberOfSlicesCompleted} Slices Completed Today!
             </Text>
-            <Text style={styles.textBase}>Daily Goal: </Text>
-            <Text>{desiredSliceGoals}</Text>
+            <Text style={styles.textBase}>Daily Goal: {desiredSliceGoals}</Text>
+            {/* <Text>{desiredSliceGoals}</Text> */}
             <Button
               title="Set Goal"
               onPress={startGoalSliceModalHandler}
-              buttonStyle={{ backgroundColor: "#ff4d6d", marginTop: 30 }}
+              titleStyle={{
+                fontSize: 20,
+              }}
+              buttonStyle={{
+                backgroundColor: "#f4978e",
+                marginTop: 20,
+                borderWidth: 2,
+                borderRadius: 20,
+                borderColor: "#f08080",
+              }}
             />
             <GoalsModals
               // passes value to make modal visible
@@ -262,18 +249,14 @@ function Goals({}) {
               defaultValues={"3"}
             />
           </View>
-
-          {/* <View style={styles.amountContainer}>
-                <Text style={styles.amount}>{amount.toFixed(2)}</Text>
-                </View> */}
           <View style={styles.subcontainer2}>
             <View>
               <Progress.Pie
                 borderWidth={2}
-                borderColor="#bc3908"
+                borderColor="#f08080"
                 progress={numberOfSlicesCompleted / desiredSliceGoals}
                 size={100}
-                color="#f25c54"
+                color="#f08080"
               />
               {isSlicesComplete && (
                 <Text style={[styles.textBase, styles.goalReached]}>
@@ -285,17 +268,28 @@ function Goals({}) {
         </View>
       </Pressable>
       <Pressable>
-        <View style={styles.taskItem2}>
-          <View style={styles.subcontainer1}>
+        <View style={styles.taskItem3}>
+          <View>
             <Text style={[styles.textBase, styles.description]}>
               {numberOfMinutesCompleted} Minutes Worked Today!
             </Text>
-            <Text style={styles.textBase}>Daily Goal: </Text>
-            <Text>{desiredMinutesGoals}</Text>
+            <Text style={styles.textBase}>
+              Daily Goal: {desiredMinutesGoals}
+            </Text>
+            {/* <Text>{desiredMinutesGoals}</Text> */}
             <Button
               title="Set Goal"
               onPress={startGoalMinutesModalHandler}
-              buttonStyle={{ backgroundColor: "#ff4d6d", marginTop: 30 }}
+              titleStyle={{
+                fontSize: 20,
+              }}
+              buttonStyle={{
+                backgroundColor: "#f4978e",
+                marginTop: 20,
+                borderWidth: 2,
+                borderRadius: 20,
+                borderColor: "#f08080",
+              }}
             />
             <GoalsModals
               // passes value to make modal visible
@@ -307,18 +301,14 @@ function Goals({}) {
               defaultValues={"3"}
             />
           </View>
-
-          {/* <View style={styles.amountContainer}>
-                <Text style={styles.amount}>{amount.toFixed(2)}</Text>
-                </View> */}
           <View style={styles.subcontainer2}>
             <View>
               <Progress.Pie
                 borderWidth={2}
-                borderColor="#bc3908"
+                borderColor="#f08080"
                 progress={numberOfMinutesCompleted / desiredMinutesGoals}
                 size={100}
-                color="#f25c54"
+                color="#f08080"
               />
               {isMinutesComplete && (
                 <Text style={[styles.textBase, styles.goalReached]}>
@@ -339,26 +329,20 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     backgroundColor: "#fbc4ab",
   },
   pressed: {
     opacity: 0.75,
   },
-  subcontainer1: {
-    //flex: 3,
-  },
   subcontainer2: {
-    //flex: 2,
-    //flexDirection: "row",
-    //justifyContent: "space-between",
+    justifyContent: "center",
   },
   taskItem1: {
-    height: "45%",
-    marginTop: 110,
+    height: "50%",
     padding: 20,
     margin: 10,
-    backgroundColor: "#F4978E",
+    backgroundColor: "#fdf0d5",
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 6,
@@ -369,11 +353,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
   },
   taskItem2: {
-    height: "45%",
+    height: "50%",
     padding: 20,
     margin: 10,
-    marginTop: 90,
-    backgroundColor: "#F4978E",
+    backgroundColor: "#fdf0d5",
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 6,
@@ -384,11 +367,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
   },
   taskItem3: {
-    height: "45%",
+    height: "50%",
     padding: 20,
     margin: 10,
-    marginTop: 90,
-    backgroundColor: "#F4978E",
+    backgroundColor: "#fdf0d5",
     flexDirection: "row",
     justifyContent: "space-between",
     borderRadius: 6,
@@ -404,10 +386,10 @@ const styles = StyleSheet.create({
   },
   textBase: {
     color: "#6d6875",
+    fontSize: 17,
   },
   description: {
-    fontSize: 17,
-    marginBottom: 4,
+    marginBottom: 10,
     fontWeight: "bold",
   },
 });
