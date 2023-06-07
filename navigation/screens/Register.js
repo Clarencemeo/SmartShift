@@ -55,6 +55,7 @@ export default function Register() {
         slices: 0,
         lastReset: "placeholder",
         minutesWorked: 0,
+        lastReset: "placeholder",
         deadlineNotif: true,
       },
       { merge: true }
