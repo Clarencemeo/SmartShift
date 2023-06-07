@@ -42,8 +42,12 @@ export default function AccountSettings({ route }) {
         const userData = docSnap.data();
         const userName = userData.firstName;
         const image_base64 = userData.image;
+        //converts stored image data to base64:
         setImage(`data:image/jpeg;base64,${image_base64}`);
-        setUserName(userName);
+        //sets username to stored username. 
+        if (userName) {
+          setUserName(userName);
+        }
       } else {
         console.log("No such document!");
       }
@@ -58,6 +62,9 @@ export default function AccountSettings({ route }) {
     checkIfUserNameSet();
   }, []);
 
+  //Opens up ImagePicker to allow the user to select an image. 
+  //Then converts the image to base64, and stores it on the firebase. 
+  //References: https://elazizi.com/posts/how-to-build-an-image-picker-in-react-native/
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -83,17 +90,17 @@ export default function AccountSettings({ route }) {
     }
   };
 
+  //Theoretically checks for CameraRollPermission, however it seems to not work as intended? 
   const checkForCameraRollPermission = async () => {
     const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
     if (status != "granted") {
-      alert(
-        "Please grant camera roll permissions inside your system's settings."
-      );
+      console.log("Media Permissions are not granted?");
     } else {
       console.log("Media Permissions are granted");
     }
   };
 
+  //Defaults the userName to the first part of the email if not set. 
   function checkIfUserNameSet() {
     if (userName == null) {
       parseEmail();
