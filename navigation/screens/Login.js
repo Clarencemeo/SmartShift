@@ -12,21 +12,17 @@ import {
 import { Icon, Button, SocialIcon } from "react-native-elements";
 import { Formik } from "formik";
 import { SignInContext } from "../../userContexts/Context";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithCredential,
-} from "firebase/auth";
+import Constants from "expo-constants";
 
 export default function Login() {
   const { dispatchSignedIn } = useContext(SignInContext);
   const text1 = useRef(1);
   const text2 = useRef(2);
-  const provider = new GoogleAuthProvider();
 
   const navigation = useNavigation();
 
   useEffect(() => {
+    console.log("@ device   ", Constants.manifest.bundleIdentifier);
     auth.onAuthStateChanged((user) => {
       if (user) {
         dispatchSignedIn({
@@ -41,24 +37,6 @@ export default function Login() {
       }
     });
   }, []);
-
-  const signInWithGoogle = async () => {
-    // Get the users ID token
-    const { idToken } = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    // Sign-in the user with the credential
-    const user_sign_in = auth().signInWithCredential(googleCredential);
-    user_sign_in
-      .then((user) => {
-        console.log(user);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   const LoginUser = (data) => {
     const { password, email } = data;
@@ -158,7 +136,7 @@ export default function Login() {
           button
           type="google"
           style={styles.socialMedia}
-          onPress={signInWithGoogle}
+          onPress={{}}
         />
       </View>
     </View>
