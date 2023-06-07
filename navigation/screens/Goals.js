@@ -296,7 +296,7 @@ function Goals({}) {
             />
             <GoalsModals
               // passes value to make modal visible
-              sliceVisible={goalMinutesModalIsVisible}
+              minutesVisible={goalMinutesModalIsVisible}
               // passes function that closes modal
               onCancel={endGoalMinutesModalHandler}
               // passes function that handles user input, then closes modal
