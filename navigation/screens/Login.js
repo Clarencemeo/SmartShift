@@ -136,7 +136,6 @@ export default function Login() {
           button
           type="google"
           style={styles.socialMedia}
-          onPress={{}}
         />
       </View>
     </View>
