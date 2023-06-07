@@ -20,12 +20,21 @@ export const TaskContext = createContext({
     complete,
     urgent,
     important,
+    completedDate,
     notificationId,
   }) => {},
   deleteTask: (id) => {},
   updateTask: (
     id,
-    { description, dueDate, complete, urgent, important, notificationId }
+    {
+      description,
+      dueDate,
+      complete,
+      urgent,
+      important,
+      completedDate,
+      notificationId,
+    }
   ) => {},
 });
 
@@ -39,6 +48,9 @@ const adjustSettings2 = async (action, id) => {
         complete: action.payload.complete,
         urgent: action.payload.urgent,
         important: action.payload.important,
+        completedDate: action.payload.complete
+          ? new Date().toLocaleDateString()
+          : null,
         notificationId: action.payload.notificationId,
       },
       { merge: true }
@@ -59,6 +71,9 @@ const adjustSettings3 = async (action) => {
         complete: action.payload.data.complete,
         urgent: action.payload.data.urgent,
         important: action.payload.data.important,
+        completedDate: action.payload.data.complete
+          ? new Date().toLocaleDateString()
+          : null,
         notificationId: action.payload.data.notificationId,
       },
       { merge: true }
@@ -82,6 +97,7 @@ const adjustSettings4 = async (action) => {
         complete: action.complete,
         urgent: action.urgent,
         important: action.important,
+        completedDate: action.complete ? new Date().toLocaleDateString() : null,
         notificationId: -1,
       },
       { merge: true }
@@ -112,6 +128,9 @@ const adjustSettings5 = async (action) => {
             complete: action.complete,
             urgent: action.urgent,
             important: action.important,
+            completedDate: action.complete
+              ? new Date().toLocaleDateString()
+              : null,
             notificationId: action.notificationId,
           },
           { merge: true }
@@ -127,6 +146,9 @@ const adjustSettings5 = async (action) => {
           complete: action.complete,
           urgent: action.urgent,
           important: action.important,
+          completedDate: action.complete
+            ? new Date().toLocaleDateString()
+            : null,
           notificationId: action.notificationId,
         },
         { merge: true }
@@ -139,8 +161,9 @@ const adjustSettings5 = async (action) => {
 
 function taskReducer(state, action) {
   switch (action.type) {
-    case "ADD_TASKS":
-      return [...state, ...action.payload];
+    //case 'ADD_TASKS':
+    //  return [...state, ...action.payload];
+    //This adds a task to the task display, but does not update the firebase
     case "ADD_INITIAL":
       return [{ ...action.payload, id: action.payload.id }, ...state];
     case "ADD":

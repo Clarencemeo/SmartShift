@@ -21,6 +21,10 @@ function Productivity({ route, navigation }) {
     navigation.navigate("Reflections Agenda");
   }
 
+  function showGoals() {
+    navigation.navigate("Goals");
+  }
+
   return (
     <View style={styles.timerContainer}>
       {/* <Text style={styles.timerText}>Main Productivity Page</Text> */}
@@ -33,7 +37,13 @@ function Productivity({ route, navigation }) {
             <Text style={styles.button}>View Reflections</Text>
           </Pressable>
         </View>
+        
       )}
+        <View>
+          <Pressable onPress={showGoals}>
+            <Text style={styles.button}>View Goals</Text>
+          </Pressable>
+        </View>
     </View>
   );
 }

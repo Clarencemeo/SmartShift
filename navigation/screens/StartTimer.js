@@ -9,20 +9,33 @@ import {
   Vibration,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import moment from "moment";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 import { SelectList } from "react-native-dropdown-select-list";
 
 import { Audio } from "expo-av";
 
-import { TaskContext } from "../../store/tasks-context";
+import { auth } from "../../firebase/firebase-config";
+import { db } from "../../firebase/firebase-config";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore/lite";
 
 export default function TimerApp({ route }) {
   const navigation = useNavigation();
   //The timer takes time in seconds, so convert to that.
-  const workDuration = route.params.workTimerDuration * 60;
-  const breakDuration = route.params.breakTimerDuration * 60;
+  //const workDuration = route.params.workTimerDuration * 60;
+  //const breakDuration = route.params.breakTimerDuration * 60;
+  const workDuration = 10;
+  const breakDuration = 6;
 
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
@@ -51,6 +64,48 @@ export default function TimerApp({ route }) {
   ];
   const [alarm, setAlarm] = useState();
   const tasksCtx = useContext(TaskContext);
+
+  //resets the dailySlices and dailyMinutesWorked when it's a new day
+  const resetCountIfNeeded = async (userId) => {
+    const currentDate = moment().format("YYYY-MM-DD");
+
+    const userRef = doc(db, "users", userId);
+
+    const userSnapshot = await getDoc(userRef);
+    const userData = userSnapshot.data();
+
+    if (userData.lastReset !== currentDate) {
+      // Reset count for a new day
+      await setDoc(
+        userRef,
+        {
+          slices: 0,
+          minutesWorked: 0,
+          lastReset: currentDate,
+        },
+        { merge: true }
+      );
+    }
+  };
+
+  const updateCount = async (userId, count, field) => {
+    const userRef = doc(db, "users", userId);
+
+    await resetCountIfNeeded(userId);
+
+    const userSnapshot = await getDoc(userRef);
+    const userData = userSnapshot.data();
+
+    const newCount = parseInt(userData[field]) + parseInt(count);
+
+    await setDoc(
+      userRef,
+      {
+        [field]: newCount,
+      },
+      { merge: true }
+    );
+  };
 
   async function playSound(val) {
     if (alarm != undefined) {
@@ -194,7 +249,17 @@ export default function TimerApp({ route }) {
             setTimerEnd(true);
             setPlay(true);
             setIsPlaying((prev) => !prev);
-            setSlices((slices) => slices + 1);
+            if (!timerWorking) {
+              setSlices((slices) => slices + 1);
+              updateCount(auth.currentUser.uid, 1, "slices");
+            }
+            if (timerWorking) {
+              updateCount(
+                auth.currentUser.uid,
+                route.params.workTimerDuration,
+                "minutesWorked"
+              );
+            }
             return { shouldRepeat: false };
           }}
         >
