@@ -1,5 +1,4 @@
 import * as React from "react";
-//import { Component } from 'react';
 import { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
@@ -18,25 +17,14 @@ import { Audio } from "expo-av";
 
 import { auth } from "../../firebase/firebase-config";
 import { db } from "../../firebase/firebase-config";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  doc,
-  setDoc,
-  deleteDoc,
-} from "firebase/firestore/lite";
+import { getDoc, doc, setDoc } from "firebase/firestore/lite";
 import { TaskContext } from "../../store/tasks-context";
 
 export default function TimerApp({ route }) {
   const navigation = useNavigation();
   //The timer takes time in seconds, so convert to that.
-  //const workDuration = route.params.workTimerDuration * 60;
-  //const breakDuration = route.params.breakTimerDuration * 60;
-  const workDuration = 10;
-  const breakDuration = 6;
+  const workDuration = route.params.workTimerDuration * 60;
+  const breakDuration = route.params.breakTimerDuration * 60;
 
   const [timerStart, setTimerStart] = useState(true);
   const [timerReset, setTimerReset] = useState(false);
@@ -339,7 +327,7 @@ export default function TimerApp({ route }) {
             </TouchableOpacity>
           </View>
         )}
-        {timerWorking && (
+        {timerWorking && timerEnd && (
           <View
             alignItems="center"
             alignSelf="stretch"
@@ -384,7 +372,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   timerText: {
-    // fontWeight: "bold",
     fontSize: 45,
     alignItems: "center",
     justifyContent: "center",
@@ -433,7 +420,6 @@ const styles = StyleSheet.create({
   },
   skipBreakTitle: {
     fontSize: 27,
-    // fontWeight: "bold",
     justifyContent: "center",
     alignItems: "center",
     color: "#900000",
