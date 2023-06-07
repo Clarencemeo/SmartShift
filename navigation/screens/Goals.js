@@ -168,7 +168,9 @@ function Goals({}) {
       <View style={{ height: "45%" }} />
       <Pressable>
         <View style={styles.taskItem1}>
-          <View>
+          <View
+            style={{ flexDirection: "column", justifyContent: "space-between" }}
+          >
             <Text style={[styles.textBase, styles.description]}>
               {numberOfTasksCompleted} Tasks Completed Today!
             </Text>
@@ -181,11 +183,10 @@ function Goals({}) {
               }}
               buttonStyle={{
                 backgroundColor: "#f4978e",
-                marginTop: 10,
+                marginTop: "4%",
                 borderWidth: 2,
                 borderRadius: 20,
                 borderColor: "#f08080",
-                fontWeight: "bold",
                 height: "70%",
               }}
             />
@@ -201,7 +202,7 @@ function Goals({}) {
           </View>
 
           <View style={styles.subcontainer2}>
-            <View>
+            <View style={{ alignItems: "center" }}>
               <Progress.Pie
                 borderWidth={2}
                 borderColor="#f08080"
@@ -209,18 +210,21 @@ function Goals({}) {
                 size={100}
                 color="#f08080"
               />
-              {isTasksComplete && (
-                <Text style={[styles.textBase, styles.goalReached]}>
-                  Goal Complete!
-                </Text>
-              )}
             </View>
+            {isTasksComplete && (
+              <Text style={[styles.goalCompletedText, styles.goalReached]}>
+                Goal Complete!
+              </Text>
+            )}
+            {/* </View> */}
           </View>
         </View>
       </Pressable>
       <Pressable>
         <View style={styles.taskItem2}>
-          <View>
+          <View
+            style={{ flexDirection: "column", justifyContent: "space-between" }}
+          >
             <Text style={[styles.textBase, styles.description]}>
               {numberOfSlicesCompleted} Slices Completed Today!
             </Text>
@@ -234,7 +238,7 @@ function Goals({}) {
               }}
               buttonStyle={{
                 backgroundColor: "#f4978e",
-                marginTop: 10,
+                marginTop: "4%",
                 borderWidth: 2,
                 borderRadius: 20,
                 borderColor: "#f08080",
@@ -252,7 +256,7 @@ function Goals({}) {
             />
           </View>
           <View style={styles.subcontainer2}>
-            <View>
+            <View style={{ alignItems: "center" }}>
               <Progress.Pie
                 borderWidth={2}
                 borderColor="#f08080"
@@ -260,18 +264,20 @@ function Goals({}) {
                 size={100}
                 color="#f08080"
               />
-              {isSlicesComplete && (
-                <Text style={[styles.textBase, styles.goalReached]}>
-                  Goal Complete!
-                </Text>
-              )}
             </View>
+            {isSlicesComplete && (
+              <Text style={[styles.goalCompletedText, , styles.goalReached]}>
+                Goal Complete!
+              </Text>
+            )}
           </View>
         </View>
       </Pressable>
       <Pressable>
         <View style={styles.taskItem3}>
-          <View>
+          <View
+            style={{ flexDirection: "column", justifyContent: "space-between" }}
+          >
             <Text style={[styles.textBase, styles.description]}>
               {numberOfMinutesCompleted} Minutes Worked Today!
             </Text>
@@ -287,7 +293,7 @@ function Goals({}) {
               }}
               buttonStyle={{
                 backgroundColor: "#f4978e",
-                marginTop: 10,
+                marginTop: "4%",
                 borderWidth: 2,
                 borderRadius: 20,
                 borderColor: "#f08080",
@@ -305,7 +311,7 @@ function Goals({}) {
             />
           </View>
           <View style={styles.subcontainer2}>
-            <View>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <Progress.Pie
                 borderWidth={2}
                 borderColor="#f08080"
@@ -313,12 +319,12 @@ function Goals({}) {
                 size={100}
                 color="#f08080"
               />
-              {isMinutesComplete && (
-                <Text style={[styles.textBase, styles.goalReached]}>
-                  Goal Complete!
-                </Text>
-              )}
             </View>
+            {isMinutesComplete && (
+              <Text style={[styles.goalCompletedText, styles.goalReached]}>
+                Goal Complete!
+              </Text>
+            )}
           </View>
         </View>
       </Pressable>
@@ -339,11 +345,11 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   subcontainer2: {
-    justifyContent: "center",
+    flexDirection: "column",
   },
   taskItem1: {
     height: "50%",
-    padding: 20,
+    padding: "4%",
     margin: 10,
     backgroundColor: "#fdf0d5",
     flexDirection: "row",
@@ -371,7 +377,7 @@ const styles = StyleSheet.create({
   },
   taskItem3: {
     height: "50%",
-    padding: 20,
+    padding: "4%",
     margin: 10,
     backgroundColor: "#fdf0d5",
     flexDirection: "row",
@@ -385,6 +391,7 @@ const styles = StyleSheet.create({
   },
   goalReached: {
     fontWeight: "bold",
+    justifyContent: "center",
   },
   textBase: {
     color: "#6d6875",
@@ -392,7 +399,12 @@ const styles = StyleSheet.create({
     marginBottom: "1%",
   },
   description: {
-    marginBottom: 10,
+    marginBottom: "6%",
     fontWeight: "bold",
+  },
+  goalCompletedText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#6d6875",
   },
 });
